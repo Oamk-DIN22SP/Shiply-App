@@ -3,7 +3,7 @@
 
 # Parcel Route
 
-The Parcel Route provides endpoints for managing parcels in the system. You can use these endpoints to retrieve, create, update, and delete parcels.
+ Parcel Route provides endpoints for managing parcels in the system. You can use these endpoints to retrieve, create, update, and delete parcels.
 All endpoints for parcels begin from ``` /api/parcels ```.
 Example :  URL: `http://[website]/api/parcels/{endpoint}`
 ## Table of Contents
