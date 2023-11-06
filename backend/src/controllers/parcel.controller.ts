@@ -1,7 +1,7 @@
 // parcel.controller.ts
 import { Request, Response } from 'express';
 import  db  from '../config/db.config'; // Import your database connection
-import   {  ResultSetHeader, RowDataPacket } from 'mysql2';
+import { Field, FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 // RowData packet is used for An array with the returned rows
 // ResultSetHeader is used for For multiples INSERT, UPDATE, DELETE, TRUNCATE, etc. when using multipleStatements as true
 class ParcelController {
@@ -10,7 +10,7 @@ class ParcelController {
     async getAllParcels(req: Request, res: Response) {
         try {
             // Execute a execute to fetch all parcels
-            const rows: RowDataPacket[] =  db.query('SELECT * FROM shiply.Parcels', []);
+            const [rows] = await (await db).query('SELECT * FROM shiply.Parcels', []);
             // Send the fetched parcels as a JSON response
         return    res.status(200).json(rows);
         } catch (err) {
@@ -22,7 +22,7 @@ class ParcelController {
     async getParcelByID(req: Request, res: Response) {
         try {
             const parcelID = req.params.parcelID;
-            const rows = db.query  ('SELECT * FROM Parcels WHERE parcelID = ?', [parcelID]);
+             const [rows] = await (await db).query('SELECT * FROM Parcels WHERE parcelID = ?', [parcelID]);
             res.status(200).json(rows)
         } catch (err) {
             console.error('Error fetching parcels:', err);
@@ -54,12 +54,12 @@ class ParcelController {
         ];
 
         // Execute the INSERT query to create a new parcel
-        const [rows, fields] = await db.execute<ResultSetHeader>(
+        const [result]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
             'INSERT INTO Parcels (receiverID, driverID, status, parcelDescription, pickupAddress, deliveryAddress, deliveryDate, deliveryNotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             values
         );
 
-        if (rows.affectedRows > 0) {
+        if (result && result[0].affectedRows > 0) {
             // If affectedRows is greater than 0, the parcel was successfully created
             res.status(201).json({ message: 'Parcel created successfully' });
         } else {
@@ -78,7 +78,7 @@ class ParcelController {
             const newStatus = req.body.status;
 
             // Execute the UPDATE execute to update the status of the parcel
-           await  db.query('UPDATE Parcels SET status = ? WHERE parcelID = ?', [newStatus, parcelID]);
+            await (await db).query('DELETE FROM Parcels WHERE parcelID = ?', [parcelID]);
 
             res.status(200).json({ message: 'Parcel status updated successfully' });
         } catch (err) {
@@ -90,7 +90,7 @@ class ParcelController {
     async deleteParcel(req: Request, res: Response) {
         try {
             const parcelID = req.params.parcelID;
-           await db.query('DELETE FROM Parcels WHERE parcelID = ?', [parcelID]);
+           await (await db).query('DELETE FROM Parcels WHERE parcelID = ?', [parcelID]);
             res.status(200).json({ message: 'Parcel deleted successfully' });
 
         } catch (err) {
