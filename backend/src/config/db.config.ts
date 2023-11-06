@@ -1,9 +1,10 @@
+require('dotenv').config();
 export default {
-  HOST: "shiply.crmjxpenk66k.eu-north-1.rds.amazonaws.com",
-  USER: "admin",
-  PASSWORD: "shiply2023",
-  DB: "shiply",
-  connectTimeout: 60000
+  HOST: process.env.HOST,
+  USER:process.env.USER,
+  PASSWORD: process.env.PASSWORD,
+  DB: process.env.DB,
+  connectTimeout: process.env.connectTimeout
 
 };
 

@@ -1,3 +1,4 @@
+require('dotenv').config();
 import express, { Application } from "express";
 import Server from "./src/index";
 
