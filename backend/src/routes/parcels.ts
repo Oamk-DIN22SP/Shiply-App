@@ -1,23 +1,22 @@
 // routes/parcel.route.js
 // Router for parcels
 const express = require('express');
-const parcelController = require('../controllers/parcel.controller');
-
+import parcelController from "../controllers/parcel.controller";
 const router = express.Router();
-
+//NOTE -  Endpoint structure for parcells /api/parcels/
 // Define the route to get all parcels
-router.get('/parcels', parcelController.getAllParcels);
+router.get('/getAllParcels', parcelController.getAllParcels);
 
 // Get Parcel by ID (Read)
-router.get('/parcels/:parcelID', parcelController.getParcelByID)
+router.get('/:parcelID', parcelController.getParcelByID)
 
 // Create a New Parcel (Create)
-router.post('/parcels', parcelController.createNewParcel)
+router.post('/createParcel', parcelController.createNewParcel)
 
 // Update Parcel Status (Update)
-router.put('/parcels/:parcelID/status', parcelController.updateParcelStatus);
+router.put('/status/:parcelID', parcelController.updateParcelStatus);
 
 // Delete Parcel (Delete)
-router.delete('/parcels/:parcelID', parcelController.deleteParcel);
+router.delete('/deleteParcel/:parcelID', parcelController.deleteParcel);
 
 export default router;

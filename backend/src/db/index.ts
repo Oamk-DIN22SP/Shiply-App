@@ -1,12 +1,11 @@
-require('dotenv').config();
+// require('dotenv').config();
+// const mysql = require('mysql2/promise');
 
-const mysql = require('mysql2/promise');
-const configDB = require('../config/db.config');
-
-export default mysql.createConnection({
-  HOST: process.env.HOST,
-  USER: process.env.USER,
-  PASSWORD: process.env.PASSWORD,
-  DB: process.env.DB,
-  connectTimeout: process.env.connectTimeout
-});
+//  const db = mysql.createConnection({
+//     host: process.env.HOST,
+//     user: 'admin',
+//     password: process.env.PASSWORD,
+//     database: process.env.DB,
+//     connectTimeout: process.env.connectTimeout
+// });
+// export default db

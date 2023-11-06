@@ -1,18 +1,18 @@
 // parcel.controller.ts
 import { Request, Response } from 'express';
-import db from '../db'; // Import your database connection
-import   {  ResultSetHeader } from 'mysql2';
+import  db  from '../config/db.config'; // Import your database connection
+import   {  ResultSetHeader, RowDataPacket } from 'mysql2';
 // RowData packet is used for An array with the returned rows
 // ResultSetHeader is used for For multiples INSERT, UPDATE, DELETE, TRUNCATE, etc. when using multipleStatements as true
 class ParcelController {
+ 
     // This endpoint retrieves all parcels from the Parcels table.
     async getAllParcels(req: Request, res: Response) {
         try {
             // Execute a execute to fetch all parcels
-            const [rows] = await  db.query('SELECT * FROM Parcels');
-
+            const rows: RowDataPacket[] =  db.query('SELECT * FROM shiply.Parcels', []);
             // Send the fetched parcels as a JSON response
-            res.status(200).json(rows);
+        return    res.status(200).json(rows);
         } catch (err) {
             console.error('Error fetching parcels:', err);
             res.status(500).json({ error: 'Internal server error' });
@@ -83,3 +83,4 @@ class ParcelController {
 }
 
 export default new ParcelController();
+
