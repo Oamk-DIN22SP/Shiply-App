@@ -68,3 +68,25 @@ padding:10px;
     margin: 0.5em 0;
     cursor: pointer;  
 }
+
+
+/* Media query for screens smaller than 700 (typical mobile devices) */
+@media (max-width: 700px) {
+  .home_page {
+    flex-direction: column;
+  }
+  
+}
+
+@media (max-width: 600px) {
+  .notification {
+    width: 100%; /* Take up the full width on smaller screens */
+  }
+  .details {
+    width: 100%; /* Take up the full width on smaller screens */
+  }
+  .parecl_info_main {
+    width: 100%; /* Take up the full width on smaller screens */
+  }
+
+}

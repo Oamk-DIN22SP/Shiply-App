@@ -61,7 +61,7 @@ export default function Notification() {
     <div className="notification">
       {/* Notification content goes here */}
       <p className='heading' style={{border:'1px solid #FFFAF6', padding:'10px', backgroundColor:'#FFFAF6',borderRadius: '10px 10px 0 0 '}}>Notification Content</p>
-        <Grid style={{backgroundColor:'#FFFAF6',height: '70vh'}}>
+        <Grid style={{backgroundColor:'#FFFAF6',minHeight: '70vh'}}>
           <Select
             style={{ marginTop: 15, width: '95%', marginLeft:'1em'}}
             value={selectedOption}
