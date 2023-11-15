@@ -1,31 +1,70 @@
-.App{
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
+.logo_line {
+    margin: auto;
+    margin-top: 3px;
+    margin-bottom: 1em;
 }
-.AppHeader{
-    height: 100px;
+.home_page {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 20px 4px 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-}
-.AppFooter{
-height: 50px;
-display: flex;
-justify-content: space-evenly;
-align-items: center;
-border-top: 1px solid rgba(0, 0, 0, 0.15);
+  }
+  
+  .notification {
+    width: 45%; /* Adjust the width as needed */
+    padding: 8px;
+    margin:5px;
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  Apply box shadow */
+    border-radius: 10px 10px 0 0; 
+  }
+  
+  .details {
+    flex: 1;
+    width: 45%;
+    padding: 8px;
+    margin:3px;
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  Apply box shadow */
+    border-radius: 10px 10px 0 0; 
 
+  }
+.heading{
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0.5em 0;
+    color: #4A4A4A;
 }
-.SideMenuAndPageContent{
-    display: flex;
-    flex: 3;
-    justify-content: flex-start;
-    align-items: flex-start;
+.send_parcel{
+ //styleName: H5 bold;
+font-size: 20px;
+font-weight: 700;
+line-height: 25px;
+letter-spacing: 0em;
+color:#4A4A4A;
+margin:5px;
+padding:10px;
 }
-.PageContent{
-    padding-left: 12px;
+.parcel_content{
+    font-size: 16px;
+    letter-spacing: 0em;
+    text-align: left;
+    color:#686868;
+    margin:5px;
+    padding:10px;
+}
+.parecl_info_main {
+  width: 420px;
+  height: 278px;
+  background-color: antiquewhite;
+  line-height: 6px;
+  padding: 1em;
+  font-size: small;
+  box-shadow: 4px 5px 0px 0px grey;
+}
+.btn_sent_parcel{
+    width: 150px;
+    height: 40px;
+    background-color: #42820F;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    margin: 0.5em 0;
+    cursor: pointer;  
 }
