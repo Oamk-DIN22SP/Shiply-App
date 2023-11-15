@@ -1,0 +1,10 @@
+### To Do:
+1. Install node_modules for react, vite, @mui/material, @mui/icons, react-router-dom
+2. Create Home.jsx file to display all products from data array
+3. Create Dashboard.jsx file as parent component of App.jsx
+4. Include routing logic inside Dashboard.jsx
+5. Right_Side_Pannel folder three file when user click on items its will route the file
+6. Test your app by running npm run dev
+
+
+
