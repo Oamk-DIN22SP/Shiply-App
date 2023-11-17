@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
 
+
 export default function Details() {
   return (
     <div className="details">
@@ -10,6 +11,8 @@ export default function Details() {
         <Grid style={{ backgroundColor: '#FFFAF6', padding: '10px', borderRadius: '5px',marginTop: '10px', height: '70vh' }}>
           <p>Content for the second grid item</p>
         </Grid>
+        
+       
 
     </div>
   );

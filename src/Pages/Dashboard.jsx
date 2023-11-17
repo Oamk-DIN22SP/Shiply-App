@@ -44,6 +44,14 @@ function ResponsiveDrawer(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const handleLogoClick = () => {
+    // Redirect to the home page when the logo is clicked
+    navigate("/home");
+  };
+  const handleLogoSmileClick = () => {
+    // Redirect to the home page when the logo is clicked
+    navigate("/");
+  };
 
   const drawer = (
     <div>
@@ -64,7 +72,7 @@ function ResponsiveDrawer(props) {
               <ListItemIcon>
                <SendIcon/>
               </ListItemIcon>
-              <ListItemText> Sender </ListItemText>
+              <ListItemText > Sender </ListItemText>
             </ListItemButton>
           </ListItem>
 
@@ -111,7 +119,7 @@ function ResponsiveDrawer(props) {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: 'flex',backgroundColor: '#f0f0f0', height: '100vh', width: '100vw' }}>
+    <Box sx={{ display: 'flex', height: '100vh', width: '100vw' }}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -134,23 +142,21 @@ function ResponsiveDrawer(props) {
           <img
           src={logo}
           alt="Logo"
-          style={{ width: '250px', height: 'auto' }}
+          style={{ width: '250px', height: 'auto', cursor:'pointer' }}
+          onClick={handleLogoClick}
         />
 <img 
   src={smile}
   alt="Logo"
   style={{ width: '50px', height: 'auto', marginLeft: 'auto', borderRadius: '50px', border: '5px solid orange', cursor:'pointer' }}
-/>  
-
-          
-        
+  onClick={handleLogoSmileClick}  
+/>   
         </Toolbar>
       </AppBar>
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
-
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
@@ -163,7 +169,7 @@ function ResponsiveDrawer(props) {
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor:'#fffdfb' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor:'#fffdfb'},
           }}
         >
           {drawer}
@@ -172,7 +178,7 @@ function ResponsiveDrawer(props) {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor:'#fffdfb' },
           }}
           open
         >
