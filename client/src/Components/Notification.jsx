@@ -37,7 +37,9 @@ const Item = (props) => (
   </Paper>
 );
 
-export default function Notification() {
+export default function Notification({
+  onNotificationItemClick,
+}) {
   const navigate = useNavigate(); // Get navigate object from useNavigate
   const [selectedOption, setSelectedOption] = React.useState('');
 
@@ -48,11 +50,14 @@ export default function Notification() {
   const handleItemClick = (text) => {
     // Redirect to another page based on the clicked item
     if (text === 'New package received') {
-      navigate('/recivedparecl');
+      // navigate('/recivedparecl');
+      onNotificationItemClick("recivedparecl");
     } else if (text === 'Paracel has been received') {
-      navigate('/sendparcel');
+      // navigate('/sendparcel');
+      onNotificationItemClick("sendparcel");
     } else if (text === 'New Parcel is waiting...') {
-      navigate('/otherparcel');
+      // navigate('/otherparcel');
+      onNotificationItemClick("otherparcel");
     }
     // Add more conditions for other items
   };

@@ -4,10 +4,16 @@ import Details from '../Components/Details'
 
 
 export default function Home() {
+  const [data, setData] = React.useState(null)
+
+  const handleNotificationItemClick = (item) => {
+    setData(item)
+  }
+
   return (
     <div className='home_page'>
-      <Notification/>
-      <Details/>
+      <Notification onNotificationItemClick={handleNotificationItemClick} />
+      <Details selectedItem={data}/>
     </div>
   )
 }
