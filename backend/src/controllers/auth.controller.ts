@@ -7,11 +7,10 @@ import { OkPacketParams, ResultSetHeader, RowDataPacket } from 'mysql2';
 // Firebase Admin SDK setup
 const serviceAccount = require('../../service_account.json');
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
 });
 
 class AuthController {
-
     // Authentication middleware
     async authenticateUser(req: Request, res: Response, next: NextFunction) {
         const { uid } = req.body;
@@ -19,43 +18,43 @@ class AuthController {
         try {
             const decodedToken = await admin.auth().verifyIdToken(uid);
             req.params.decodedToken = decodedToken.uid;
-            const clientID = req.params.uid;
+            const clientID = req.params.decodedToken;
 
-            
             // Query the MySQL database to check if the UID exists
-            const [rows] =  await (await db).query('SELECT * FROM users WHERE uid = ?', [clientID]);
+            const [rows] = await (await db).query('SELECT * FROM users WHERE uid = ?', [clientID]);
             // Send the fetched parcels as a JSON response
             return res.status(200).json(rows);
-          
-
         } catch (error) {
             res.status(401).json({ error: 'Authentication failed' });
         }
     }
+
     // Signup function
     async signUpUser(req: Request, res: Response) {
         const { uid, email, displayName } = req.body;
 
         try {
             const decodedToken = await admin.auth().verifyIdToken(uid);
-            req.params.uid = decodedToken.uid;
-            const clientID = req.params.uid;
+            const clientID = decodedToken.uid;
 
             // Query the MySQL database to check if the UID exists
-            const [rows] : [ResultSetHeader[], FieldPacket[]] = await (await db).query('SELECT * FROM users WHERE uid = ?', [clientID]);
-            // Send the fetched parcels as a JSON response
+            const [rows]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
+                'SELECT * FROM users WHERE uid = ?',
+                [clientID]
+            );
 
-            if (rows && rows.length > 0 ) {
+            // Send the fetched parcels as a JSON response
+            if (rows && rows.length > 0) {
                 // User with this UID already exists in the database
                 res.status(400).json({ error: 'User with this UID already exists' });
             } else {
                 // Insert the user into the MySQL database
-                const [rows]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
+                const [insertResult]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
                     'INSERT INTO Client (clientId, clientEmail, clientName) VALUES (?, ?, ?)',
                     [uid, email, displayName]
                 );
 
-                if (rows && rows[0].affectedRows > 0) {
+                if (insertResult && insertResult[0].affectedRows > 0) {
                     // Successful insertion
                     res.json({ success: true, uid });
                 } else {
@@ -68,8 +67,6 @@ class AuthController {
             res.status(500).json({ error: 'Internal server error' });
         }
     }
-   
-    }
-
+}
 
 export default new AuthController();
