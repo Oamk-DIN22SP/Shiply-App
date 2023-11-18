@@ -22,8 +22,4 @@ app
     }
   });
 // Firebase Admin SDK initialization
-admin.initializeApp({
-  credential:
-})
-
 
