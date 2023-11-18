@@ -1,16 +1,36 @@
-// LoginForm.js
-import React, { useState } from 'react';
-import { TextField, Button, Container, Paper, Typography, Link } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import SignUpForm from '../Components/SignupForm'
-import logo from '../Images/img_shiplylogo1.png'
+import React, { useEffect, useState } from "react";
+import { TextField, Button, Container, Paper, Typography } from "@mui/material";
+import { NavLink, useNavigate } from "react-router-dom";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithRedirect,
+} from "firebase/auth";
+import { auth } from "../config/firebase.config.js";
+import logo from "../Images/img_shiplylogo1.png";
+import { authenticateUser } from "../api/users/authenticate.js";
+
 
 const LoginForm = () => {
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    return () => {
+      // Unsubscribe when the component is unmounted
+      unsubscribe();
+    };
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,24 +38,72 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your login logic here
-    console.log('Form data submitted:', formData);
-    navigate('/home');
+    console.log("Form data submitted:", formData);
+    navigate("/home");
   };
 
   const handleSignUpClick = () => {
-    navigate('/signupForm');
+    navigate("/signup");
   };
+
+  const loginWithGoogle = () => {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    signInWithRedirect(auth, provider);
+    
+  };
+
+  if (user) {
+    // If the user is already signed in, you might redirect them to another page
+    navigate("/home"); // Adjust the route as needed
+    return null; // Render nothing or a loading spinner
+  }
+  const handleLogin = async () => {
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+       const response = await fetch("https://shiply-server.onrender.com/api/auth/login", {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+         },
+         body: JSON.stringify({ auth }),
+       });
+
+       const data = await response.json();
+       console.log("Response from server:", data);
+
+      } catch {
+        ((err) => {
+    console.log('Error fetching user data:', err);
+  });
+}
+  }
+    
+    
 
   return (
     <Container component="main" maxWidth="xs">
-      <img
-        src={logo}
-        alt="Logo" style={{ width: '250px', height: 'auto' }} />
-      <p className='logo_line'>Your local delivery soluiton</p>
-      <Paper elevation={3} style={{ padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '5px', boxShadow: '5px 5px 10px #ccc 10px', backgroundColor: '#fffdfb' }}>
+      <img src={logo} alt="Logo" style={{ width: "250px", height: "auto" }} />
+      <p className="logo_line">Your local delivery solution</p>
+      <Paper
+        elevation={3}
+        style={{
+          padding: 16,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          borderRadius: "5px",
+          boxShadow: "5px 5px 10px #ccc 10px",
+          backgroundColor: "#fffdfb",
+        }}
+      >
         <Typography variant="h5">Login</Typography>
-        <form onSubmit={handleSubmit} style={{ width: '100%', marginTop: 16 }}>
+        <form onSubmit={handleSubmit} style={{ width: "100%", marginTop: 16 }}>
           <TextField
             label="Email"
             type="email"
@@ -58,13 +126,26 @@ const LoginForm = () => {
             value={formData.password}
             onChange={handleChange}
           />
-          <Button type="submit" variant="contained" color="warning" style={{ marginTop: 16, textAlign: 'center' }}>
+
+          {/* ... rest of your form */}
+          <Button
+            type="submit"
+            variant="contained"
+            color="warning"
+            style={{ marginTop: 16, textAlign: "center" }}
+            onClick={handleLogin}
+          >
             Login
           </Button>
           <br />
-          <Button sx={{ marginTop: 2, borderRadius: 3 }} color='warning' onClick={handleSignUpClick}>
-            Don't have an account? Sign Up
+          <Button
+            sx={{ marginTop: 2, borderRadius: 3 }}
+            color="warning"
+            onClick={handleSignUpClick}
+          >
+            <NavLink to="/signup">Don't have an account? Sign Up</NavLink>
           </Button>
+          <button onClick={loginWithGoogle}>Login with Google</button>
         </form>
       </Paper>
     </Container>
