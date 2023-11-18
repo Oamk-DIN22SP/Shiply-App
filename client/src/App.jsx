@@ -17,6 +17,7 @@ import Track from './Pages/Track';
 import Settings from './Pages/Settings';
 
 import Home from './Pages/Home';
+import { replace } from 'react-to/HistoryControl';
 
 
 
@@ -26,10 +27,17 @@ function App() {
 
   return (
     <div>
-      
       <Routes>
-      
-        <Route path="/" element={<LoginForm/>} />
+        <Route
+          path="/"
+          element={
+            user ? (
+              <Navigate to="/dashboard" />
+            ) : (
+              <Navigate to="/login" replace={true} />
+            )
+          }
+        />
         <Route path="/home/:userId" element={<Home />} />
         <Route path={`/login`} element={<LoginForm />} />
         <Route path={`/signup`} element={<SignupForm />} />
@@ -39,10 +47,9 @@ function App() {
         <Route path={`/sender`} element={<Sender />} />
         <Route path={`/track`} element={<Track />} />
         <Route path={`/settings`} element={<Settings />} />
-
       </Routes>
-     
-      <ResponsiveDrawer/>
+
+      <ResponsiveDrawer />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import admin from 'firebase-admin';
 import db from '../config/db.config';
 import { FieldPacket } from 'mysql2/typings/mysql/lib/protocol/packets/FieldPacket';
-import { ResultSetHeader, RowDataPacket } from 'mysql2';
+import { OkPacketParams, ResultSetHeader, RowDataPacket } from 'mysql2';
 
 // Firebase Admin SDK setup
 const serviceAccount = require('../../service_account.json');
@@ -14,12 +14,12 @@ class AuthController {
 
     // Authentication middleware
     async authenticateUser(req: Request, res: Response, next: NextFunction) {
-        const { idToken } = req.body;
+        const { uid } = req.body;
 
         try {
-            const decodedToken = await admin.auth().verifyIdToken(idToken);
-            req.uid = decodedToken.uid;
-            const clientID = req.uid;
+            const decodedToken = await admin.auth().verifyIdToken(uid);
+            req.params.decodedToken = decodedToken.uid;
+            const clientID = req.params.uid;
 
             
             // Query the MySQL database to check if the UID exists
@@ -38,14 +38,14 @@ class AuthController {
 
         try {
             const decodedToken = await admin.auth().verifyIdToken(uid);
-            req.uid = decodedToken.uid;
-            const clientID = req.uid;
+            req.params.uid = decodedToken.uid;
+            const clientID = req.params.uid;
 
             // Query the MySQL database to check if the UID exists
-            const rows : RowDataPacket[] = await (await db).query('SELECT * FROM users WHERE uid = ?', [clientID]);
+            const [rows] : [ResultSetHeader[], FieldPacket[]] = await (await db).query('SELECT * FROM users WHERE uid = ?', [clientID]);
             // Send the fetched parcels as a JSON response
 
-            if (rows && rows[0].affectedRows > 0) {
+            if (rows && rows.length > 0 ) {
                 // User with this UID already exists in the database
                 res.status(400).json({ error: 'User with this UID already exists' });
             } else {
