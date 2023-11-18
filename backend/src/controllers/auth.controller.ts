@@ -31,10 +31,10 @@ class AuthController {
 
     // Signup function
     async signUpUser(req: Request, res: Response) {
-        const { uid, email, displayName } = req.body;
+        const { idToken, email, displayName } = req.body;
 
         try {
-            const decodedToken = await admin.auth().verifyIdToken(uid);
+            const decodedToken = await admin.auth().verifyIdToken(idToken);
             const clientID = decodedToken.uid;
 
             // Query the MySQL database to check if the UID exists
@@ -51,12 +51,12 @@ class AuthController {
                 // Insert the user into the MySQL database
                 const [insertResult]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
                     'INSERT INTO Client (clientId, clientEmail, clientName) VALUES (?, ?, ?)',
-                    [uid, email, displayName]
+                    [clientID, email, displayName]
                 );
 
                 if (insertResult && insertResult[0].affectedRows > 0) {
                     // Successful insertion
-                    res.json({ success: true, uid });
+                    res.json({ success: true, clientID });
                 } else {
                     // Insertion failed
                     res.status(500).json({ error: 'Failed to insert user into the database' });
