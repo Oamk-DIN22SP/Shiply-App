@@ -1,11 +1,14 @@
 require('dotenv').config();
 import express, { Application } from "express";
 import Server from "./src/index";
+import cors from "cors";
 
 const app: Application = express();
 const server: Server = new Server(app);
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-
+app.use(cors({
+  origin: 'https://shiply-frontend.onrender.com',
+}));
 app
   .listen(PORT,  function () {
     console.log(`Server is running on port ${PORT}.`);
