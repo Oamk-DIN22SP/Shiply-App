@@ -5,13 +5,11 @@ import {
   GoogleAuthProvider,
   getAuth,
   onAuthStateChanged,
-  signInWithEmailAndPassword,
   signInWithRedirect,
+  getRedirectResult,
 } from "firebase/auth";
 import { auth } from "../config/firebase.config.js";
 import logo from "../Images/img_shiplylogo1.png";
-import { authenticateUser } from "../api/users/authenticate.js";
-
 
 const LoginForm = () => {
   const [user, setUser] = useState(null);
@@ -46,11 +44,39 @@ const LoginForm = () => {
     navigate("/signup");
   };
 
-  const loginWithGoogle = () => {
+  const loginWithGoogle = async () => {
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
-    signInWithRedirect(auth, provider);
-    
+
+    try {
+      await signInWithRedirect(auth, provider);
+
+      // Handle the redirect result
+      const result = await getRedirectResult(auth);
+
+      if (result.user) {
+        // Get the user ID token
+        const idToken = await result.user.getIdToken();
+
+        // Send the ID token to the server for authentication
+        const response = await fetch(
+          "https://shiply-server.onrender.com/api/auth/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ idToken }),
+          }
+        );
+
+        const data = await response.json();
+        console.log("Response from server:", data);
+      }
+    } catch (error) {
+      console.error("Error logging in with Google:", error);
+      // Handle the error, e.g., show an error message to the user
+    }
   };
 
   if (user) {
@@ -58,33 +84,6 @@ const LoginForm = () => {
     navigate("/home"); // Adjust the route as needed
     return null; // Render nothing or a loading spinner
   }
-  const handleLogin = async () => {
-    try {
-      const auth = getAuth();
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
-       const response = await fetch("https://shiply-server.onrender.com/api/auth/login", {
-         method: "POST",
-         headers: {
-           "Content-Type": "application/json",
-         },
-         body: JSON.stringify({ auth }),
-       });
-
-       const data = await response.json();
-       console.log("Response from server:", data);
-
-      } catch {
-        ((err) => {
-    console.log('Error fetching user data:', err);
-  });
-}
-  }
-    
-    
 
   return (
     <Container component="main" maxWidth="xs">
@@ -104,29 +103,6 @@ const LoginForm = () => {
       >
         <Typography variant="h5">Login</Typography>
         <form onSubmit={handleSubmit} style={{ width: "100%", marginTop: 16 }}>
-          <TextField
-            label="Email"
-            type="email"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            required
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            required
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-
           {/* ... rest of your form */}
           <Button
             type="submit"
