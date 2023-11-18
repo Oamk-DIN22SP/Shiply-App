@@ -17,7 +17,7 @@ import Track from './Pages/Track';
 import Settings from './Pages/Settings';
 
 import Home from './Pages/Home';
-import { replace } from 'react-to/HistoryControl';
+
 
 
 
