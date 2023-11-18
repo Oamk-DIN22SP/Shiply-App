@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   signInWithRedirect,
   getRedirectResult,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../config/firebase.config.js";
 import logo from "../Images/img_shiplylogo1.png";
@@ -84,6 +85,37 @@ const LoginForm = () => {
     navigate("/home"); // Adjust the route as needed
     return null; // Render nothing or a loading spinner
   }
+const handleLogin = async () => {
+  try {
+    const auth = getAuth();
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      formData.email,
+      formData.password
+    );
+
+    // Get the user ID token
+    const idToken = await userCredential.user.getIdToken();
+
+    // Send the ID token to the server for authentication
+    const response = await fetch(
+      "https://shiply-server.onrender.com/api/auth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
+      }
+    );
+
+    const data = await response.json();
+    console.log("Response from server:", data);
+  } catch (error) {
+    console.error("Error logging in:", error);
+    // Handle the error, e.g., show an error message to the user
+  }
+};
 
   return (
     <Container component="main" maxWidth="xs">
