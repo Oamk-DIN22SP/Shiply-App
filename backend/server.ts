@@ -1,8 +1,6 @@
 require('dotenv').config();
 import express, { Application } from "express";
 import Server from "./src/index";
-const admin = require('firebase-admin');
-const firebaseConfig = require('./config/firebaseConfig');
 
 const app: Application = express();
 const server: Server = new Server(app);
