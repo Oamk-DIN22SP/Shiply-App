@@ -33,18 +33,40 @@ import SignupForm from '../Components/SignupForm';
 import RecivedParcel from '../Right_Side_Pannel/RecivedParcel';
 import OtherParcel from '../Right_Side_Pannel/OtherParcel';
 import SendParcel from '../Right_Side_Pannel/SendParcel';
+import { useEffect } from 'react';
 
 const drawerWidth = 240;
 
-function ResponsiveDrawer(props) {
+function ResponsiveDrawer(props, userId) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+   const [parcels, setParcels] = useState([]);
   const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+ useEffect(() => {
+    // Function to fetch user parcels
+    const fetchUserParcels = async () => {
+      try {
+        const response = await fetch(
+          `https://shiply-server.onrender.com/api/parcels/getMyParcels/${userId}`
+        );
+        const data = await response.json();
+
+        // Set the fetched parcels to the state
+        setParcels(data.parcels);
+      } catch (error) {
+        console.error('Error fetching user parcels:', error);
+      }
+    };
+
+    // Call the function to fetch user parcels when the component mounts
+    fetchUserParcels();
+  }, [userId]); 
+  
   const drawer = (
     <div>
       <Toolbar />

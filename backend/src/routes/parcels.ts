@@ -9,7 +9,8 @@ router.get('/getAllParcels', parcelController.getAllParcels);
 
 // Get Parcel by ID (Read)
 router.get('/:parcelID', parcelController.getParcelByID)
-
+// Get Parcel by Receiver ID (Read)
+router.get('/getMyParcels/:receiverID', parcelController.getParcelByReceiverID)
 // Create a New Parcel (Create)
 router.post('/createParcel', parcelController.createNewParcel)
 
