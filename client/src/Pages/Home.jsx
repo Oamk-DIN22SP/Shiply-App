@@ -5,7 +5,6 @@ import Details from '../Components/Details'
 
 export default function Home() {
   const [data, setData] = React.useState(null)
-
   const handleNotificationItemClick = (item) => {
     setData(item)
   }
@@ -17,3 +16,5 @@ export default function Home() {
     </div>
   )
 }
+
+//declare local state that will track the selected item

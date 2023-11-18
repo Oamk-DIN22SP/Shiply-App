@@ -30,16 +30,6 @@
     margin: 0.5em 0;
     color: #4A4A4A;
 }
-.send_parcel{
- //styleName: H5 bold;
-font-size: 20px;
-font-weight: 700;
-line-height: 25px;
-letter-spacing: 0em;
-color:#4A4A4A;
-margin:5px;
-padding:10px;
-}
 .parcel_content{
     font-size: 16px;
     letter-spacing: 0em;
@@ -67,4 +57,16 @@ padding:10px;
     font-size: 16px;
     margin: 0.5em 0;
     cursor: pointer;  
+}
+
+@media screen and (max-width: 600px) {
+  .notification {
+    width: 100%; /* Take up the full width on smaller screens */
+  }
+  .details {
+    width: 100%; /* Take up the full width on smaller screens */
+  }
+  .parecl_info_main {
+    width: 100%; /* Take up the full width on smaller screens */
+  }
 }
