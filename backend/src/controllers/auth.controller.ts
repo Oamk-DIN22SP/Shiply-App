@@ -5,7 +5,7 @@ import { FieldPacket } from 'mysql2/typings/mysql/lib/protocol/packets/FieldPack
 import { OkPacketParams, ResultSetHeader, RowDataPacket } from 'mysql2';
 
 // Firebase Admin SDK setup
-const serviceAccount = require('./service_account.json');
+const serviceAccount = require('../../../service_account.json');
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
