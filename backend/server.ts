@@ -1,6 +1,8 @@
 require('dotenv').config();
 import express, { Application } from "express";
 import Server from "./src/index";
+const admin = require('firebase-admin');
+const firebaseConfig = require('./config/firebaseConfig');
 
 const app: Application = express();
 const server: Server = new Server(app);
@@ -19,5 +21,9 @@ app
       console.log("---------------------------")
     }
   });
+// Firebase Admin SDK initialization
+admin.initializeApp({
+  credential:
+})
 
 
