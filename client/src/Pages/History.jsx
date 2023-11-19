@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from "react";
 import BACKEND_HOSTNAME from "../config/backend.config";
+import { getAuth } from "firebase/auth";
 
-export default function History({ userId }) {
+export default function History() {
   const [parcels, setParcels] = useState([]);
 
   useEffect(() => {
-    // Function to fetch user parcels
-    const fetchUserParcels = async (userId) => {
+    const fetchUserParcels = async () => {
       try {
+        let user = getAuth().currentUser;
+        if (!user) {
+          console.error("No local user found");
+          return;
+        }
         const response = await fetch(
-          `${BACKEND_HOSTNAME}/api/parcels/getUserParcels/${userId}`
+          `${BACKEND_HOSTNAME}/api/parcels/getMyParcels/${user.uid}`
         );
         const data = await response.json();
-        console.log(data);
+
         // Set the fetched parcels to the state
         setParcels(data.parcels);
       } catch (error) {
         console.error("Error fetching user parcels:", error);
       }
     };
-
     // Call the function to fetch user parcels when the component mounts
-    fetchUserParcels(userId);
-  }, [userId]);
+    fetchUserParcels();
+  }, []);
 
   return (
     <div>
