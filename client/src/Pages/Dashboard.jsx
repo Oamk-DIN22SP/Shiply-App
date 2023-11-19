@@ -36,11 +36,8 @@ import SendParcel from "../Right_Side_Pannel/SendParcel";
 import { useEffect } from "react";
 import { useState } from "react";
 import BACKEND_HOSTNAME from "../config/backend.config";
-import firebase from "firebase/app";
-import "firebase/auth";
-import { auth } from "../config/firebase.config.js";
-import { getAuth } from "firebase/auth";
-
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../config/firebase.config";
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props, userId) {
@@ -48,7 +45,7 @@ function ResponsiveDrawer(props, userId) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [parcels, setParcels] = useState([]);
   const navigate = useNavigate();
-
+const [user] = useAuthState(auth); 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -57,13 +54,10 @@ function ResponsiveDrawer(props, userId) {
     // Function to fetch user parcels
     const fetchUserParcels = async () => {
       try {
-        let user = getAuth().currentUser;
-        if (!user) {
-          console.error("No local user found");
-          return;
-        }
+        const userID = await user?.uid()
+
         const response = await fetch(
-          `${BACKEND_HOSTNAME}/api/parcels/getMyParcels/${user.uid}`
+          `${BACKEND_HOSTNAME}/api/parcels/getMyParcels/${userID}`
         );
         const data = await response.json();
 

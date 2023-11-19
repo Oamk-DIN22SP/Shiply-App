@@ -2,13 +2,15 @@ require('dotenv').config();
 import express, { Application } from "express";
 import Server from "./src/index";
 import cors from "cors";
+import morgan from 'morgan';
 
 const app: Application = express();
 const server: Server = new Server(app);
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 app.use(cors());
+app.use(morgan('dev'));
 app
-  .listen(PORT,  function () {
+  .listen(PORT, function () {
     console.log(`Server is running on port ${PORT}.`);
   })
   .on("error", (err: any) => {

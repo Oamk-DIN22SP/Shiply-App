@@ -17,13 +17,14 @@ import Track from './Pages/Track';
 import Settings from './Pages/Settings';
 
 import Home from './Pages/Home';
-
+import { auth } from './config/firebase.config';
+import { useAuthState } from "react-firebase-hooks/auth";
 
 
 
 function App() {
-  const [user, setUser] = useState(null);
 
+const [user] = useAuthState(auth); 
 
   return (
     <div>
@@ -32,13 +33,14 @@ function App() {
           path="/"
           element={
             user ? (
-              <Navigate to="/dashboard" />
+              <Navigate to="/home" replace={true} />
             ) : (
               <Navigate to="/login" replace={true} />
             )
           }
         />
-        <Route path="/home/:userId" element={<Home />} />
+
+        <Route path="/home" element={<Home />} />
         <Route path={`/login`} element={<LoginForm />} />
         <Route path={`/signup`} element={<SignupForm />} />
         <Route path={`/dashboard`} element={<Dashboard />} />
@@ -48,8 +50,7 @@ function App() {
         <Route path={`/track`} element={<Track />} />
         <Route path={`/settings`} element={<Settings />} />
       </Routes>
-
-      <ResponsiveDrawer />
+      {user && <ResponsiveDrawer />}
     </div>
   );
 }

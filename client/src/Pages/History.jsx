@@ -18,8 +18,14 @@ export default function History() {
         );
         const data = await response.json();
 
-        // Set the fetched parcels to the state
-        setParcels(data.parcels);
+         if (response.ok) {
+        // If the response status is okay, proceed with your logic
+        console.log("Response from server:", data);
+         setParcels(data.parcels);
+      } else {
+        // If there's an error in the response, handle it
+        console.error("Error from server:", data);
+      }    
       } catch (error) {
         console.error("Error fetching user parcels:", error);
       }
@@ -27,17 +33,21 @@ export default function History() {
     // Call the function to fetch user parcels when the component mounts
     fetchUserParcels();
   }, []);
-
-  return (
-    <div>
-      <h1>Welcome to the History</h1>
-      <h2>User Parcels:</h2>
+return (
+  <div>
+    <h1>Welcome to the History</h1>
+    <h2>User Parcels:</h2>
+    {parcels ? (
       <ul>
         {parcels.map((parcel) => (
           <li key={parcel.id}>{parcel.name}</li>
           // Adjust the structure based on your parcel data
         ))}
       </ul>
-    </div>
-  );
+    ) : (
+      <p>No parcels available.</p>
+    )}
+  </div>
+);
+
 }
