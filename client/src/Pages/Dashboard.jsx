@@ -35,6 +35,7 @@ import OtherParcel from '../Right_Side_Pannel/OtherParcel';
 import SendParcel from '../Right_Side_Pannel/SendParcel';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import BACKEND_HOSTNAME from '../config/backend.config';
 
 const drawerWidth = 240;
 
@@ -53,7 +54,7 @@ function ResponsiveDrawer(props, userId) {
     const fetchUserParcels = async () => {
       try {
         const response = await fetch(
-          `https://shiply-server.onrender.com/api/parcels/getMyParcels/${userId}`
+          `${BACKEND_HOSTNAME}/api/parcels/getMyParcels/${userId}`
         );
         const data = await response.json();
 

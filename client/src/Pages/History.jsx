@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
+import BACKEND_HOSTNAME from "../config/backend.config";
 
 export default function History({ userId }) {
-  const [parcels, setParcels] = useState(null);
+  const [parcels, setParcels] = useState([]);
 
   useEffect(() => {
     // Function to fetch user parcels
     const fetchUserParcels = async (userId) => {
       try {
         const response = await fetch(
-          `https://your-backend-url/api/parcels/getUserParcels/${userId}`
+          `${BACKEND_HOSTNAME}/api/parcels/getUserParcels/${userId}`
         );
         const data = await response.json();
         console.log(data);

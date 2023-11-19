@@ -2,7 +2,7 @@ export function authenticateUser(idToken) {
   const authData = {
     idToken,
   };
-
+//FIXME -  OUtdated
   return fetch("http://localhost:3000/api/auth/login", {
     method: "POST",
     headers: {

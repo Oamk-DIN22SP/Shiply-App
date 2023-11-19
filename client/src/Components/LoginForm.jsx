@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../config/firebase.config.js";
 import logo from "../Images/img_shiplylogo1.png";
+import BACKEND_HOSTNAME from "../config/backend.config.js";
 
 const LoginForm = () => {
   const [user, setUser] = useState(null);
@@ -61,7 +62,7 @@ const LoginForm = () => {
 
         // Send the ID token to the server for authentication
         const response = await fetch(
-          "https://shiply-server.onrender.com/api/auth/login",
+          `${BACKEND_HOSTNAME}/api/auth/login`,
           {
             method: "POST",
             headers: {
@@ -99,7 +100,7 @@ const handleLogin = async () => {
 
     // Send the ID token to the server for authentication
     const response = await fetch(
-      "https://shiply-server.onrender.com/api/auth/login",
+      `${BACKEND_HOSTNAME}/api/auth/login`,
       {
         method: "POST",
         headers: {

@@ -1,6 +1,7 @@
 // User authentication Firebase controller
 import { useEffect } from "react";
 import { auth } from "../config/firebase.config";
+import BACKEND_HOSTNAME from "./backend.config";
 
 const AuthController = () => {
   useEffect(() => {
@@ -17,7 +18,7 @@ const AuthController = () => {
             },
           };
           const res = await fetch(
-            "https://shiply-server.onrender.com/",
+        `${BACKEND_HOSTNAME}/`,
             payloadHeader
           );
           console.log(await res.text());
