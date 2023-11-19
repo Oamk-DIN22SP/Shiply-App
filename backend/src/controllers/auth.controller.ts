@@ -3,7 +3,7 @@ import admin from 'firebase-admin';
 import db from '../config/db.config';
 import { FieldPacket } from 'mysql2/typings/mysql/lib/protocol/packets/FieldPacket';
 import { OkPacketParams, ResultSetHeader, RowDataPacket } from 'mysql2';
-
+const { OAuth2Client } = require('google-auth-library');
 // Firebase Admin SDK setup
 const serviceAccount = require('../../../service_account.json');
 admin.initializeApp({
@@ -12,19 +12,33 @@ admin.initializeApp({
 
 class AuthController {
     // Authentication middleware
+    // Authentication middleware
     async authenticateUser(req: Request, res: Response, next: NextFunction) {
-        const { uid } = req.body;
+        const { idToken } = req.body.idToken;
 
         try {
-            const decodedToken = await admin.auth().verifyIdToken(uid);
-            req.params.decodedToken = decodedToken.uid;
-            const clientID = req.params.decodedToken;
+            const client = new OAuth2Client();
+
+            // Verify the ID token from Google
+            const ticket = await client.verifyIdToken({
+                idToken,
+                audience: process.env.CLIENT_ID,
+            });
+
+            const payload = ticket.getPayload();
+            const userId = payload['sub']; // User ID
+
+            // // Use Firebase Admin SDK to verify the user's UID
+            // const decodedToken = await admin.auth().verifyIdToken(uid);
+            // req.params.decodedToken = decodedToken.uid;
 
             // Query the MySQL database to check if the UID exists
-            const [rows] = await (await db).query('SELECT * FROM users WHERE uid = ?', [clientID]);
-            // Send the fetched parcels as a JSON response
+            const [rows] = await (await db).query('SELECT * FROM users WHERE uid = ?', [userId]);
+
+            // Send the fetched user data as a JSON response
             return res.status(200).json(rows);
         } catch (error) {
+            console.error('Authentication error:', error);
             res.status(401).json({ error: 'Authentication failed' });
         }
     }
@@ -34,13 +48,21 @@ class AuthController {
         const { idToken, email, displayName } = req.body;
 
         try {
-            const decodedToken = await admin.auth().verifyIdToken(idToken);
-            const clientID = decodedToken.uid;
+            const client = new OAuth2Client();
+
+            // Verify the ID token from Google
+            const ticket = await client.verifyIdToken({
+                idToken,
+                audience: process.env.CLIENT_ID,
+            });
+
+            const payload = ticket.getPayload();
+            const userId = payload['sub']; // User ID
 
             // Query the MySQL database to check if the UID exists
             const [rows]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
                 'SELECT * FROM users WHERE uid = ?',
-                [clientID]
+                [userId]
             );
 
             // Send the fetched parcels as a JSON response
@@ -51,12 +73,12 @@ class AuthController {
                 // Insert the user into the MySQL database
                 const [insertResult]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
                     'INSERT INTO Client (clientId, clientEmail, clientName) VALUES (?, ?, ?)',
-                    [clientID, email, displayName]
+                    [userId, email, displayName]
                 );
 
                 if (insertResult && insertResult[0].affectedRows > 0) {
                     // Successful insertion
-                    res.json({ success: true, clientID });
+                    res.json({ success: true, userId });
                 } else {
                     // Insertion failed
                     res.status(500).json({ error: 'Failed to insert user into the database' });
