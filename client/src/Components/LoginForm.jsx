@@ -135,7 +135,28 @@ const handleLogin = async () => {
       >
         <Typography variant="h5">Login</Typography>
         <form onSubmit={handleSubmit} style={{ width: "100%", marginTop: 16 }}>
-          {/* ... rest of your form */}
+          <TextField
+            label="Email"
+            type="email"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            required
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <TextField
+            label="Password"
+            type="password"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            required
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
           <Button
             type="submit"
             variant="contained"

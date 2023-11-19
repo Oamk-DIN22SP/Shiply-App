@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 
-  const [parcels, setParcels] = useState([]);
-  
- useEffect(() => {
+export default function History({ userId }) {
+  const [parcels, setParcels] = useState(null);
+
+  useEffect(() => {
     // Function to fetch user parcels
     const fetchUserParcels = async (userId) => {
       try {
-        const response = await fetch(`https://your-backend-url/api/parcels/getUserParcels/${userId}`);
+        const response = await fetch(
+          `https://your-backend-url/api/parcels/getUserParcels/${userId}`
+        );
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         // Set the fetched parcels to the state
         setParcels(data.parcels);
       } catch (error) {
-        console.error('Error fetching user parcels:', error);
+        console.error("Error fetching user parcels:", error);
       }
     };
 
     // Call the function to fetch user parcels when the component mounts
-    fetchUserParcels();
-  }, [userId]); 
-  
-export default function History() {
+    fetchUserParcels(userId);
+  }, [userId]);
+
   return (
-    <div>History
-  
+    <div>
       <h1>Welcome to the History</h1>
       <h2>User Parcels:</h2>
       <ul>
@@ -33,5 +34,5 @@ export default function History() {
         ))}
       </ul>
     </div>
-  )
+  );
 }
