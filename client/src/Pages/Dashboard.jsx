@@ -249,7 +249,7 @@ const [user] = useAuthState(auth);
             }
           />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/signupForm" element={<SignupForm />} />
+          <Route path="/signup" element={<SignupForm />} />
           <Route path="/home" element={<Home />} />
           <Route path="/sender" element={<Sender />} />
           <Route path="/receiver" element={<Receiver />} />
