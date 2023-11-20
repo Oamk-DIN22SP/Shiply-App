@@ -1,5 +1,11 @@
 import * as React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  HashRouter as Router,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -54,10 +60,8 @@ const [user] = useAuthState(auth);
     // Function to fetch user parcels
     const fetchUserParcels = async () => {
       try {
-        const userID = await user?.uid()
-
         const response = await fetch(
-          `${BACKEND_HOSTNAME}/api/parcels/getMyParcels/${userID}`
+          `${BACKEND_HOSTNAME}/api/parcels/getMyParcels/${user?.uid}`
         );
         const data = await response.json();
 
@@ -234,7 +238,17 @@ const [user] = useAuthState(auth);
       >
         <Toolbar />
         <Routes>
-          <Route path="/" element={<LoginForm />} />
+          <Route
+            path="/"
+            element={
+              user ? (
+                <Navigate to="/home" replace={true} />
+              ) : (
+                <Navigate to="/login" replace={true} />
+              )
+            }
+          />
+          <Route path="/login" element={<LoginForm />} />
           <Route path="/signupForm" element={<SignupForm />} />
           <Route path="/home" element={<Home />} />
           <Route path="/sender" element={<Sender />} />
