@@ -1,5 +1,11 @@
 import * as React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  HashRouter as Router,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -36,11 +42,8 @@ import SendParcel from "../Right_Side_Pannel/SendParcel";
 import { useEffect } from "react";
 import { useState } from "react";
 import BACKEND_HOSTNAME from "../config/backend.config";
-import firebase from "firebase/app";
-import "firebase/auth";
-import { auth } from "../config/firebase.config.js";
-import { getAuth } from "firebase/auth";
-
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../config/firebase.config";
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props, userId) {
@@ -48,7 +51,7 @@ function ResponsiveDrawer(props, userId) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [parcels, setParcels] = useState([]);
   const navigate = useNavigate();
-
+const [user] = useAuthState(auth); 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -57,13 +60,8 @@ function ResponsiveDrawer(props, userId) {
     // Function to fetch user parcels
     const fetchUserParcels = async () => {
       try {
-        let user = getAuth().currentUser;
-        if (!user) {
-          console.error("No local user found");
-          return;
-        }
         const response = await fetch(
-          `${BACKEND_HOSTNAME}/api/parcels/getMyParcels/${user.uid}`
+          `${BACKEND_HOSTNAME}/api/parcels/getMyParcels/${user?.uid}`
         );
         const data = await response.json();
 
@@ -240,7 +238,17 @@ function ResponsiveDrawer(props, userId) {
       >
         <Toolbar />
         <Routes>
-          <Route path="/" element={<LoginForm />} />
+          <Route
+            path="/"
+            element={
+              user ? (
+                <Navigate to="/home" replace={true} />
+              ) : (
+                <Navigate to="/login" replace={true} />
+              )
+            }
+          />
+          <Route path="/login" element={<LoginForm />} />
           <Route path="/signupForm" element={<SignupForm />} />
           <Route path="/home" element={<Home />} />
           <Route path="/sender" element={<Sender />} />

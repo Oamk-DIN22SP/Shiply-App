@@ -7,6 +7,7 @@ import { Field, FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 class ParcelController {
  
     // This endpoint retrieves all parcels from the Parcels table.
+    // For the driver to see all parcels available
     async getAllParcels(req: Request, res: Response) {
         try {
             // Execute a execute to fetch all parcels
@@ -88,8 +89,8 @@ class ParcelController {
             const parcelID = req.params.parcelID;
             const newStatus = req.body.status;
 
-            // Execute the UPDATE execute to update the status of the parcel
-            await (await db).query('DELETE FROM Parcels WHERE parcelID = ?', [parcelID]);
+            // Execute the UPDATE query to update the status of the parcel
+            await (await db).query('UPDATE Parcels SET status = ? WHERE parcelID = ?', [newStatus, parcelID]);
 
             res.status(200).json({ message: 'Parcel status updated successfully' });
         } catch (err) {
@@ -97,6 +98,7 @@ class ParcelController {
             res.status(500).json({ error: 'Internal server error' });
         }
     }
+
 
     async deleteParcel(req: Request, res: Response) {
         try {

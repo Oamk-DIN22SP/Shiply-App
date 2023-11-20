@@ -12,25 +12,19 @@ import {
 import { auth } from "../config/firebase.config.js";
 import logo from "../Images/img_shiplylogo1.png";
 import BACKEND_HOSTNAME from "../config/backend.config.js";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const LoginForm = () => {
-  const [user, setUser] = useState(null);
+const [user] = useAuthState(auth); 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
 
-    return () => {
-      // Unsubscribe when the component is unmounted
-      unsubscribe();
-    };
-  }, []);
+
+    
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,56 +32,51 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form data submitted:", formData);
-    navigate("/home");
   };
+const loginWithGoogle = async () => {
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
 
-  const handleSignUpClick = () => {
-    navigate("/signup");
-  };
+  try {
+    // Initiate Google sign-in
+    await signInWithRedirect(auth, provider);
 
-  const loginWithGoogle = async () => {
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
+    // After returning from the redirect when your app initializes you can obtain the result
+    const result = await getRedirectResult(auth);
+   
+    if (result) {
+      // Get the user ID token
+       const user = result.user;
+      const idToken = await user.getIdToken();
 
-    try {
-      await signInWithRedirect(auth, provider);
+      // Send the ID token to the server for authentication
+      const response = await fetch(`${BACKEND_HOSTNAME}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
+      });
 
-      // Handle the redirect result
-      const result = await getRedirectResult(auth);
-
-      if (!result) {
-        console.error("result is null, eptit'");
-        return;
-      }
-
-      if (result.user) {
-        // Get the user ID token
-        const idToken = await result.user.getIdToken();
-
-        // Send the ID token to the server for authentication
-        const response = await fetch(`${BACKEND_HOSTNAME}/api/auth/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ idToken }),
-        });
-
+      if (response.ok) {
         const data = await response.json();
         console.log("Response from server:", data);
+        navigate("/home");
+      } else {
+        // Handle the case where the server response is not OK
+        console.error("Server response not OK:", response);
       }
-    } catch (error) {
-      console.error("Error logging in with Google:", error);
-      // Handle the error, e.g., show an error message to the user
+    } else {
+      // Handle the case where result.user is null
+      console.error("result.user is null");
     }
-  };
-
-  if (user) {
-    // If the user is already signed in, you might redirect them to another page
-    navigate("/home"); // Adjust the route as needed
-    return null; // Render nothing or a loading spinner
+  } catch (error) {
+    console.error("Error logging in with Google:", error);
+    // Handle the error, e.g., show an error message to the user
   }
+};
+
+
   const handleLogin = async () => {
     try {
       const auth = getAuth();
@@ -110,7 +99,19 @@ const LoginForm = () => {
       });
 
       const data = await response.json();
-      console.log("Response from server:", data);
+
+      if (response.ok) {
+        // If the response status is okay, proceed with your logic
+        console.log("Response from server:", data);
+        navigate("/home");
+      } else {
+        // If there's an error in the response, handle it
+        console.error("Error from server:", data);
+
+        // Alert the user about the error
+        alert("Authentication failed. Please try again.");
+
+      }
     } catch (error) {
       console.error("Error logging in:", error);
       // Handle the error, e.g., show an error message to the user
@@ -167,14 +168,10 @@ const LoginForm = () => {
             Login
           </Button>
           <br />
-          <Button
-            sx={{ marginTop: 2, borderRadius: 3 }}
-            color="warning"
-            onClick={handleSignUpClick}
-          >
+          <Button sx={{ marginTop: 2, borderRadius: 3 }} color="warning">
             <NavLink to="/signup">Don't have an account? Sign Up</NavLink>
           </Button>
-          <button onClick={loginWithGoogle}>Login with Google</button>
+          <button onClick={loginWithGoogle}>Login with Google doesnt work now</button>
         </form>
       </Paper>
     </Container>

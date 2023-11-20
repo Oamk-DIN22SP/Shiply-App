@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "node ./build/server.js",
+    "dev": "npm run build && node ./build/server.js",
     "start": "tsc && npm run dev"
   },
   "keywords": [
@@ -25,11 +25,13 @@
   "devDependencies": {
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.20",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^20.8.10",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "axios": "^1.6.2",
     "configure-env": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -37,6 +39,7 @@
     "firebase": "^10.6.0",
     "firebase-admin": "^11.11.0",
     "google-auth-library": "^9.2.0",
+    "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.6.3"
   }

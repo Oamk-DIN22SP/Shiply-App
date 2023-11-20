@@ -4,6 +4,7 @@ import { TextField, Button, Container, Paper, Typography } from '@mui/material';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase.config';
+import BACKEND_HOSTNAME from '../config/backend.config';
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -22,13 +23,41 @@ const SignupForm = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    await createUserWithEmailAndPassword(
+    const userCredential = await createUserWithEmailAndPassword(
       auth,
       formData.email,
-      formData.password
+      formData.password,
     );
-    console.log("User registered successfully");
-    navigate("/home");
+    // Get the user ID token
+    const idToken = await userCredential.user.getIdToken();
+
+    // Send the ID token to the server for authentication
+    const response = await fetch(`${BACKEND_HOSTNAME}/api/auth/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        idToken,
+        email: formData.email,
+        displayName: formData.username,
+        clientAddress: formData.address,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // If the response status is okay, proceed with your logic
+      console.log("Response from server:", data);
+      navigate("/home");
+    } else {
+      // If there's an error in the response, handle it
+      console.error("Error from server:", data);
+
+      // Alert the user about the error
+      alert("Authentication failed. Please try again.");
+    }
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
