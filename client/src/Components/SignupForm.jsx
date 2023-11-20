@@ -1,7 +1,9 @@
 // SignupForm.js
 import React, { useState } from 'react';
 import { TextField, Button, Container, Paper, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase.config';
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -17,19 +19,39 @@ const SignupForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your signup logic here
-    console.log('Form data submitted:', formData);
-    navigate('/home')
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    await createUserWithEmailAndPassword(
+      auth,
+      formData.email,
+      formData.password
+    );
+    console.log("User registered successfully");
+    navigate("/home");
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.error(errorCode, errorMessage);
+    // Handle the error (e.g., display an error message to the user)
+  }
+};
+
  
 
   return (
     <Container component="main" maxWidth="xs">
-      <Paper elevation={3} style={{ padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Paper
+        elevation={3}
+        style={{
+          padding: 16,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <Typography variant="h5">Sign Up</Typography>
-        <form onSubmit={handleSubmit} style={{ width: '100%', marginTop: 16 }}>
+        <form onSubmit={handleSubmit} style={{ width: "100%", marginTop: 16 }}>
           <TextField
             label="First Name"
             variant="outlined"
@@ -37,7 +59,6 @@ const SignupForm = () => {
             fullWidth
             required
             name="username"
-            value={formData.firstName}
             onChange={handleChange}
           />
           <TextField
@@ -62,7 +83,7 @@ const SignupForm = () => {
             value={formData.password}
             onChange={handleChange}
           />
-            <TextField
+          <TextField
             label="Address"
             type="text"
             variant="outlined"
@@ -73,7 +94,7 @@ const SignupForm = () => {
             value={formData.address}
             onChange={handleChange}
           />
-            <TextField
+          <TextField
             label="Phone"
             type="number"
             variant="outlined"
@@ -84,7 +105,16 @@ const SignupForm = () => {
             value={formData.phone}
             onChange={handleChange}
           />
-          <Button type="submit" variant="contained" color="warning" style={{ marginTop: 16 }} onClick={SignupForm}>
+          <Button sx={{ marginTop: 2, borderRadius: 3 }} color="warning">
+            <NavLink to="/login">Already have an account? Login</NavLink>
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="warning"
+            style={{ marginTop: 16 }}
+            onClick={SignupForm}
+          >
             Submit
           </Button>
         </form>

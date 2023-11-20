@@ -5,7 +5,8 @@ import ReceivedParcel from '../Right_Side_Pannel/RecivedParcel'
 import SendParcel from '../Right_Side_Pannel/SendParcel'
 
 export default function Details({
-  selectedItem
+  selectedItem,
+  handleTrackClick
 }) {
   return (
     <div className="details">
@@ -17,7 +18,7 @@ export default function Details({
             selectedItem === "recivedparecl" ? <ReceivedParcel /> : selectedItem === "sendparcel" ? <SendParcel /> : <OtherParcel />
           }
         </Grid>
-
+          <button onClick={() => handleTrackClick(true)}>Track</button>
     </div>
   );
 }

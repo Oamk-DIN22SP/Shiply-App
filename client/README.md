@@ -1,4 +1,6 @@
 # Shiply - Your Ultimate Parcel Delivery Solution
+### Client URL: https://shiply-frontend.onrender.com/
+### Backend URL: https://shiply-server.onrender.com/
 
 Are you tired of the hassle and uncertainty of parcel delivery? **Shiply** is here to revolutionize the way you send and receive packages, making it as effortless as a gentle Nordic breeze.
 

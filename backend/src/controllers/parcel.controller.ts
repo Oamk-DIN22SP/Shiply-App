@@ -18,6 +18,17 @@ class ParcelController {
             res.status(500).json({ error: 'Internal server error' });
         }
     }
+    // retrieve parcel by receiver id (main page, my parcels)
+    async getParcelByReceiverID(req: Request, res: Response) {
+        try {
+            const receiverID = req.params.receiverID;
+            const [rows] = await (await db).query('SELECT * FROM Parcels WHERE receiverID = ?', [receiverID]);
+            res.status(200).json(rows)
+        } catch (err) {
+            console.error('Error fetching parcels:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
     // This endpoint allows you to retrieve a specific parcel by its parcelID.
     async getParcelByID(req: Request, res: Response) {
         try {
