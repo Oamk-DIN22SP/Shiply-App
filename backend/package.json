@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "axios": "^1.6.2",
+    "backend": "^0.0.0",
     "configure-env": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

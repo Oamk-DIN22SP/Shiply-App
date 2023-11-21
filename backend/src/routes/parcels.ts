@@ -3,7 +3,7 @@
 const express = require('express');
 import parcelController from "../controllers/parcel.controller";
 const router = express.Router();
-//NOTE -  Endpoint structure for parcells /api/parcels/
+//NOTE -  Endpoint structure for parcels /api/parcels/
 // Define the route to get all parcels
 router.get('/getAllParcels', parcelController.getAllParcels);
 
