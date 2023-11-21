@@ -20,7 +20,7 @@ export default function Sender() {
     senderAddress: "",
     senderPhoneNumber: "",
     senderID: user?.uid,
-    
+
     receiverName: "",
     receiverEmailAddress: "",
     receiverAddress: "",
@@ -58,7 +58,7 @@ export default function Sender() {
     try {
       // Replace the following URL with your actual API endpoint
       console.log(formData);
-      const apiUrl = `${DEV_HOSTNAME}/api/parcels/createParcel`;
+      const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/createParcel`;
 
       const response = await fetch(apiUrl, {
         method: "POST",
