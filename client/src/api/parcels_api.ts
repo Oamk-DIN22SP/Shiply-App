@@ -44,3 +44,34 @@ interface ParcelRequest {
     }
 }
 
+async function trackParcel() {
+    try {
+        // Ensure the user is authenticated before making the request
+        if (!user) {
+            console.error('User not authenticated');
+            return;
+        }
+// trackingNumber from input
+        const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/trackParcel/${trackingNumber}`;
+        // Create a request payload with the expected structure
+        const requestBody: ParcelRequest = {
+            receiverEmailAddress: user.email,
+        };
+
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+        });
+
+
+        const result = await response.json();
+        // Handle the API response as needed
+        console.log("API Response:", result);
+    } catch (error) {
+        console.error("Error sending data to API:", error);
+    }
+}
+
