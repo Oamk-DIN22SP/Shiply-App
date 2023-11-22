@@ -7,11 +7,13 @@ export default interface Parcel extends RowDataPacket {
     pinCode: string;
     senderName: string;
     senderEmailAddress: string;
+    senderID: number; // should be equal to FirebaseID of a user
     senderAddress: string;
     senderPhoneNumber: string;
     senderDropOffPoint: string;
     
     receiverName: string;
+    receiverID: number;
     receiverEmailAddress: string;
     receiverAddress: string;
     receiverPhoneNumber: string;

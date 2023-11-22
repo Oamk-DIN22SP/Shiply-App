@@ -48,7 +48,7 @@ const loginWithGoogle = async () => {
       // Get the user ID token
        const user = result.user;
       const idToken = await user.getIdToken();
-
+ 
       // Send the ID token to the server for authentication
       const response = await fetch(`${BACKEND_HOSTNAME}/api/auth/login`, {
         method: "POST",
@@ -59,6 +59,7 @@ const loginWithGoogle = async () => {
       });
 
       if (response.ok) {
+       
         const data = await response.json();
         console.log("Response from server:", data);
         navigate("/home");
@@ -103,6 +104,7 @@ const loginWithGoogle = async () => {
       if (response.ok) {
         // If the response status is okay, proceed with your logic
         console.log("Response from server:", data);
+          console.log(idToken);
         navigate("/home");
       } else {
         // If there's an error in the response, handle it

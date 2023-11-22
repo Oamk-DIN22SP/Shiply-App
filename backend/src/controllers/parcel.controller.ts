@@ -52,17 +52,17 @@ class ParcelController {
                 senderAddress,
                 senderPhoneNumber,
                 senderID,
+                senderDropOffLocation,
 
                 receiverName,
                 receiverEmailAddress,
                 receiverAddress,
                 receiverPhoneNumber,
 
-                receiverLocation, // drop off location
+                
                 packageWidth,
                 packageHeight,
-                packageMass,
-                packageWeight,
+                packageMass
             } = req.body;
 
             // Generate tracking number and pin code
@@ -73,9 +73,28 @@ class ParcelController {
             try {
                 // Insert parcel data into the database
                 const [result]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
-                    'INSERT INTO Parcels (trackingNumber, pinCode, status, senderName, senderEmailAddress, senderAddress, senderPhoneNumber, senderID, receiverName, receiverEmailAddress, receiverAddress, receiverPhoneNumber, senderDropOffPoint, packageWidth, packageHeight, packageMass, packageWeight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                    [trackingNumber, pinCode, 'Sent', senderName, senderEmailAddress, senderAddress, senderPhoneNumber, senderID,
-                    receiverName, receiverEmailAddress, receiverAddress, receiverPhoneNumber, receiverLocation, packageWidth, packageHeight, packageMass, packageWeight]
+                    'INSERT INTO Parcels (trackingNumber, pinCode, status, senderName, senderEmailAddress, senderAddress, senderPhoneNumber, senderID, senderDropOffPoint, receiverName, receiverEmailAddress, receiverAddress, receiverPhoneNumber, packageWidth, packageHeight, packageMass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    [
+                        trackingNumber,
+                        pinCode,
+                        'Sent',
+
+                        senderName,
+                        senderEmailAddress,
+                        senderAddress,
+                        senderPhoneNumber,
+                        senderID, // Use the extracted sender ID here
+                        senderDropOffLocation,
+
+                        receiverName,
+                        receiverEmailAddress,
+                        receiverAddress,
+                        receiverPhoneNumber,
+
+                        packageWidth,
+                        packageHeight,
+                        packageMass,
+                    ]
                 );
 
 

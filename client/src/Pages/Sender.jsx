@@ -20,17 +20,16 @@ export default function Sender() {
     senderAddress: "",
     senderPhoneNumber: "",
     senderID: user?.uid,
+    senderDropOffLocation: "",
 
     receiverName: "",
     receiverEmailAddress: "",
     receiverAddress: "",
     receiverPhoneNumber: "",
-    receiverLocation: "",
-
+  
     packageWidth: "",
     packageHeight: "",
-    packageMass: "",
-    packageWeight: "",
+    packageMass: ""
 
   });
 
@@ -51,7 +50,7 @@ export default function Sender() {
   };
 
   const handleChooseLocation = (chosenLocation) => {
-    setFormData({ ...formData, location: chosenLocation });
+    setFormData({ ...formData, senderDropOffLocation: chosenLocation });
   };
 
   const submithandleClick = async () => {
@@ -140,8 +139,8 @@ export default function Sender() {
               variant="outlined"
               fullWidth
               margin="normal"
-              value={formData.receiverAddress}
-              onChange={handleChange("receiverAddress")}
+              value={formData.receiverEmailAddress}
+              onChange={handleChange("receiverEmailAddress")}
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
@@ -198,15 +197,7 @@ export default function Sender() {
               onChange={handleChange("packageMass")}
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
-            <TextField
-              label="Weight"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={formData.packageWeight}
-              onChange={handleChange("packageWeight")}
-              style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
-            />
+        
             {/* Add more fields as needed */}
           </>
         );
@@ -218,10 +209,7 @@ export default function Sender() {
             <List>
               {[
                 "Kangastie 8001C / Tuiron kakku 24, Marikkonta, Oulu / Finland",
-                "Kangastie 8001C / Tuiron kakku 24, Marikkonta, Oulu / Finland",
-                "Kangastie 8001C / Tuiron kakku 24, Marikkonta, Oulu / Finland",
-                "Kangastie 8001C / Tuiron kakku 24, Marikkonta, Oulu / Finland",
-                "Kangastie 8001C / Tuiron kakku 24, Marikkonta, Oulu / Finland",
+            
               ].map((location) => (
                 <ListItem key={location} className="sender_list">
                   <ListItemText primary={location} style={{ margin: "10px" }} />

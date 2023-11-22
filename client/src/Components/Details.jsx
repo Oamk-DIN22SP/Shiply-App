@@ -4,11 +4,13 @@ import OtherParcel from '../Right_Side_Pannel/OtherParcel'
 import ReceivedParcel from '../Right_Side_Pannel/RecivedParcel'
 import SendParcel from '../Right_Side_Pannel/SendParcel'
 import { auth } from '../config/firebase.config';
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Details({
   selectedItem,
   handleTrackClick
 }) {
+  const [user] = useAuthState(auth); 
   return (
     <div className="details">
       <p
@@ -22,7 +24,7 @@ export default function Details({
       >
         Details
       </p>
-      <h4> Welcome , {auth.currentUser?.displayName} </h4>
+      <h4> Welcome , {user?.displayName} </h4>
       {/* Grid with different background colors */}
       <Grid
         style={{
