@@ -99,7 +99,7 @@ class ParcelController {
 
 
                 if (result) {
-                    res.json({ success: true, trackingNumber, pinCode, status: "Sent" });
+                    res.json({ success: true, trackingNumber, pinCode, status: "Sent", receiverName, receiverEmailAddress,  senderDropOffLocation });
                 } else  {
                     console.error();
                     res.status(500).json({ error: 'Failed to create the parcel' });
