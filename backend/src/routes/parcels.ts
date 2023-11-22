@@ -15,6 +15,9 @@ router.get('/getMyParcels/:receiverID', parcelController.getParcelByReceiverID)
 router.get('/receiver/getParcels', parcelController.getParcelByReceiverEmail)
 // Get info about parcel with tracking number
 router.get('/trackParcel/:trackingNumber', parcelController.trackParcel)
+
+// Get info about parcel which are sent from current user
+router.get('/sender/getSentParcels', parcelController.getParcelBySenderID)
 // Create a New Parcel (Create)
 router.post('/createParcel', parcelController.createNewParcel)
 
