@@ -66,7 +66,7 @@ export default function Sender() {
       // Replace the following URL with your actual API endpoint
       console.log(formData);
       const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/createParcel`;
-
+console.log(user?.email)
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
