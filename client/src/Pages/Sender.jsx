@@ -11,10 +11,19 @@ import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../config/firebase.config";
 
-export default function Sender() {
-  const [user] = useAuthState(auth); 
-  const [formData, setFormData] = useState({
 
+export default function Sender() {
+  const [user] = useAuthState(auth);
+  const [response, setResponseData] = useState(null); // New state variable
+// interface SendPackageResponse {
+//   success: boolean;
+//   trackingNumber: string;
+//   pinCode: string;
+//   status: string;
+//   receiverEmailAddress: string;
+//   // Add more fields as needed
+// }
+  const [formData, setFormData] = useState({
     senderName: "",
     senderEmailAddress: "",
     senderAddress: "",
@@ -26,11 +35,10 @@ export default function Sender() {
     receiverEmailAddress: "",
     receiverAddress: "",
     receiverPhoneNumber: "",
-  
+
     packageWidth: "",
     packageHeight: "",
-    packageMass: ""
-
+    packageMass: "",
   });
 
   const [step, setStep] = useState(1);
@@ -67,11 +75,11 @@ export default function Sender() {
         body: JSON.stringify(formData),
       });
 
-      const result = await response.json();
+      const result  = await response.json();
+    setResponseData(result);
 
       // Handle the API response as needed
       console.log("API Response:", result);
-
     } catch (error) {
       console.error("Error sending data to API:", error);
     }
@@ -197,7 +205,7 @@ export default function Sender() {
               onChange={handleChange("packageMass")}
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
-        
+
             {/* Add more fields as needed */}
           </>
         );
@@ -209,7 +217,6 @@ export default function Sender() {
             <List>
               {[
                 "Kangastie 8001C / Tuiron kakku 24, Marikkonta, Oulu / Finland",
-            
               ].map((location) => (
                 <ListItem key={location} className="sender_list">
                   <ListItemText primary={location} style={{ margin: "10px" }} />
@@ -244,25 +251,27 @@ export default function Sender() {
               <CardContent>
                 <div className="parcel_info_main">
                   <p className="parcel_info">
-                    <b>Delivery number</b>: 12345678
+                    <b>Tracking number </b>: {response?.trackingNumber}
+                  </p>
+                
+                  <p className="parcel_info">
+                    <b>Address of parcel locker (to send package) </b> {response?.senderDropOffLocation}
+                  </p>
+                
+                  <p className="parcel_info">
+                    <b>Receiver name </b>: {response?.receiverName}
                   </p>
                   <p className="parcel_info">
-                    <b>PickUp point</b>: Location 5
+                    <b>Receiver email </b>: {response?.receiverEmailAddress}
                   </p>
                   <p className="parcel_info">
-                    <b>Pickup address</b>:katu 502 A /102 Oulu Finland
+                    <b>Cabinet number </b> to be done
                   </p>
                   <p className="parcel_info">
-                    <b>Postal code</b>:1276
+                    <b>Parcel status</b> {response?.status}
                   </p>
                   <p className="parcel_info">
-                    <b>Consignee</b>: Thomas Edison
-                  </p>
-                  <p className="parcel_info">
-                    <b>Cabinet number</b>12
-                  </p>
-                  <p className="parcel_info">
-                    <b>Password</b>:2341
+                    <b>Pin code for parcel locker </b>: {response?.pinCode}
                   </p>
                 </div>
               </CardContent>

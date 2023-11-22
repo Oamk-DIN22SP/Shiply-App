@@ -3,8 +3,14 @@ import { Request, Response } from 'express';
 import db from '../config/db.config'; // Import your database connection
 import { Field, FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 import {nanoid} from "nanoid";
+import { generateNumericString } from '../robot';
 // RowData packet is used for An array with the returned rows
 // ResultSetHeader is used for For multiples INSERT, UPDATE, DELETE, TRUNCATE, etc. when using multipleStatements as true
+
+// Generate tracking number and pin code
+const trackingNumber = generateNumericString(8);
+const pinCode = generateNumericString(4);
+
 class ParcelController {
 
     // This endpoint retrieves all parcels from the Parcels table.
@@ -23,9 +29,31 @@ class ParcelController {
     // retrieve parcel by receiver id (main page, my parcels)
     async getParcelByReceiverID(req: Request, res: Response) {
         try {
-            const receiverID = req.params.receiverID;
+            const receiverID = req.body.receiverID;
             const [rows] = await (await db).query('SELECT * FROM Parcels WHERE receiverID = ?', [receiverID]);
-            res.status(200).json(rows)
+
+            if (rows) {
+                res.json( rows);
+            } else {
+                console.error();
+                res.status(500).json({ error: 'Failed to create the parcel' });
+            }
+        } catch (err) {
+            console.error('Error fetching parcels:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+    // retrieve parcel by receiver id (main page, my parcels)
+    async getParcelByReceiverEmail(req: Request, res: Response) {
+        try {
+            const receiverEmailAddress = req.body.receiverEmailAddress;
+            const [rows] = await (await db).query('SELECT * FROM Parcels WHERE receiverEmailAddress = ?', [receiverEmailAddress]);
+            if (rows) {
+                res.json(rows);
+            } else {
+                console.error();
+                res.status(500).json({ error: 'Failed to get info about parcel' });
+            } 
         } catch (err) {
             console.error('Error fetching parcels:', err);
             res.status(500).json({ error: 'Internal server error' });
@@ -65,9 +93,7 @@ class ParcelController {
                 packageMass
             } = req.body;
 
-            // Generate tracking number and pin code
-            const trackingNumber = nanoid(8);
-            const pinCode = nanoid(4);
+         
 
 
             try {
@@ -187,6 +213,8 @@ class ParcelController {
         }
     }
 }
+
+
 
 export default new ParcelController();
 
