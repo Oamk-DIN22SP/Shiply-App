@@ -1,5 +1,13 @@
-import React, {useState } from "react";
-import { TextField, Button, Container, Paper, Typography, Snackbar, SnackbarContent } from "@mui/material";
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  Container,
+  Paper,
+  Typography,
+  Snackbar,
+  SnackbarContent,
+} from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   GoogleAuthProvider,
@@ -23,17 +31,16 @@ const LoginForm = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
 
- 
   const [snackbarOpen, setsnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarColor, setSnackbarColor] = useState('');
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarColor, setSnackbarColor] = useState("");
 
   const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setsnackbarOpen(false);
-  }
+  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -42,7 +49,6 @@ const LoginForm = () => {
     e.preventDefault();
   };
   const loginWithGoogle = async () => {
-
     setIsLoading(true);
 
     const auth = getAuth();
@@ -51,34 +57,32 @@ const LoginForm = () => {
     try {
       // Initiate Google sign-in
       await signInWithRedirect(auth, provider);
-    try {
-      // Initiate Google sign-in
-      await signInWithRedirect(auth, provider);
 
-    // After returning from the redirect when your app initializes you can obtain the result
-    const result = await getRedirectResult(auth);
-   
-    if (result) {
-      // Get the user ID token
-       const user = result.user;
-      const idToken = await user.getIdToken();
+      // After returning from the redirect when your app initializes you can obtain the result
+      const result = await getRedirectResult(auth);
 
-      // Send the ID token to the server for authentication
-      const response = await fetch(`${BACKEND_HOSTNAME}/api/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ idToken }),
-      });
+      if (result) {
+        // Get the user ID token
+        const user = result.user;
+        const idToken = await user.getIdToken();
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Response from server:", data);
-        navigate("/home");
-      } else {
-        // Handle the case where result.user is null
-        console.error("result.user is null");
+        // Send the ID token to the server for authentication
+        const response = await fetch(`${BACKEND_HOSTNAME}/api/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ idToken }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Response from server:", data);
+          navigate("/home");
+        } else {
+          // Handle the case where result.user is null
+          console.error("result.user is null");
+        }
       }
     } catch (error) {
       console.error("Error logging in with Google:", error);
@@ -87,8 +91,8 @@ const LoginForm = () => {
   };
 
   const handleLogin = async () => {
-    setSnackbarMessage('Login successful');
-    setSnackbarColor('#4CAF50'); // Set color for success
+    setSnackbarMessage("Login successful");
+    setSnackbarColor("#4CAF50"); // Set color for success
     setsnackbarOpen(true);
     try {
       setIsLoading(true);
@@ -119,10 +123,9 @@ const LoginForm = () => {
       } else {
         // If there's an error in the response, handle it
         console.error("Error from server:", data);
-        setSnackbarMessage('Login failed');
-        setSnackbarColor('#FF5252'); // Set color for failure
+        setSnackbarMessage("Login failed");
+        setSnackbarColor("#FF5252"); // Set color for failure
         setsnackbarOpen(true);
-
 
         // Alert the user about the error
         alert("Authentication failed. Please try again.");
@@ -130,8 +133,8 @@ const LoginForm = () => {
     } catch (error) {
       console.error("Error logging in:", error);
       // Handle the error, e.g., show an error message to the user
-      setSnackbarMessage('An error occurred. Please try again.');
-      setSnackbarColor('#FF5252'); // Set color for failure
+      setSnackbarMessage("An error occurred. Please try again.");
+      setSnackbarColor("#FF5252"); // Set color for failure
       setsnackbarOpen(true);
     } finally {
       setIsLoading(false);
@@ -190,7 +193,14 @@ const LoginForm = () => {
           <Button sx={{ marginTop: 2, borderRadius: 3 }} color="warning">
             <NavLink to="/signup">Don't have an account? Sign Up</NavLink>
           </Button>
-          <Button variant="contained" color="warning" style={{ marginTop: 16, textAlign: "center" }} onClick={loginWithGoogle}>Login with Google doesnt work now</Button>
+          <Button
+            variant="contained"
+            color="warning"
+            style={{ marginTop: 16, textAlign: "center" }}
+            onClick={loginWithGoogle}
+          >
+            Login with Google doesnt work now
+          </Button>
           <button onClick={loginWithGoogle}>
             Login with Google doesnt work now
           </button>
@@ -200,9 +210,8 @@ const LoginForm = () => {
         open={snackbarOpen}
         autoHideDuration={5000}
         onClose={handleSnackbarClose}
-        anchorOrigin={
-          { vertical: 'top', horizontal: 'center' }
-        }>
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
         <SnackbarContent
           style={{ backgroundColor: snackbarColor }} // Set your desired background color
           message={snackbarMessage}

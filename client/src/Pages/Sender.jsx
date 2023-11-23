@@ -10,11 +10,16 @@ import CardContent from "@mui/material/CardContent";
 import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, authenticateUser } from "../config/firebase.config";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 
 export default function Sender() {
   const [user] = useAuthState(auth);
-  const [response, setResponseData] = useState(null); // New state variable
-  authenticateUser();
+  const [response, setResponseData] = useState(null);
   const [formData, setFormData] = useState({
     senderName: user ? user.displayName : "",
     senderEmailAddress: user ? user.email : "",
@@ -42,6 +47,7 @@ export default function Sender() {
 
   const handleNextButtonClick = () => {
     setStep(step + 1);
+   
   };
 
   const handlePrevButtonClick = () => {
@@ -50,15 +56,34 @@ export default function Sender() {
     }
   };
 
+  const validateForm = () => {
+    // Basic validation, add more as needed
+   return (
+     formData.senderName !== "" &&
+     formData.senderEmailAddress !== "" &&
+     formData.senderPhoneNumber !== "" &&
+     formData.receiverName !== "" &&
+     formData.receiverEmailAddress !== "" &&
+     formData.receiverPhoneNumber !== "" &&
+     formData.packageWidth !== "" &&
+     formData.packageHeight !== "" &&
+     formData.packageMass !== ""
+   );
+  };
+
   const handleChooseLocation = (chosenLocation) => {
     setFormData({ ...formData, senderDropOffLocation: chosenLocation });
   };
+const closeConfirmationDialog = () => {
+  setConfirmationDialogOpen(false);
+};
+
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       const confirmationMessage =
         "Are you sure you want to leave? Your changes may be lost.";
-      e.returnValue = confirmationMessage; // Standard for most browsers
-      return confirmationMessage; // For some older browsers
+      e.returnValue = confirmationMessage;
+      return confirmationMessage;
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -66,14 +91,16 @@ export default function Sender() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []); // Ensure this effect runs only once
+  }, []);
 
   const submithandleClick = async () => {
     try {
-      // Replace the following URL with your actual API endpoint
-      console.log(formData);
-      const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/createParcel`;
-      console.log(user?.email);
+      if (!validateForm()) {
+        alert("Please fill out all fields before confirming.");
+        return;
+      } 
+
+      const apiUrl = `${DEV_HOSTNAME}/api/parcels/createParcel`;
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -84,7 +111,7 @@ export default function Sender() {
 
       const result = await response.json();
       setResponseData(result);
-
+  closeConfirmationDialog();
       // Handle the API response as needed
       console.log("API Response:", result);
     } catch (error) {
@@ -145,38 +172,39 @@ export default function Sender() {
               variant="outlined"
               fullWidth
               margin="normal"
-              value={formData.senderName}
-              onChange={handleChange('senderName')}
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
+              value={formData.receiverName}
+              onChange={handleChange("receiverName")}
+              style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
               label="Email Address"
               variant="outlined"
               fullWidth
               margin="normal"
-              value={formData.emailAddress}
-              onChange={handleChange('emailAddress')}
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
+              value={formData.receiverEmailAddress}
+              onChange={handleChange("receiverEmailAddress")}
+              style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
               label="Address"
               variant="outlined"
               fullWidth
               margin="normal"
-              value={formData.address}
-              onChange={handleChange('address')}
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
+              value={formData.receiverAddress}
+              onChange={handleChange("receiverAddress")}
+              style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
               label="Phone Number"
               variant="outlined"
               fullWidth
               margin="normal"
-              value={formData.phoneNumber}
-              onChange={handleChange('phoneNumber')}
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
+              value={formData.receiverPhoneNumber}
+              onChange={handleChange("receiverPhoneNumber")}
+              style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
-          </>)
+          </>
+        );
       case 3:
         // Additional fields for step 2
         return (
@@ -212,11 +240,10 @@ export default function Sender() {
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
 
-            {/* Add more fields as needed */}
           </>
         );
       case 4:
-        // Additional fields for step 3
+  
         return (
           <>
             <h5 className="send_parcel">Drop Off Location</h5>
@@ -242,7 +269,7 @@ export default function Sender() {
         // Additional fields for step 4 (Final Confirmation)
         return (
           <>
-           <h5 className="set_heading">Final Confirmation</h5>
+            <h5 className="set_heading">Final Confirmation</h5>
             {/* Add content for final confirmation */}
             <p>Review your information before confirming.</p>
             <Card
@@ -356,7 +383,11 @@ export default function Sender() {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeConfirmationDialog}>Cancel</Button>
-          <Button onClick={handleConfirmationSubmit} variant="contained" style={{ backgroundColor: '#872222', fontWeight: 'bolder' }}>
+          <Button
+            onClick={submithandleClick}
+            variant="contained"
+            style={{ backgroundColor: "#872222", fontWeight: "bolder" }}
+          >
             Confirm
           </Button>
         </DialogActions>

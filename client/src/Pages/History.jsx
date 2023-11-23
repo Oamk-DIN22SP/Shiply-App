@@ -43,8 +43,7 @@ return (
     <Grid style={{backgroundColor:'#FFFAF6',height: '70vh'}}>
       <Select
         style={{ marginTop: 15, width: '95%', marginLeft:'1em'}}
-        value={selectedOption}
-        onChange={handleSelectChange}
+      
       >
         <MenuItem value="option1">Send First</MenuItem>
         <MenuItem value="option2">Receive First</MenuItem>

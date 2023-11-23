@@ -4,13 +4,14 @@ import Details from "../Components/Details";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, authenticateUser } from "../config/firebase.config";
-import BACKEND_HOSTNAME from "../config/backend.config";
+import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 
 export default function Home() {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   authenticateUser();
+
 
   const handleNotificationItemClick = (item) => {
     setData(item);
@@ -20,16 +21,22 @@ export default function Home() {
     // Fetch parcels from the backend API
     const fetchParcels = async () => {
       try {
-        const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/receiver/getParcels`;
-        const response = await fetch(apiUrl, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+       const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/receiver/getParcels`;
+       // Create a request payload with the expected structure
+       const requestBody = {
+         receiverEmailAddress: user?.email,
+       };
+console.log(requestBody)
+       const response = await fetch(apiUrl, {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+         },
+         body: JSON.stringify(requestBody),
+       });
 
         const fetchedData = await response.json();
-        console.log(fetchedData)
+        console.log("Fetched parcels", fetchedData)
         setData(fetchedData);
       } catch (error) {
         console.error("Error fetching parcels:", error);

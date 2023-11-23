@@ -104,7 +104,7 @@ const navigate = useNavigate();
       )}
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-          <Button variant="contained" onClick={handleSignOut} style={{ backgroundColor: '#BF5000', color: '#FDF9F3' }}>Delete Account</Button>
+          <Button variant="contained" onClick={handleSignOut} style={{ backgroundColor: '#BF5000', color: '#FDF9F3' }}>Sign Out</Button>
         </div>
       </Grid>
     </Container>

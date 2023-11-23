@@ -4,7 +4,15 @@ import { auth, authenticateUser } from "../config/firebase.config";
 import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Container, Grid, List, ListItem, ListItemText } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 
 interface ParcelRequest {
   receiverEmailAddress?: string | null;
@@ -28,7 +36,7 @@ const Receiver = () => {
         };
 
         const response = await fetch(apiUrl, {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },

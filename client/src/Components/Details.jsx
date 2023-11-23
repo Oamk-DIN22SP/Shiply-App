@@ -7,6 +7,7 @@ import ReceivedParcel from '../Right_Side_Pannel/RecivedParcel'
 import SendParcel from '../Right_Side_Pannel/SendParcel'
 import { auth } from '../config/firebase.config';
 import { Container } from '@mui/system';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 export default function Details({
   selectedItem,
