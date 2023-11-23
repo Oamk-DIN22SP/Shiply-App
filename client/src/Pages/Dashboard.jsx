@@ -42,7 +42,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import BACKEND_HOSTNAME from "../config/backend.config";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../config/firebase.config";
+import { auth, authenticateUser } from "../config/firebase.config";
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props, userId) {
@@ -50,12 +50,14 @@ function ResponsiveDrawer(props, userId) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [parcels, setParcels] = useState([]);
   const navigate = useNavigate();
-const [user] = useAuthState(auth); 
+  const [user] = useAuthState(auth);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
+  authenticateUser();
   useEffect(() => {
+    // Ensure the user is authenticated before making the request
+
     // Function to fetch user parcels
     const fetchUserParcels = async () => {
       try {
@@ -98,7 +100,7 @@ const [user] = useAuthState(auth);
             <ListItemIcon>
               <SendIcon />
             </ListItemIcon>
-            <ListItemText> Sender </ListItemText>
+            <ListItemText> Send parcels </ListItemText>
           </ListItemButton>
         </ListItem>
 
@@ -107,7 +109,7 @@ const [user] = useAuthState(auth);
             <ListItemIcon>
               <MoveToInboxIcon />
             </ListItemIcon>
-            <ListItemText> Receiver </ListItemText>
+            <ListItemText> Receive </ListItemText>
           </ListItemButton>
         </ListItem>
 
@@ -116,7 +118,7 @@ const [user] = useAuthState(auth);
             <ListItemIcon>
               <GpsFixedIcon />
             </ListItemIcon>
-            <ListItemText> Track </ListItemText>
+            <ListItemText> Track my parcel </ListItemText>
           </ListItemButton>
         </ListItem>
 
@@ -125,7 +127,7 @@ const [user] = useAuthState(auth);
             <ListItemIcon>
               <ManageHistoryIcon />
             </ListItemIcon>
-            <ListItemText> History </ListItemText>
+            <ListItemText> All parcels </ListItemText>
           </ListItemButton>
         </ListItem>
 
@@ -253,7 +255,7 @@ const [user] = useAuthState(auth);
           <Route path="/track" element={<Track />} />
           <Route path="/history" element={<History />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/recivedparecl" element={<RecivedParcel />} />
+          <Route path="/receivedparcel" element={<RecivedParcel />} />
           <Route path="/sendparcel" element={<SendParcel />} />
           <Route path="/otherparcel" element={<OtherParcel />} />
         </Routes>

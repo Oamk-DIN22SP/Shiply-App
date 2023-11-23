@@ -1,17 +1,4 @@
-import React, { useState } from 'react';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -22,25 +9,17 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../config/firebase.config";
-
+import { auth, authenticateUser } from "../config/firebase.config";
 
 export default function Sender() {
   const [user] = useAuthState(auth);
   const [response, setResponseData] = useState(null); // New state variable
-// interface SendPackageResponse {
-//   success: boolean;
-//   trackingNumber: string;
-//   pinCode: string;
-//   status: string;
-//   receiverEmailAddress: string;
-//   // Add more fields as needed
-// }
+  authenticateUser();
   const [formData, setFormData] = useState({
-    senderName: "",
-    senderEmailAddress: "",
+    senderName: user ? user.displayName : "",
+    senderEmailAddress: user ? user.email : "",
     senderAddress: "",
-    senderPhoneNumber: "",
+    senderPhoneNumber: user ? user.phoneNumber : "",
     senderID: user?.uid,
     senderDropOffLocation: "",
 
@@ -74,13 +53,27 @@ export default function Sender() {
   const handleChooseLocation = (chosenLocation) => {
     setFormData({ ...formData, senderDropOffLocation: chosenLocation });
   };
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const confirmationMessage =
+        "Are you sure you want to leave? Your changes may be lost.";
+      e.returnValue = confirmationMessage; // Standard for most browsers
+      return confirmationMessage; // For some older browsers
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []); // Ensure this effect runs only once
 
   const submithandleClick = async () => {
     try {
       // Replace the following URL with your actual API endpoint
       console.log(formData);
       const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/createParcel`;
-console.log(user?.email)
+      console.log(user?.email);
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -89,8 +82,8 @@ console.log(user?.email)
         body: JSON.stringify(formData),
       });
 
-      const result  = await response.json();
-    setResponseData(result);
+      const result = await response.json();
+      setResponseData(result);
 
       // Handle the API response as needed
       console.log("API Response:", result);
@@ -266,11 +259,12 @@ console.log(user?.email)
                   <p className="parcel_info">
                     <b>Tracking number </b>: {response?.trackingNumber}
                   </p>
-                
+
                   <p className="parcel_info">
-                    <b>Address of parcel locker (to send package) </b> {response?.senderDropOffLocation}
+                    <b>Address of parcel locker (to send package) </b>{" "}
+                    {response?.senderDropOffLocation}
                   </p>
-                
+
                   <p className="parcel_info">
                     <b>Receiver name </b>: {response?.receiverName}
                   </p>
