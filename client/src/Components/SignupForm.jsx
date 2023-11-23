@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Paper, Typography } from '@mui/material';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase.config';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import BACKEND_HOSTNAME from '../config/backend.config';
+import { auth } from '../config/firebase.config';
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -49,6 +49,11 @@ const handleSubmit = async (e) => {
 
     if (response.ok) {
       // If the response status is okay, proceed with your logic
+      // @ts-ignore
+      await updateProfile(auth.currentUser, { displayName: formData.username }).catch(
+        (err) => console.log(err)
+      );
+      
       console.log("Response from server:", data);
       navigate("/home");
     } else {

@@ -21,8 +21,9 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-
+ 
   const [snackbarOpen, setsnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarColor, setSnackbarColor] = useState('');
@@ -41,9 +42,15 @@ const LoginForm = () => {
     e.preventDefault();
   };
   const loginWithGoogle = async () => {
+
+    setIsLoading(true);
+
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
 
+    try {
+      // Initiate Google sign-in
+      await signInWithRedirect(auth, provider);
     try {
       // Initiate Google sign-in
       await signInWithRedirect(auth, provider);
@@ -70,25 +77,21 @@ const LoginForm = () => {
         console.log("Response from server:", data);
         navigate("/home");
       } else {
-        // Handle the case where the server response is not OK
-        console.error("Server response not OK:", response);
+        // Handle the case where result.user is null
+        console.error("result.user is null");
       }
-    } else {
-      // Handle the case where result.user is null
-      console.error("result.user is null");
+    } catch (error) {
+      console.error("Error logging in with Google:", error);
+      // Handle the error, e.g., show an error message to the user
     }
-  } catch (error) {
-    console.error("Error logging in with Google:", error);
-    // Handle the error, e.g., show an error message to the user
-  }
-};
-
+  };
 
   const handleLogin = async () => {
     setSnackbarMessage('Login successful');
     setSnackbarColor('#4CAF50'); // Set color for success
     setsnackbarOpen(true);
     try {
+      setIsLoading(true);
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -112,7 +115,6 @@ const LoginForm = () => {
       if (response.ok) {
         // If the response status is okay, proceed with your logic
         console.log("Response from server:", data);
-          console.log(idToken);
         navigate("/home");
       } else {
         // If there's an error in the response, handle it
@@ -121,6 +123,9 @@ const LoginForm = () => {
         setSnackbarColor('#FF5252'); // Set color for failure
         setsnackbarOpen(true);
 
+
+        // Alert the user about the error
+        alert("Authentication failed. Please try again.");
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -128,6 +133,8 @@ const LoginForm = () => {
       setSnackbarMessage('An error occurred. Please try again.');
       setSnackbarColor('#FF5252'); // Set color for failure
       setsnackbarOpen(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -184,6 +191,9 @@ const LoginForm = () => {
             <NavLink to="/signup">Don't have an account? Sign Up</NavLink>
           </Button>
           <Button variant="contained" color="warning" style={{ marginTop: 16, textAlign: "center" }} onClick={loginWithGoogle}>Login with Google doesnt work now</Button>
+          <button onClick={loginWithGoogle}>
+            Login with Google doesnt work now
+          </button>
         </form>
       </Paper>
       <Snackbar
