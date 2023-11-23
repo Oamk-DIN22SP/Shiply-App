@@ -3,7 +3,7 @@
 const express = require('express');
 import parcelController from "../controllers/parcel.controller";
 const router = express.Router();
-//NOTE -  Endpoint structure for parcells /api/parcels/
+//NOTE -  Endpoint structure for parcels /api/parcels/
 // Define the route to get all parcels
 router.get('/getAllParcels', parcelController.getAllParcels);
 
@@ -11,6 +11,13 @@ router.get('/getAllParcels', parcelController.getAllParcels);
 router.get('/:parcelID', parcelController.getParcelByID)
 // Get Parcel by Receiver ID (Read)
 router.get('/getMyParcels/:receiverID', parcelController.getParcelByReceiverID)
+// Get all parcels by user email (currently logged in)
+router.get('/receiver/getParcels', parcelController.getParcelByReceiverEmail)
+// Get info about parcel with tracking number
+router.get('/trackParcel/:trackingNumber', parcelController.trackParcel)
+
+// Get info about parcel which are sent from current user
+router.get('/sender/getSentParcels', parcelController.getParcelBySenderID)
 // Create a New Parcel (Create)
 router.post('/createParcel', parcelController.createNewParcel)
 

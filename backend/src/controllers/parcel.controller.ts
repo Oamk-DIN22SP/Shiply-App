@@ -1,11 +1,18 @@
 // parcel.controller.ts
 import { Request, Response } from 'express';
-import  db  from '../config/db.config'; // Import your database connection
+import db from '../config/db.config'; // Import your database connection
 import { Field, FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
+import {nanoid} from "nanoid";
+import { generateNumericString } from '../robot';
 // RowData packet is used for An array with the returned rows
 // ResultSetHeader is used for For multiples INSERT, UPDATE, DELETE, TRUNCATE, etc. when using multipleStatements as true
+
+// Generate tracking number and pin code
+const trackingNumber = generateNumericString(8);
+const pinCode = generateNumericString(4);
+
 class ParcelController {
- 
+
     // This endpoint retrieves all parcels from the Parcels table.
     // For the driver to see all parcels available
     async getAllParcels(req: Request, res: Response) {
@@ -13,7 +20,7 @@ class ParcelController {
             // Execute a execute to fetch all parcels
             const [rows] = await (await db).query('SELECT * FROM shiply.Parcels', []);
             // Send the fetched parcels as a JSON response
-        return    res.status(200).json(rows);
+            return res.status(200).json(rows);
         } catch (err) {
             console.error('Error fetching parcels:', err);
             res.status(500).json({ error: 'Internal server error' });
@@ -22,9 +29,63 @@ class ParcelController {
     // retrieve parcel by receiver id (main page, my parcels)
     async getParcelByReceiverID(req: Request, res: Response) {
         try {
-            const receiverID = req.params.receiverID;
+            const receiverID = req.body.receiverID;
             const [rows] = await (await db).query('SELECT * FROM Parcels WHERE receiverID = ?', [receiverID]);
-            res.status(200).json(rows)
+
+            if (rows) {
+                res.json( rows);
+            } else {
+                console.error();
+                res.status(500).json({ error: 'Failed to create the parcel' });
+            }
+        } catch (err) {
+            console.error('Error fetching parcels:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+    // retrieve parcel by receiver id (main page, my parcels)
+    async getParcelByReceiverEmail(req: Request, res: Response) {
+        try {
+            const receiverEmailAddress = req.body.receiverEmailAddress;
+            const [rows] = await (await db).query('SELECT * FROM Parcels WHERE receiverEmailAddress = ?', [receiverEmailAddress]);
+            if (rows) {
+                res.json(rows);
+            } else {
+                console.error();
+                res.status(500).json({ error: 'Failed to get info about parcel' });
+            } 
+        } catch (err) {
+            console.error('Error fetching parcels:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+    // retrieve parcel by sender ID (in history to see all parcels which you sent, and which are sent to you)
+    async getParcelBySenderID(req: Request, res: Response) {
+        try {
+            const senderID = req.body.senderID;
+            const [rows] = await (await db).query('SELECT * FROM Parcels WHERE senderID = ?', [senderID]);
+            if (rows) {
+                res.json(rows);
+            } else {
+                console.error();
+                res.status(500).json({ error: 'Failed to get info about parcel' });
+            }
+        } catch (err) {
+            console.error('Error fetching parcels:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+    // retrieve parcel by receiver id (main page, my parcels)
+    async trackParcel(req: Request, res: Response) {
+        try {
+            const trackingNumber = req.params.trackingNumber;
+            const [rows] = await (await db).query('SELECT * FROM Parcels WHERE trackingNumber = ?', [trackingNumber]);
+            if (rows) {
+                res.status(200).json(rows);
+            } else {
+                console.error();
+                res.status(500).json({ error: 'Failed to get info about parcel' });
+            }
         } catch (err) {
             console.error('Error fetching parcels:', err);
             res.status(500).json({ error: 'Internal server error' });
@@ -34,54 +95,126 @@ class ParcelController {
     async getParcelByID(req: Request, res: Response) {
         try {
             const parcelID = req.params.parcelID;
-             const [rows] = await (await db).query('SELECT * FROM Parcels WHERE parcelID = ?', [parcelID]);
+            const [rows] = await (await db).query('SELECT * FROM Parcels WHERE parcelID = ?', [parcelID]);
             res.status(200).json(rows)
         } catch (err) {
             console.error('Error fetching parcels:', err);
             res.status(500).json({ error: 'Internal server error' });
         }
     }
-   async createNewParcel(req: Request, res: Response) {
-    try {
-        const {
-            receiverID,
-            driverID,
-            status,
-            parcelDescription,
-            pickupAddress,
-            deliveryAddress,
-            deliveryDate,
-            deliveryNotes,
-        } = req.body;
+    // Endpoint to send parcel (create a new parcel from sender account) 
+    async createNewParcel (req: Request, res: Response) {
+        try {
+            
+            const {
+                senderName,
+                senderEmailAddress,
+                senderAddress,
+                senderPhoneNumber,
+                senderID,
+                senderDropOffLocation,
 
-        const values = [
-            receiverID,
-            driverID,
-            status, // Use the 'status' field from the request body
-            parcelDescription,
-            pickupAddress,
-            deliveryAddress,
-            deliveryDate,
-            deliveryNotes,
-        ];
+                receiverName,
+                receiverEmailAddress,
+                receiverAddress,
+                receiverPhoneNumber,
 
-        // Execute the INSERT query to create a new parcel
-        const [result]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
-            'INSERT INTO Parcels (receiverID, driverID, status, parcelDescription, pickupAddress, deliveryAddress, deliveryDate, deliveryNotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            values
-        );
+                
+                packageWidth,
+                packageHeight,
+                packageMass
+            } = req.body;
 
-        if (result && result[0].affectedRows > 0) {
-            // If affectedRows is greater than 0, the parcel was successfully created
-            res.status(201).json({ message: 'Parcel created successfully' });
-        } else {
-            res.status(500).json({ error: 'Failed to create the parcel' });
+         
+
+
+            try {
+                // Insert parcel data into the database
+                const [result]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
+                    'INSERT INTO Parcels (trackingNumber, pinCode, status, senderName, senderEmailAddress, senderAddress, senderPhoneNumber, senderID, senderDropOffPoint, receiverName, receiverEmailAddress, receiverAddress, receiverPhoneNumber, packageWidth, packageHeight, packageMass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    [
+                        trackingNumber,
+                        pinCode,
+                        'Sent',
+
+                        senderName,
+                        senderEmailAddress,
+                        senderAddress,
+                        senderPhoneNumber,
+                        senderID, // Use the extracted sender ID here
+                        senderDropOffLocation,
+
+                        receiverName,
+                        receiverEmailAddress,
+                        receiverAddress,
+                        receiverPhoneNumber,
+
+                        packageWidth,
+                        packageHeight,
+                        packageMass,
+                    ]
+                );
+
+
+                if (result) {
+                    res.json({ success: true, trackingNumber, pinCode, status: "Sent", receiverName, receiverEmailAddress,  senderDropOffLocation });
+                } else  {
+                    console.error();
+                    res.status(500).json({ error: 'Failed to create the parcel' });
+                }
+
+            } catch (error) {
+                console.error('Error saving parcel:', error);
+                res.status(500).json({ success: false, error: 'Internal Server Error' });
+            }
+        } catch (error) {
+            console.error('Error saving parcel:', error);
+            res.status(500).json({ success: false, error: 'Internal Server Error' });
         }
-    } catch (err) {
-        console.error('Error creating a parcel:', err);
-        res.status(500).json({ error: 'Internal server error' });
     }
-}
+
+
+    // async createNewParcel(req: Request, res: Response) {
+    //     try {
+    //         const {
+    //             receiverID,
+    //             driverID,
+    //             status,
+    //             parcelDescription,
+    //             pickupAddress,
+    //             deliveryAddress,
+    //             deliveryDate,
+    //             deliveryNotes,
+    //         } = req.body;
+
+    //         const values = [
+    //             receiverID,
+    //             driverID,
+    //             status, // Use the 'status' field from the request body
+    //             parcelDescription,
+    //             pickupAddress,
+    //             deliveryAddress,
+    //             deliveryDate,
+    //             deliveryNotes,
+    //         ];
+
+    //         // Execute the INSERT query to create a new parcel
+    //         const [result]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
+    //             'INSERT INTO Parcels (receiverID, driverID, status, parcelDescription, pickupAddress, deliveryAddress, deliveryDate, deliveryNotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    //             values
+    //         );
+
+    //         if (result && result[0].affectedRows > 0) {
+    //             // If affectedRows is greater than 0, the parcel was successfully created
+    //             res.status(201).json({ message: 'Parcel created successfully' });
+    //         } else {
+    //             res.status(500).json({ error: 'Failed to create the parcel' });
+    //         }
+    //     } catch (err) {
+    //         console.error('Error creating a parcel:', err);
+    //         res.status(500).json({ error: 'Internal server error' });
+    //     }
+    // }
 
     // This endpoint allows updating the status of a parcel by its parcelID.
     async updateParcelStatus(req: Request, res: Response) {
@@ -103,7 +236,7 @@ class ParcelController {
     async deleteParcel(req: Request, res: Response) {
         try {
             const parcelID = req.params.parcelID;
-           await (await db).query('DELETE FROM Parcels WHERE parcelID = ?', [parcelID]);
+            await (await db).query('DELETE FROM Parcels WHERE parcelID = ?', [parcelID]);
             res.status(200).json({ message: 'Parcel deleted successfully' });
 
         } catch (err) {
@@ -112,6 +245,8 @@ class ParcelController {
         }
     }
 }
+
+
 
 export default new ParcelController();
 

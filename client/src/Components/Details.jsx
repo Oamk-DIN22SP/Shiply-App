@@ -13,6 +13,7 @@ export default function Details({
   handleTrackClick,
   handleSenderClick
 }) {
+  const [user] = useAuthState(auth); 
   return (
     <Container>
       <p

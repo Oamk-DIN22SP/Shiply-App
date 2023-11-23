@@ -48,43 +48,40 @@ const LoginForm = () => {
       // Initiate Google sign-in
       await signInWithRedirect(auth, provider);
 
-      // After returning from the redirect when your app initializes you can obtain the result
-      const result = await getRedirectResult(auth);
+    // After returning from the redirect when your app initializes you can obtain the result
+    const result = await getRedirectResult(auth);
+   
+    if (result) {
+      // Get the user ID token
+       const user = result.user;
+      const idToken = await user.getIdToken();
 
-      if (result) {
-        // Get the user ID token
-        const user = result.user;
-        const idToken = await user.getIdToken();
+      // Send the ID token to the server for authentication
+      const response = await fetch(`${BACKEND_HOSTNAME}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
+      });
 
-        // Send the ID token to the server for authentication
-        const response = await fetch(`${BACKEND_HOSTNAME}/api/auth/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ idToken }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Response from server:", data);
-          toast.success('Login successful');
-          navigate("/home");
-        } else {
-          // Handle the case where the server response is not OK
-          console.error("Server response not OK:", response);
-          toast.error('Login failed');
-        }
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Response from server:", data);
+        navigate("/home");
       } else {
-        // Handle the case where result.user is null
-        console.error("result.user is null");
-
+        // Handle the case where the server response is not OK
+        console.error("Server response not OK:", response);
       }
-    } catch (error) {
-      console.error("Error logging in with Google:", error);
-      // Handle the error, e.g., show an error message to the user
+    } else {
+      // Handle the case where result.user is null
+      console.error("result.user is null");
     }
-  };
+  } catch (error) {
+    console.error("Error logging in with Google:", error);
+    // Handle the error, e.g., show an error message to the user
+  }
+};
 
 
   const handleLogin = async () => {
@@ -115,6 +112,7 @@ const LoginForm = () => {
       if (response.ok) {
         // If the response status is okay, proceed with your logic
         console.log("Response from server:", data);
+          console.log(idToken);
         navigate("/home");
       } else {
         // If there's an error in the response, handle it
