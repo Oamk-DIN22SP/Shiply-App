@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import message from '../Images/msg1.png'
 import envelope from '../Images/envelope.png'
 import whtup from '../Images/whtup.png'
+import { Container } from '@mui/system';
 
 
 
@@ -73,9 +74,9 @@ export default function Notification({
   };
 
   return (
-    <div className="notification">
+    <Container>
     <p className='heading' style={{border:'1px solid #FFFAF6', padding:'10px', backgroundColor:'#FFFAF6',borderRadius: '10px 10px 0 0 '}}>Notification Content</p>
-    <Grid style={{backgroundColor:'#FFFAF6',height: '70vh'}}>
+    <Grid style={{backgroundColor:'#FFFAF6', height:'100vh'}}>
       <Select
         style={{ marginTop: 15, width: '95%', marginLeft:'1em'}}
         value={selectedOption}
@@ -97,7 +98,7 @@ export default function Notification({
         />
       ))}
     </Grid>
-  </div>
+  </Container>
 );
 }
   

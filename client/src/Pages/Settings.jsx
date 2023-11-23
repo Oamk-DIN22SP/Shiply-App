@@ -4,6 +4,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase.config";
 import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid';
+import { Container } from '@mui/system';
 
 
 export default function Settings() {
@@ -22,7 +23,7 @@ const navigate = useNavigate();
   };
 
   return (
-    <div className="details">    
+    <Container>    
     <p className='heading' style={{border:'1px solid #FFFAF6', padding:'10px', backgroundColor:'#FFFAF6',borderRadius:'10px 10px 0 0'}}>Settings</p>
       <Grid style={{ backgroundColor: '#FFFAF6', padding: '10px', borderRadius: '5px',marginTop: '10px', height: '70vh' }}>
       <h5 className="set_heading">Time is Limited!</h5>
@@ -35,6 +36,6 @@ const navigate = useNavigate();
           <Button variant="contained" onClick={handleSignOut} style={{ backgroundColor: '#BF5000', color: '#FDF9F3' }}>Delete Account</Button>
         </div>
       </Grid>
-    </div>
+    </Container>
   );
 }

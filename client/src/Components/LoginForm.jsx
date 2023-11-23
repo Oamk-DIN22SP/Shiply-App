@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { TextField, Button, Container, Paper, Typography, Snackbar, SnackbarContent } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   GoogleAuthProvider,
   getAuth,
-  onAuthStateChanged,
   signInWithRedirect,
   getRedirectResult,
   signInWithEmailAndPassword,
@@ -17,11 +16,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 const LoginForm = () => {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [snackbarOpen, setsnackbarOpen] = useState('');
+
+
+  const [snackbarOpen, setsnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarColor, setSnackbarColor] = useState('');
 
@@ -188,7 +190,7 @@ const LoginForm = () => {
       </Paper>
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={5000}
         onClose={handleSnackbarClose}
         anchorOrigin={
           { vertical: 'top', horizontal: 'center' }

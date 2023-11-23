@@ -10,7 +10,6 @@ import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import SendIcon from "@mui/icons-material/Send";
@@ -77,11 +76,15 @@ const [user] = useAuthState(auth);
   }, [userId]);
 
   const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
+    <div style={{ overflow: 'hidden'}}> 
+      <img
+    src={logo}
+    alt="Logo"
+    style={{ width: "240px", backgroundColor:'#FFFAF6', height:'4em', objectFit:'contain'}}
+  />
+   
       <List>
-        <ListItem disablePadding onClick={() => navigate("/home")}>
+        <ListItem disablePadding onClick={() => navigate("/home")} sx={{ backgroundColor: "#F3F3F3" }}>
           <ListItemButton>
             <ListItemIcon>
               <HomeIcon />
@@ -99,7 +102,7 @@ const [user] = useAuthState(auth);
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding onClick={() => navigate("/receiver")}>
+        <ListItem disablePadding onClick={() => navigate("/receiver")} >
           <ListItemButton>
             <ListItemIcon>
               <MoveToInboxIcon />
@@ -147,17 +150,15 @@ const [user] = useAuthState(auth);
       sx={{
         display: "flex",
         backgroundColor: "#f0f0f0",
-        height: "100vh",
-        width: "100vw",
       }}
     >
       <CssBaseline />
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          width: { sm: '100%' },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: "#fffdfb",
+          backgroundColor: "#FFFAF6",
         }}
       >
         <Toolbar>
@@ -170,11 +171,7 @@ const [user] = useAuthState(auth);
           >
             <MenuIcon />
           </IconButton>
-          <img
-            src={logo}
-            alt="Logo"
-            style={{ width: "250px", height: "auto" }}
-          />
+         
           <img
             src={smile}
             alt="Logo"

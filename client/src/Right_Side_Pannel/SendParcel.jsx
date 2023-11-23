@@ -5,11 +5,7 @@ import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 
 export default function SendParcel() {
-    const [track, setTrack] = React.useState(null)
-    const trackhandle = (track) => {
-        setTrack(track)
-    }
-
+    
     return (
         <div>
             <p className='heading'>Send Parcel</p>
@@ -33,9 +29,7 @@ export default function SendParcel() {
                         </div>
                     </CardContent>
                 </Card>
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-          <Button variant="contained"  style={{ backgroundColor: '#60326A', color:'#FDF9F3' }} onClick={trackhandle}>Track</Button>
-        </div>
+               
             </Grid>
         </div>
     )

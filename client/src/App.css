@@ -7,23 +7,7 @@
     display: flex;
   }
   
-  .notification {
-    width: 45%; /* Adjust the width as needed */
-    padding: 8px;
-    margin:5px;
-    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  Apply box shadow */
-    border-radius: 10px 10px 0 0; 
-  }
   
-  .details {
-    flex: 1;
-    width: 45%;
-    padding: 8px;
-    margin:3px;
-    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  Apply box shadow */
-    border-radius: 10px 10px 0 0; 
-
-  }
 .heading{
     font-size: 19px;
     font-weight: 600;
@@ -63,10 +47,28 @@
   .notification {
     width: 100%; /* Take up the full width on smaller screens */
   }
+  .home_page {
+   display: block;
+  }
   .details {
     width: 100%; /* Take up the full width on smaller screens */
   }
   .parecl_info_main {
     width: 100%; /* Take up the full width on smaller screens */
   }
+}
+.sender_list{
+  background-color: '#F2FDE8';
+  padding: '10px';
+  font-size: '10px';
+  margin:'5px'
+}
+p.setting_content {
+  color: #686868;
+  font-size: 14px;
+}
+h5.set_heading {
+  font-weight: 700;
+  color: #4A4A4A;
+  font-size: medium;
 }

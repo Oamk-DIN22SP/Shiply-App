@@ -29,9 +29,6 @@ export default function OtherParcel() {
                 </div>
             </CardContent>
         </Card>
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-  <Button variant="contained"  style={{ backgroundColor: '#60326A', color:'#FDF9F3' }}>Track</Button>
-</div>
     </Grid>
 </div>
   )

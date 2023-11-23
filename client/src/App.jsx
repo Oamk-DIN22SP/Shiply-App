@@ -22,10 +22,7 @@ function App() {
 const [user] = useAuthState(auth); 
 
   return (
-    <div>
-      
-
-       
+    <div>       
      <ResponsiveDrawer/>
     </div>
   );

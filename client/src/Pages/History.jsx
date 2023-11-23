@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import BACKEND_HOSTNAME from "../config/backend.config";
 import { getAuth } from "firebase/auth";
+import Grid from "@mui/material/Grid";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+
 
 export default function History() {
   const [parcels, setParcels] = useState([]);
@@ -34,19 +38,31 @@ export default function History() {
     fetchUserParcels();
   }, []);
 return (
-  <div>
-    <h1>Welcome to the History</h1>
-    <h2>User Parcels:</h2>
+  <div className="notification">
+    <p className='heading' style={{border:'1px solid #FFFAF6', padding:'10px', backgroundColor:'#FFFAF6',borderRadius: '10px 10px 0 0 '}}>Notification Content</p>
+    <Grid style={{backgroundColor:'#FFFAF6',height: '70vh'}}>
+      <Select
+        style={{ marginTop: 15, width: '95%', marginLeft:'1em'}}
+        value={selectedOption}
+        onChange={handleSelectChange}
+      >
+        <MenuItem value="option1">Send First</MenuItem>
+        <MenuItem value="option2">Receive First</MenuItem>
+        <MenuItem value="option3">Send and Receive</MenuItem>
+      </Select>
+      </Grid>
     {parcels ? (
       <ul>
         {parcels.map((parcel) => (
           <li key={parcel.id}>{parcel.name}</li>
-          // Adjust the structure based on your parcel data
         ))}
       </ul>
     ) : (
       <p>No parcels available.</p>
     )}
+    
+
+
   </div>
 );
 

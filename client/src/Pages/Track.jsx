@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { Container } from '@mui/system';
 
 export default function Track() {
   const [deliveryNumber, setDeliveryNumber] = useState('');
@@ -9,12 +10,10 @@ export default function Track() {
     setDeliveryNumber(event.target.value);
   };
   const handleTrackButtonClick = () => {
-    // You can add logic here to handle the tracking functionality
-    // For now, let's just set isTracking to true
-    setIsTracking(true);
+    console.log(deliveryNumber);
   };
   return (
-    <div className="details">    
+    <Container>    
     <p className='heading' style={{border:'1px solid #FFFAF6', padding:'10px', backgroundColor:'#FFFAF6',borderRadius:'10px 10px 0 0'}}>Track</p>
       <Grid style={{ backgroundColor: '#FFFAF6', padding: '10px', borderRadius: '5px',marginTop: '10px', height: '70vh' }}>
       <h5 className='send_parcel'>Track Your Delivery!</h5>
@@ -33,6 +32,6 @@ export default function Track() {
           <Button variant="contained" onClick={handleTrackButtonClick} style={{ backgroundColor: '#60326A', color: '#FDF9F3' }}>Track</Button>
         </div>
       </Grid>
-    </div>
+    </Container>
   );
 }
