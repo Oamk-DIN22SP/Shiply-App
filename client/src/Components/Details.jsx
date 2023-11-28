@@ -7,13 +7,15 @@ import ReceivedParcel from '../Right_Side_Pannel/RecivedParcel'
 import SendParcel from '../Right_Side_Pannel/SendParcel'
 import { auth } from '../config/firebase.config';
 import { Container } from '@mui/system';
+import Receiver from '../Pages/Receiver';
+import Home from '../Pages/Home';
 
 export default function Details({
   selectedItem,
   handleTrackClick,
-  handleSenderClick
+ 
 }) {
-  const [user] = useAuthState(auth); 
+ 
   return (
     <Container>
       <p
@@ -47,6 +49,7 @@ export default function Details({
         ) : (
           <OtherParcel />
         )}
+   
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
           <Button variant="contained"  style={{ backgroundColor: '#60326A', color:'#FDF9F3' }} onClick={() => handleTrackClick(true)}>Track</Button>
         </div>

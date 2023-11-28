@@ -6,8 +6,6 @@
 .home_page {
     display: flex;
   }
-  
-  
 .heading{
     font-size: 19px;
     font-weight: 600;
@@ -67,8 +65,48 @@ p.setting_content {
   color: #686868;
   font-size: 14px;
 }
+.set_para{
+  color: #686868;
+  font-size: 14px;
+  margin: 10px;
+  padding: 10px;
+  margin-left: 2em;
+  text-align: justify;
+}
+.main_send {
+  background:#F3F3F3 ;
+  height: 60vh;
+  border-radius: 10px;
+  padding: 20px;
+
+}
 h5.set_heading {
   font-weight: 700;
   color: #4A4A4A;
   font-size: medium;
+  margin: 10px;
+  padding: 10px;
+  margin-left: 2em;
+    text-align: justify;
+}
+.error {
+  color: red;
+  font-size: 14px;
+}
+.list-item {
+  background-color: #FCF2FF; /* Set default background color */
+  transition: background-color 0.3s; /* Add a smooth transition on hover */
+  margin: 5px; /* Set margin */
+  padding: 10px; /* Set padding */
+  cursor: pointer;
+}
+
+.list-item:hover {
+  background-color: #F7D5FE; /* Change background color on hover */
+}
+
+.list_div{
+  background-color: #F2FDE8;
+  margin: 5px;
+  border: 1px solid #E5E5E5;
 }

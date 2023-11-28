@@ -3,10 +3,11 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Container } from '@mui/system';
+import Notification from '../Components/Notification';
 
 export default function Track() {
   const [trackingNumber, settrackingNumber] = useState('');
-    const [user] = useAuthState(auth);
+   // const [user] = useAuthState(auth);
  
   const handletrackingNumberChange = (event) => {
     settrackingNumber(event.target.value);
@@ -40,9 +41,11 @@ export default function Track() {
   };
 
   return (
-    <Container>    
-    <p className='heading' style={{border:'1px solid #FFFAF6', padding:'10px', backgroundColor:'#FFFAF6',borderRadius:'10px 10px 0 0'}}>Track</p>
-      <Grid style={{ backgroundColor: '#FFFAF6', padding: '10px', borderRadius: '5px',marginTop: '10px', height: '70vh' }}>
+    <Container style={{display:'flex'}}>
+    <Notification/>
+    <div>
+      <p className='heading' style={{ border: '1px solid #FFFAF6', padding: '10px', backgroundColor: '#FFFAF6', borderRadius: '10px 10px 0 0' }}>Track</p>
+      <Grid style={{ backgroundColor: '#FFFAF6', padding: '10px', borderRadius: '5px',marginTop: '10px', height: '100vh' }}>
       <h5 className='send_parcel'>Track Your Delivery!</h5>
         <p className='track_content'>Your 5 digit delivery number is enough to know the status<br></br>
           of your delivery.</p>
@@ -61,6 +64,7 @@ export default function Track() {
           </Button>
         </div>
       </Grid>
+    </div>
     </Container>
   );
 }

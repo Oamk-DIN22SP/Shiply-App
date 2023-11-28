@@ -7,22 +7,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import React, { useState } from "react";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../config/firebase.config";
+import Notification from "../Components/Notification";
+import { Container, Typography } from '@mui/material';
 
 
 export default function Sender() {
@@ -55,16 +44,13 @@ export default function Sender() {
   });
 
   const [step, setStep] = useState(1);
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-
   const handleChange = (field) => (event) => {
     setFormData({ ...formData, [field]: event.target.value });
   };
-
   const handleNextButtonClick = () => {
-    setStep(step + 1);
-  };
-
+      setStep(step + 1);
+   
+    }  
   const handlePrevButtonClick = () => {
     if (step > 1) {
       setStep(step - 1);
@@ -104,9 +90,14 @@ console.log(user?.email)
       case 1:
         return (
           <>
-            <h5 className="set_heading">Sender Details</h5>
+            <h5 className="set_heading">To Send a package</h5>
+            <p className='set_para'>Please fill out all required information completely...</p>
+             <div className='main_send'>
+              <h3 style={{color:'#686868', textAlign:'center', margin:'auto'}}>Consigner Detials</h3>
             <TextField
-              label="Sender Name"
+             placeholder='Sender Name'
+              type='text'
+              required
               variant="outlined"
               fullWidth
               margin="normal"
@@ -115,7 +106,9 @@ console.log(user?.email)
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
-              label="Email Address"
+            placeholder='Sender Email Address'
+              type="email"
+              required
               variant="outlined"
               fullWidth
               margin="normal"
@@ -124,7 +117,9 @@ console.log(user?.email)
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
-              label="Address"
+            placeholder='Sender Address'
+              type="text"
+              required
               variant="outlined"
               fullWidth
               margin="normal"
@@ -133,22 +128,31 @@ console.log(user?.email)
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
-              label="Phone Number"
+            placeholder='Sender Phone Number'
+             type='number'
+              required
               variant="outlined"
               fullWidth
               margin="normal"
+              name='phone'
               value={formData.senderPhoneNumber}
               onChange={handleChange("senderPhoneNumber")}
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
+          </div>
           </>
         );
       case 2:
         return (
           <>
             <h5 className="set_heading">Reciver Details</h5>
+            <p className='p_sender'>Please fill out all required information completely...</p>
+            <div className='main_send'>
+              <h3 style={{color:'#686868', textAlign:'center', margin:'auto'}}>Consignee Detials</h3>
             <TextField
-              label="Reciver Name"
+            placeholder='Reciver Name'
+              type="text"
+              required
               variant="outlined"
               fullWidth
               margin="normal"
@@ -157,42 +161,52 @@ console.log(user?.email)
               style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
             />
             <TextField
-              label="Email Address"
+            placeholder='Reciver Email Address'
+              type="email"
               variant="outlined"
               fullWidth
+              required
               margin="normal"
               value={formData.emailAddress}
               onChange={handleChange('emailAddress')}
               style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
             />
             <TextField
-              label="Address"
+            placeholder='Reciver Address'
+             type='text'
               variant="outlined"
               fullWidth
+              required
               margin="normal"
               value={formData.address}
               onChange={handleChange('address')}
               style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
             />
             <TextField
-              label="Phone Number"
+            placeholder='Reciver Phone Number'
+              type="number"
               variant="outlined"
               fullWidth
+              required
               margin="normal"
               value={formData.phoneNumber}
               onChange={handleChange('phoneNumber')}
               style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
             />
+          </div>
           </>)
       case 3:
         // Additional fields for step 2
         return (
           <>
             <h5 className="set_heading">Package Details</h5>
-            {/* Add additional fields for step 2 */}
-            {/* Example: */}
+            <p className='p_sender'>Please fill out all required information completely...</p>
+            <div className='main_send'>
+              <h3 style={{color:'#686868', textAlign:'center', margin:'auto'}}>Consigner Detials</h3>
             <TextField
-              label="Width"
+            placeholder='Enter package width'
+              type='number'
+              required
               variant="outlined"
               fullWidth
               margin="normal"
@@ -201,7 +215,9 @@ console.log(user?.email)
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
-              label="Height"
+            placeholder='Enter package height'
+              type="number"
+              required
               variant="outlined"
               fullWidth
               margin="normal"
@@ -210,7 +226,8 @@ console.log(user?.email)
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
-              label="Mass"
+            placeholder='Enter package mass'
+              type="number"
               variant="outlined"
               fullWidth
               margin="normal"
@@ -218,8 +235,7 @@ console.log(user?.email)
               onChange={handleChange("packageMass")}
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
-
-            {/* Add more fields as needed */}
+          </div>
           </>
         );
       case 4:
@@ -227,15 +243,22 @@ console.log(user?.email)
         return (
           <>
             <h5 className="send_parcel">Drop Off Location</h5>
+            <p className='p_sender'>Please choose a drop off location...</p>
+            <div className='main_send'>
+              <h3 style={{color:'#686868', textAlign:'center', margin:'auto'}}>Location</h3>
             <List>
               {[
-                "Kangastie 8001C / Tuiron kakku 24, Marikkonta, Oulu / Finland",
+                "Kangastie 001C / Tuiron kakku 24, Marikkonta, Oulu / Finland",
+                "Kangastie 501D / Tuiron kakku 21, Surrikilmnta, Tampere / Island",
+                "Kangastie 70WS / Tuiron kakku 56, Linnamaikkonta, Helsinki / Finland",
+                "Kangastie 88CW / Tuiron kakku 87, Paivaonta, Kokolla / Finland",
+                "Kangastie 901S / Tuiron kakku 45, Marikkonta, Espoo / Finland",
               ].map((location) => (
-                <ListItem key={location} className="sender_list">
-                  <ListItemText primary={location} style={{ margin: "10px" }} />
+                <ListItem key={location} style={{backgroundColor:'#D5F9B8', margin:'5px'}}>
+                  <ListItemText primary={location} style={{ backgroundColor:'red', fontSize:'small' }} />
                   <Button
                     variant="outlined"
-                    style={{ marginLeft: "10px" }}
+                    style={{ marginLeft: "10px", backgroundColor: "#ADADAD", color: "black", fontSize:'9px', padding:'5px', border:'none' }}
                     onClick={() => handleChooseLocation(location)}
                   >
                     Choose
@@ -243,6 +266,7 @@ console.log(user?.email)
                 </ListItem>
               ))}
             </List>
+          </div>
           </>
         );
       case 5:
@@ -250,11 +274,12 @@ console.log(user?.email)
         return (
           <>
            <h5 className="set_heading">Final Confirmation</h5>
-            {/* Add content for final confirmation */}
             <p>Review your information before confirming.</p>
+            <div className='main_send'>
+              <h3 style={{color:'#686868', textAlign:'center', margin:'auto'}}>Final Detials</h3>
             <Card
               style={{
-                maxWidth: 600,
+                width: "100%",
                 lineHeight: "10px",
                 fontSize: "small",
                 boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.1)",
@@ -289,6 +314,7 @@ console.log(user?.email)
                 </div>
               </CardContent>
             </Card>
+            </div>
             <br></br>
             <Button
               variant="contained"
@@ -302,31 +328,25 @@ console.log(user?.email)
       default:
         return null;
     }
-  };
 
+  };
+  
   return (
-    <div className="details">
-      <p
-        className="heading"
-        style={{
-          border: "1px solid #FFFAF6",
-          padding: "10px",
-          backgroundColor: "#FFFAF6",
-          borderRadius: "10px 10px 0 0",
-        }}
-      >
-        Send
-      </p>
-      {/* Grid with different background colors */}
+    <Container style={{display:'flex'}}>
+      <Notification/>
+      <div>
+        <p className='heading' style={{ border: '1px solid #FFFAF6', padding: '10px', backgroundColor: '#FFFAF6', borderRadius: '10px 10px 0 0' }}>Sender</p>
       <Grid
         style={{
-          backgroundColor: "#FFFAF6",
+          backgroundColor: "#F2FDE8",
           padding: "10px",
           borderRadius: "5px",
           marginTop: "10px",
-          height: "70vh",
+          height: "100vh",
+          width: "100%",
         }}
       >
+        <h2></h2>
         {renderStepContent()}
         <br />
         <div>
@@ -354,19 +374,7 @@ console.log(user?.email)
           )}
         </div>
       </Grid>
-
-      <Dialog open={isConfirmationDialogOpen} onClose={closeConfirmationDialog}>
-        <DialogTitle>Confirmation</DialogTitle>
-        <DialogContent>
-          <p>Your parcel is ready for send...</p>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeConfirmationDialog}>Cancel</Button>
-          <Button onClick={handleConfirmationSubmit} variant="contained" style={{ backgroundColor: '#872222', fontWeight: 'bolder' }}>
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+  </div>
+    </Container>
   );
 }
