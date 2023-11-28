@@ -11,42 +11,43 @@ import { Container } from '@mui/system';
 
 
 const notificationItems = [
-  { imageSrc:message,  text: 'New package received'  },
-  { imageSrc:envelope, text: 'Paracel has been received' },
-  { imageSrc:whtup, text: 'New Parcel is waiting...' },
-  { imageSrc:envelope, text: 'New package sent...' },
-  { imageSrc:envelope, text: 'Thanks for choosing us...' },
+  { imageSrc: message, text: "New package received" },
+  { imageSrc: envelope, text: "Paracel has been received" },
+  { imageSrc: whtup, text: "New Parcel is waiting..." },
+  { imageSrc: envelope, text: "New package sent..." },
+  { imageSrc: envelope, text: "Thanks for choosing us..." },
 ];
 
 const Item = (props) => (
   <Paper
-  sx={{
-    p: 2,
-    margin: 1,
-    display: 'inline_block',
-    flexDirection: 'column',
-    background: '#FFFAF6',
-    transition: 'background 0.3s',
-    '&:hover': {
-      background: '#D5F9B8',
-    },
-    ...props.style,
-  }}
-  onClick={props.onClick}
->
-  <div>
-    <img src={props.imageSrc} alt="msg" style={{ width: '35px', height: '35px' }} />
-    {props.text}
-    {props.dateTime}
-  </div>
-
-</Paper>
+    sx={{
+      p: 2,
+      margin: 1,
+      display: "inline_block",
+      flexDirection: "column",
+      background: "#FFFAF6",
+      transition: "background 0.3s",
+      "&:hover": {
+        background: "#D5F9B8",
+      },
+      ...props.style,
+    }}
+    onClick={props.onClick}
+  >
+    <div>
+      <img
+        src={props.imageSrc}
+        alt="msg"
+        style={{ width: "35px", height: "35px" }}
+      />
+      {props.text}
+      {props.dateTime}
+    </div>
+  </Paper>
 );
-export default function Notification({
-  onNotificationItemClick,
-}) {
-  const [selectedOption, setSelectedOption] = React.useState('');
-  const [currentTime, setCurrentTime] = useState('');
+export default function Notification({ onNotificationItemClick }) {
+  const [selectedOption, setSelectedOption] = React.useState("");
+  const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -64,11 +65,11 @@ export default function Notification({
 
   const handleItemClick = (text) => {
     // Redirect to another page based on the clicked item
-    if (text === 'New package received') {
-      onNotificationItemClick("recivedparecl");
-    } else if (text === 'Paracel has been received') {
+    if (text === "New package received") {
+      onNotificationItemClick("receivedparcel");
+    } else if (text === "Paracel has been received") {
       onNotificationItemClick("sendparcel");
-    } else if (text === 'New Parcel is waiting...') {
+    } else if (text === "New Parcel is waiting...") {
       onNotificationItemClick("otherparcel");
     }
   };
@@ -101,4 +102,3 @@ export default function Notification({
   </Container>
 );
 }
-  

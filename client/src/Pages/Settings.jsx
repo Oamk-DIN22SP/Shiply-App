@@ -12,6 +12,36 @@ import Notification from '../Components/Notification'
 export default function Settings() {
   const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleEditClick = () => {
+    setEditMode(true);
+  };
+
+  const handleSaveClick = async () => {
+    // Add logic to save changes to the backend or update user profile
+    // For example, you can use the updateProfile method provided by Firebase Auth
+     await updateProfile(auth.currentUser, { displayName: formData.displayName }).catch(
+        (err) => console.log(err)
+      );
+
+    // After saving changes, exit edit mode
+    setEditMode(false);
+  };
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (editMode) {
+        const confirmationMessage = 'Are you sure you want to leave? Your changes may be lost.';
+        e.returnValue = confirmationMessage; // Standard for most browsers
+        return confirmationMessage; // For some older browsers
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  })
   const handleSignOut = async () => {
     try {
       const result = await Swal.fire({
@@ -51,4 +81,6 @@ export default function Settings() {
       </div>
     </Container>
   );
-}
+};
+
+

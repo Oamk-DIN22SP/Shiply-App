@@ -16,20 +16,12 @@ import { Container, Typography } from '@mui/material';
 
 export default function Sender() {
   const [user] = useAuthState(auth);
-  const [response, setResponseData] = useState(null); // New state variable
-// interface SendPackageResponse {
-//   success: boolean;
-//   trackingNumber: string;
-//   pinCode: string;
-//   status: string;
-//   receiverEmailAddress: string;
-//   // Add more fields as needed
-// }
+  const [response, setResponseData] = useState(null);
   const [formData, setFormData] = useState({
-    senderName: "",
-    senderEmailAddress: "",
+    senderName: user ? user.displayName : "",
+    senderEmailAddress: user ? user.email : "",
     senderAddress: "",
-    senderPhoneNumber: "",
+    senderPhoneNumber: user ? user.phoneNumber : "",
     senderID: user?.uid,
     senderDropOffLocation: "",
 
@@ -57,16 +49,51 @@ export default function Sender() {
     }
   };
 
+  const validateForm = () => {
+    // Basic validation, add more as needed
+   return (
+     formData.senderName !== "" &&
+     formData.senderEmailAddress !== "" &&
+     formData.senderPhoneNumber !== "" &&
+     formData.receiverName !== "" &&
+     formData.receiverEmailAddress !== "" &&
+     formData.receiverPhoneNumber !== "" &&
+     formData.packageWidth !== "" &&
+     formData.packageHeight !== "" &&
+     formData.packageMass !== ""
+   );
+  };
+
   const handleChooseLocation = (chosenLocation) => {
     setFormData({ ...formData, senderDropOffLocation: chosenLocation });
   };
+const closeConfirmationDialog = () => {
+  setConfirmationDialogOpen(false);
+};
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const confirmationMessage =
+        "Are you sure you want to leave? Your changes may be lost.";
+      e.returnValue = confirmationMessage;
+      return confirmationMessage;
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   const submithandleClick = async () => {
     try {
-      // Replace the following URL with your actual API endpoint
-      console.log(formData);
-      const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/createParcel`;
-console.log(user?.email)
+      if (!validateForm()) {
+        alert("Please fill out all fields before confirming.");
+        return;
+      } 
+
+      const apiUrl = `${DEV_HOSTNAME}/api/parcels/createParcel`;
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -75,9 +102,9 @@ console.log(user?.email)
         body: JSON.stringify(formData),
       });
 
-      const result  = await response.json();
-    setResponseData(result);
-
+      const result = await response.json();
+      setResponseData(result);
+  closeConfirmationDialog();
       // Handle the API response as needed
       console.log("API Response:", result);
     } catch (error) {
@@ -156,9 +183,9 @@ console.log(user?.email)
               variant="outlined"
               fullWidth
               margin="normal"
-              value={formData.senderName}
-              onChange={handleChange('senderName')}
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
+              value={formData.receiverName}
+              onChange={handleChange("receiverName")}
+              style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
             placeholder='Reciver Email Address'
@@ -167,9 +194,9 @@ console.log(user?.email)
               fullWidth
               required
               margin="normal"
-              value={formData.emailAddress}
-              onChange={handleChange('emailAddress')}
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
+              value={formData.receiverEmailAddress}
+              onChange={handleChange("receiverEmailAddress")}
+              style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
             placeholder='Reciver Address'
@@ -178,9 +205,9 @@ console.log(user?.email)
               fullWidth
               required
               margin="normal"
-              value={formData.address}
-              onChange={handleChange('address')}
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
+              value={formData.receiverAddress}
+              onChange={handleChange("receiverAddress")}
+              style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
             placeholder='Reciver Phone Number'
@@ -189,9 +216,9 @@ console.log(user?.email)
               fullWidth
               required
               margin="normal"
-              value={formData.phoneNumber}
-              onChange={handleChange('phoneNumber')}
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)' }}
+              value={formData.receiverPhoneNumber}
+              onChange={handleChange("receiverPhoneNumber")}
+              style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
           </div>
           </>)
@@ -239,7 +266,7 @@ console.log(user?.email)
           </>
         );
       case 4:
-        // Additional fields for step 3
+  
         return (
           <>
             <h5 className="send_parcel">Drop Off Location</h5>
@@ -291,11 +318,12 @@ console.log(user?.email)
                   <p className="parcel_info">
                     <b>Tracking number </b>: {response?.trackingNumber}
                   </p>
-                
+
                   <p className="parcel_info">
-                    <b>Address of parcel locker (to send package) </b> {response?.senderDropOffLocation}
+                    <b>Address of parcel locker (to send package) </b>{" "}
+                    {response?.senderDropOffLocation}
                   </p>
-                
+
                   <p className="parcel_info">
                     <b>Receiver name </b>: {response?.receiverName}
                   </p>

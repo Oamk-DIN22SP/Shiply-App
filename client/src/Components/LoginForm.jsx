@@ -1,14 +1,5 @@
-import React, { useState} from "react";
-import {
-  TextField,
-  Button,
-  Container,
-  Paper,
-  Typography,
-  Snackbar,
-  SnackbarContent,
-  CircularProgress, // Import CircularProgress for the loader
-} from "@mui/material";
+import React, {useState } from "react";
+import { TextField, Button, Container, Paper, Typography, Snackbar, SnackbarContent } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   GoogleAuthProvider,
@@ -33,8 +24,8 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false); // Loading state for the loader
-  
+
+
   const [snackbarOpen, setsnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarColor, setSnackbarColor] = useState("");
@@ -44,8 +35,7 @@ const LoginForm = () => {
       return;
     }
     setsnackbarOpen(false);
-  };
-
+  }
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -54,6 +44,8 @@ const LoginForm = () => {
     e.preventDefault();
   };
   const loginWithGoogle = async () => {
+    setIsLoading(true);
+
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
 
@@ -63,13 +55,13 @@ const LoginForm = () => {
       // Initiate Google sign-in
       await signInWithRedirect(auth, provider);
 
-      // After returning from the redirect when your app initializes, obtain the result
-      const result = await getRedirectResult(auth);
-
-      if (result) {
-        // Get the user ID token
-        const user = result.user;
-        const idToken = await user.getIdToken();
+    // After returning from the redirect when your app initializes you can obtain the result
+    const result = await getRedirectResult(auth);
+   
+    if (result) {
+      // Get the user ID token
+       const user = result.user;
+      const idToken = await user.getIdToken();
 
         // Send the ID token to the server for authentication
         const response = await fetch(`${BACKEND_HOSTNAME}/api/auth/login`, {
@@ -80,25 +72,24 @@ const LoginForm = () => {
           body: JSON.stringify({ idToken }),
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Response from server:", data);
-          navigate("/home");
-        } else {
-          // Handle the case where the server response is not OK
-          console.error("Server response not OK:", response);
-        }
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Response from server:", data);
+        navigate("/home");
       } else {
-        // Handle the case where result.user is null
-        console.error("result.user is null");
+        // Handle the case where the server response is not OK
+        console.error("Server response not OK:", response);
       }
-    } catch (error) {
-      console.error("Error logging in with Google:", error);
-      // Handle the error, e.g., show an error message to the user
-    } finally {
-      setLoading(false); // Set loading to false when the login process is complete
+    } else {
+      // Handle the case where result.user is null
+      console.error("result.user is null");
     }
-  };
+  } catch (error) {
+    console.error("Error logging in with Google:", error);
+    // Handle the error, e.g., show an error message to the user
+  }
+};
+
 
   const handleLogin = async () => {
     setSnackbarMessage("Login successful");
@@ -106,8 +97,6 @@ const LoginForm = () => {
     setsnackbarOpen(true);
 
     try {
-      setLoading(true); // Set loading to true when starting the login process
-
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -131,7 +120,7 @@ const LoginForm = () => {
       if (response.ok) {
         // If the response status is okay, proceed with your logic
         console.log("Response from server:", data);
-        console.log(idToken);
+          console.log(idToken);
         navigate("/home");
       } else {
         // If there's an error in the response, handle it
@@ -139,6 +128,7 @@ const LoginForm = () => {
         setSnackbarMessage("Login failed");
         setSnackbarColor("#FF5252"); // Set color for failure
         setsnackbarOpen(true);
+
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -146,8 +136,6 @@ const LoginForm = () => {
       setSnackbarMessage("An error occurred. Please try again.");
       setSnackbarColor("#FF5252"); // Set color for failure
       setsnackbarOpen(true);
-    } finally {
-      setLoading(false); // Set loading to false when the login process is complete
     }
   };
 
@@ -224,17 +212,16 @@ const LoginForm = () => {
           >
             Login with Google doesnt work now
           </Button>
+          <Button variant="contained" color="warning" style={{ marginTop: 16, textAlign: "center" }} onClick={loginWithGoogle}>Login with Google doesnt work now</Button>
         </form>
       </Paper>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={5000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
+        anchorOrigin={
+          { vertical: 'top', horizontal: 'center' }
+        }>
         <SnackbarContent
           style={{ backgroundColor: snackbarColor }}
           message={snackbarMessage}

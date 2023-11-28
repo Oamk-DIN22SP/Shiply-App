@@ -7,8 +7,7 @@ import ReceivedParcel from '../Right_Side_Pannel/RecivedParcel'
 import SendParcel from '../Right_Side_Pannel/SendParcel'
 import { auth } from '../config/firebase.config';
 import { Container } from '@mui/system';
-import Receiver from '../Pages/Receiver';
-import Home from '../Pages/Home';
+
 
 export default function Details({
   selectedItem,
