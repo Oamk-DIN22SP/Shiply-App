@@ -16,7 +16,6 @@ import { auth } from './config/firebase.config';
 import { useAuthState } from "react-firebase-hooks/auth";
 
 
-
 function App() {
 
 const [user] = useAuthState(auth); 
@@ -24,6 +23,7 @@ const [user] = useAuthState(auth);
   return (
     <div>       
      <ResponsiveDrawer/>
+    
     </div>
   );
 }

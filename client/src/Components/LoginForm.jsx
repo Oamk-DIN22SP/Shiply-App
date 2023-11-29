@@ -1,13 +1,5 @@
-import React, { useState } from "react";
-import {
-  TextField,
-  Button,
-  Container,
-  Paper,
-  Typography,
-  Snackbar,
-  SnackbarContent,
-} from "@mui/material";
+import React, {useState } from "react";
+import { TextField, Button, Container, Paper, Typography, Snackbar, SnackbarContent } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   GoogleAuthProvider,
@@ -24,12 +16,15 @@ import { useAuthState } from "react-firebase-hooks/auth";
 const LoginForm = () => {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+
 
   const [snackbarOpen, setsnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -40,7 +35,7 @@ const LoginForm = () => {
       return;
     }
     setsnackbarOpen(false);
-  };
+  }
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -55,16 +50,18 @@ const LoginForm = () => {
     const provider = new GoogleAuthProvider();
 
     try {
+      setLoading(true); // Set loading to true when starting the login process
+
       // Initiate Google sign-in
       await signInWithRedirect(auth, provider);
 
-      // After returning from the redirect when your app initializes you can obtain the result
-      const result = await getRedirectResult(auth);
-
-      if (result) {
-        // Get the user ID token
-        const user = result.user;
-        const idToken = await user.getIdToken();
+    // After returning from the redirect when your app initializes you can obtain the result
+    const result = await getRedirectResult(auth);
+   
+    if (result) {
+      // Get the user ID token
+       const user = result.user;
+      const idToken = await user.getIdToken();
 
         // Send the ID token to the server for authentication
         const response = await fetch(`${BACKEND_HOSTNAME}/api/auth/login`, {
@@ -75,27 +72,31 @@ const LoginForm = () => {
           body: JSON.stringify({ idToken }),
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Response from server:", data);
-          navigate("/home");
-        } else {
-          // Handle the case where result.user is null
-          console.error("result.user is null");
-        }
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Response from server:", data);
+        navigate("/home");
+      } else {
+        // Handle the case where the server response is not OK
+        console.error("Server response not OK:", response);
       }
-    } catch (error) {
-      console.error("Error logging in with Google:", error);
-      // Handle the error, e.g., show an error message to the user
+    } else {
+      // Handle the case where result.user is null
+      console.error("result.user is null");
     }
-  };
+  } catch (error) {
+    console.error("Error logging in with Google:", error);
+    // Handle the error, e.g., show an error message to the user
+  }
+};
+
 
   const handleLogin = async () => {
     setSnackbarMessage("Login successful");
     setSnackbarColor("#4CAF50"); // Set color for success
     setsnackbarOpen(true);
+
     try {
-      setIsLoading(true);
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -119,6 +120,7 @@ const LoginForm = () => {
       if (response.ok) {
         // If the response status is okay, proceed with your logic
         console.log("Response from server:", data);
+          console.log(idToken);
         navigate("/home");
       } else {
         // If there's an error in the response, handle it
@@ -127,8 +129,6 @@ const LoginForm = () => {
         setSnackbarColor("#FF5252"); // Set color for failure
         setsnackbarOpen(true);
 
-        // Alert the user about the error
-        alert("Authentication failed. Please try again.");
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -136,13 +136,16 @@ const LoginForm = () => {
       setSnackbarMessage("An error occurred. Please try again.");
       setSnackbarColor("#FF5252"); // Set color for failure
       setsnackbarOpen(true);
-    } finally {
-      setIsLoading(false);
     }
   };
+
   return (
     <Container maxWidth="xs">
-      <img src={logo} alt="Logo" style={{ width: "250px", height: "auto" }} />
+      <img
+        src={logo}
+        alt="Logo"
+        style={{ width: "250px", height: "auto" }}
+      />
       <p className="logo_line">Your local delivery solution</p>
       <Paper
         elevation={3}
@@ -157,9 +160,12 @@ const LoginForm = () => {
         }}
       >
         <Typography variant="h5">Login</Typography>
-        <form onSubmit={handleSubmit} style={{ width: "100%", marginTop: 16 }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ width: "100%", marginTop: 16 }}
+        >
           <TextField
-            label="Email"
+            placeholder="Email"
             type="email"
             variant="outlined"
             margin="normal"
@@ -170,7 +176,7 @@ const LoginForm = () => {
             onChange={handleChange}
           />
           <TextField
-            label="Password"
+            placeholder="Password"
             type="password"
             variant="outlined"
             margin="normal"
@@ -186,38 +192,54 @@ const LoginForm = () => {
             color="warning"
             style={{ marginTop: 16, textAlign: "center" }}
             onClick={handleLogin}
+            disabled={loading} // Disable the button when loading is true
           >
             Login
           </Button>
           <br />
-          <Button sx={{ marginTop: 2, borderRadius: 3 }} color="warning">
-            <NavLink to="/signup">Don't have an account? Sign Up</NavLink>
+          <Button
+            sx={{ marginTop: 2, borderRadius: 3 }}
+            color="warning"
+          >
+            <NavLink to="/signup" style={{color:'orange'}}>Don't have an account? Sign Up</NavLink>
           </Button>
           <Button
             variant="contained"
             color="warning"
             style={{ marginTop: 16, textAlign: "center" }}
             onClick={loginWithGoogle}
+            disabled={loading} // Disable the button when loading is true
           >
             Login with Google doesnt work now
           </Button>
-          <button onClick={loginWithGoogle}>
-            Login with Google doesnt work now
-          </button>
+          <Button variant="contained" color="warning" style={{ marginTop: 16, textAlign: "center" }} onClick={loginWithGoogle}>Login with Google doesnt work now</Button>
         </form>
       </Paper>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={5000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
+        anchorOrigin={
+          { vertical: 'top', horizontal: 'center' }
+        }>
         <SnackbarContent
-          style={{ backgroundColor: snackbarColor }} // Set your desired background color
+          style={{ backgroundColor: snackbarColor }}
           message={snackbarMessage}
         />
       </Snackbar>
+      {loading && (
+          <CircularProgress
+            size={60} // Adjust the size of the loader
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        )}
     </Container>
   );
 };
+
 export default LoginForm;

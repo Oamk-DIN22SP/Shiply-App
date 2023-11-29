@@ -1,5 +1,5 @@
 // SignupForm.js
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { TextField, Button, Container, Paper, Typography } from '@mui/material';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -15,6 +15,35 @@ const SignupForm = () => {
     address:'',
     phone:'',
   });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+ 
+
+  const validate = (inputValues) => {
+    let errors = {};
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    if (!inputValues.username) {
+      errors.username = 'Username is required';
+    }
+    if (!inputValues.email) {
+      console.log(formData.email);
+      errors.email = 'Email is required';
+    } else if (!regex.test(inputValues.email)) {
+      errors.email = 'Invalid email format';
+    }
+    if (!inputValues.password) {
+      errors.password = 'Password is required';
+    } else if (inputValues.password.length < 6) {
+      errors.password = 'Password must be more than 6 characters';
+    }
+    if (!inputValues.address) {
+      errors.address = 'Address is required';
+    }
+    if (!inputValues.phone.match('[0-9]{10}')) {
+      errors.phone = 'Phone Number is digits should be 11';
+    }
+    return errors;
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,6 +51,8 @@ const SignupForm = () => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+  setErrors(validate(formData));
+   setSubmitting(true);
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -59,9 +90,6 @@ const handleSubmit = async (e) => {
     } else {
       // If there's an error in the response, handle it
       console.error("Error from server:", data);
-
-      // Alert the user about the error
-      alert("Authentication failed. Please try again.");
     }
   } catch (error) {
     const errorCode = error.code;
@@ -70,8 +98,14 @@ const handleSubmit = async (e) => {
     // Handle the error (e.g., display an error message to the user)
   }
 };
-
- 
+const finishSubmit = () => {
+  console.log(formData);
+};
+useEffect(() => {
+  if (Object.keys(errors).length === 0 && submitting) {
+    finishSubmit();
+  }
+}, [errors, submitting]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -85,60 +119,85 @@ const handleSubmit = async (e) => {
         }}
       >
         <Typography variant="h5">Sign Up</Typography>
+        {Object.keys(errors).length === 0 && submitting ? (
+    <span className="success">Successfully submitted ✓</span>
+  ) : null}
         <form onSubmit={handleSubmit} style={{ width: "100%", marginTop: 16 }}>
           <TextField
-            label="First Name"
+            placeholder='Username'
             variant="outlined"
             margin="normal"
             fullWidth
-            required
+            value={formData.username}
             name="username"
             onChange={handleChange}
           />
+         {errors.username ? (
+            <p className="error">
+              Please enter your name
+            </p>
+          ) : null}
           <TextField
-            label="Email"
+            placeholder='Email'
             type="email"
             variant="outlined"
             margin="normal"
-            fullWidth
-            required
+            fullWidth       
             name="email"
             value={formData.email}
             onChange={handleChange}
           />
+           {errors.email ? (
+            <p className="error">Email should be at least 15 characters long</p>
+          ) : null}
+
           <TextField
-            label="Password"
+            placeholder='Password'
             type="password"
             variant="outlined"
             margin="normal"
             fullWidth
-            required
             name="password"
             value={formData.password}
             onChange={handleChange}
           />
+          {errors.password ? (
+            <p className="error">
+              Password should be at least 5 characters long
+            </p>
+          ) : null}
           <TextField
-            label="Address"
+            placeholder='Address'
             type="text"
             variant="outlined"
             margin="normal"
             fullWidth
-            required
             name="address"
             value={formData.address}
             onChange={handleChange}
           />
+          {errors.address ? (
+            <p className="error">
+              Please enter your address
+            </p>
+          ) : null}
+
           <TextField
-            label="Phone"
+            placeholder='Phone Number'
             type="number"
             variant="outlined"
             margin="normal"
             fullWidth
-            required
             name="phone"
             value={formData.phone}
             onChange={handleChange}
           />
+            {errors.phone ? (
+            <p className="error">
+              phone number should be at least 11 digits long
+            </p>
+          ) : null}
+
           <Button sx={{ marginTop: 2, borderRadius: 3 }} color="warning">
             <NavLink to="/login">Already have an account? Login</NavLink>
           </Button>
@@ -147,7 +206,7 @@ const handleSubmit = async (e) => {
             variant="contained"
             color="warning"
             style={{ marginTop: 16 }}
-            onClick={SignupForm}
+            onClick={handleSubmit}
           >
             Submit
           </Button>
