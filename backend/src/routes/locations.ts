@@ -6,6 +6,10 @@ const router = express.Router();
 // get all locations
 router.get('/', LocationCabinetController.getAllLocations);
 
+router.get('/reserve', LocationCabinetController.reserveRandomEmptyCabinet);
+router.post('/reserve', LocationCabinetController.reserveEmptyCabinetByLocation);
+
+
 // Get all cabinets by location ID
 router.get('/:locationId/cabinets', LocationCabinetController.getAllCabinetsByLocationID);
 
