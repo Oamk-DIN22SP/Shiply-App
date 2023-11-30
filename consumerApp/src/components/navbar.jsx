@@ -1,5 +1,5 @@
-function navbar() {
-  return <div></div>;
+function Navbar() {
+  return <div>Navbar</div>;
 }
 
-export default navbar;
+export default Navbar;

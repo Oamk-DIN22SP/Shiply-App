@@ -1,7 +1,17 @@
-import "./App.css";
+import LeftPanel from "./components/left-panel";
+import MidPanel from "./components/mid-panel";
+import Navbar from "./components/navbar";
+import RightPanel from "./components/right-panel/right-panel";
 
 function App() {
-  return <div>hello baby!</div>;
+  return (
+    <div>
+      <Navbar />
+      <LeftPanel />
+      <RightPanel />
+      <MidPanel />
+    </div>
+  );
 }
 
 export default App;
