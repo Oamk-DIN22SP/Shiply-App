@@ -49,20 +49,18 @@ class ParcelControllerTest {
         locker_id
       ]);
 
-      console.log('Parcel create status:', result);
-
       // Get the last inserted parcel ID
       const parcelId = (result[0] as ResultSetHeader).insertId;
 
-      // Update the corresponding cabinet with parcel ID and code
+      // Update the corresponding cabinet with parcel ID, code, traking number and status
       const updateCabinetResult = await (await db).query(
-        'UPDATE cabinets SET parcel_id = ?, code = ? WHERE id = ?',
-        [parcelId, security_code, locker_id]
+        'UPDATE cabinets SET parcel_id = ?, code = ?, tracking_number = ?, status = "reserved" WHERE id = ?',
+        [parcelId, security_code, tracking_number, locker_id]
       );
-
-      console.log('Cabinet update status:', updateCabinetResult);
-
+      
+      // return according to frontend requirements
       res.status(201).json({ message: 'Parcel created successfully', tracking_number, security_code });
+
     } catch (err) {
       console.error('Error creating parcel:', err);
       res.status(500).json({ error: 'Internal server error' });
