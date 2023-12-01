@@ -96,6 +96,41 @@ class LocationCabinetController {
       res.status(500).json({ error: 'Internal server error' });
     }
   }
+
+  async verifyDropOff(req: Request, res: Response) {
+    try {
+      const { locationId, deliveryNumber, code } = req.body;
+  
+      if (!locationId || !deliveryNumber || !code) {
+        return res.status(400).json({ error: 'Please provide locationId, deliveryNumber, and code in the request body' });
+      }
+  
+      const [cabinetResult] = await (await db).query(
+        'SELECT id AS cabinet_id, parcel_id FROM cabinets WHERE location_id = ? AND tracking_number IS NOT NULL AND tracking_number <> "" AND tracking_number = ? AND code = ?',
+        [locationId, deliveryNumber, code]
+      );
+  
+      if (!Array.isArray(cabinetResult) || cabinetResult.length === 0) {
+        return res.status(404).json({ error: 'No matching cabinet found for the provided details' });
+      }
+  
+      const { cabinet_id, parcel_id } = cabinetResult[0] as { cabinet_id: number, parcel_id: string };
+  
+      if (!cabinet_id || !parcel_id) {
+        return res.status(404).json({ error: 'No matching cabinet found for the provided details' });
+      }
+  
+      // Additional logic if needed, such as updating cabinet status or other actions
+  
+      res.status(200).json({ message: 'Drop-off verified successfully', cabinet_id, parcel_id });
+    } catch (err) {
+      console.error('Error verifying drop-off:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+ 
+  
 }
 
 export default new LocationCabinetController();

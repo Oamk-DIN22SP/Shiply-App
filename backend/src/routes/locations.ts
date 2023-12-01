@@ -9,6 +9,8 @@ router.get('/', LocationCabinetController.getAllLocations);
 router.get('/reserve', LocationCabinetController.reserveRandomEmptyCabinet);
 router.post('/reserve', LocationCabinetController.reserveEmptyCabinetByLocation);
 
+router.post('/verify-drop-off', LocationCabinetController.verifyDropOff);
+
 
 // Get all cabinets by location ID
 router.get('/:locationId/cabinets', LocationCabinetController.getAllCabinetsByLocationID);
