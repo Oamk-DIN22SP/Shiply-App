@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import db from '../config/db.config';
+import { ResultSetHeader } from 'mysql2';
 
 class ParcelControllerTest {
 
@@ -49,6 +50,17 @@ class ParcelControllerTest {
       ]);
 
       console.log('Parcel create status:', result);
+
+      // Get the last inserted parcel ID
+      const parcelId = (result[0] as ResultSetHeader).insertId;
+
+      // Update the corresponding cabinet with parcel ID and code
+      const updateCabinetResult = await (await db).query(
+        'UPDATE cabinets SET parcel_id = ?, code = ? WHERE id = ?',
+        [parcelId, security_code, locker_id]
+      );
+
+      console.log('Cabinet update status:', updateCabinetResult);
 
       res.status(201).json({ message: 'Parcel created successfully', tracking_number, security_code });
     } catch (err) {
