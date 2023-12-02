@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import { Container } from '@mui/system';
 import Notification from '../Components/Notification'
+import { useEffect } from "react";
 
 
 export default function Settings() {

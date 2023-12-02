@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import { Container } from '@mui/system';
 import BACKEND_HOSTNAME from '../config/backend.config';
 import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../config/firebase.config";
 export default function Track() {
   const [trackingNumber, settrackingNumber] = useState('');
     const [user] = useAuthState(auth);

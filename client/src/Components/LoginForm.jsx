@@ -44,14 +44,13 @@ const LoginForm = () => {
     e.preventDefault();
   };
   const loginWithGoogle = async () => {
-    setIsLoading(true);
+
 
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
 
     try {
-      setLoading(true); // Set loading to true when starting the login process
-
+    
       // Initiate Google sign-in
       await signInWithRedirect(auth, provider);
 
@@ -192,7 +191,6 @@ const LoginForm = () => {
             color="warning"
             style={{ marginTop: 16, textAlign: "center" }}
             onClick={handleLogin}
-            disabled={loading} // Disable the button when loading is true
           >
             Login
           </Button>
@@ -208,7 +206,6 @@ const LoginForm = () => {
             color="warning"
             style={{ marginTop: 16, textAlign: "center" }}
             onClick={loginWithGoogle}
-            disabled={loading} // Disable the button when loading is true
           >
             Login with Google doesnt work now
           </Button>
@@ -227,17 +224,7 @@ const LoginForm = () => {
           message={snackbarMessage}
         />
       </Snackbar>
-      {loading && (
-          <CircularProgress
-            size={60} // Adjust the size of the loader
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          />
-        )}
+     
     </Container>
   );
 };
