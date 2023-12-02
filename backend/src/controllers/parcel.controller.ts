@@ -174,48 +174,6 @@ class ParcelController {
     }
 
 
-    // async createNewParcel(req: Request, res: Response) {
-    //     try {
-    //         const {
-    //             receiverID,
-    //             driverID,
-    //             status,
-    //             parcelDescription,
-    //             pickupAddress,
-    //             deliveryAddress,
-    //             deliveryDate,
-    //             deliveryNotes,
-    //         } = req.body;
-
-    //         const values = [
-    //             receiverID,
-    //             driverID,
-    //             status, // Use the 'status' field from the request body
-    //             parcelDescription,
-    //             pickupAddress,
-    //             deliveryAddress,
-    //             deliveryDate,
-    //             deliveryNotes,
-    //         ];
-
-    //         // Execute the INSERT query to create a new parcel
-    //         const [result]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
-    //             'INSERT INTO Parcels (receiverID, driverID, status, parcelDescription, pickupAddress, deliveryAddress, deliveryDate, deliveryNotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-    //             values
-    //         );
-
-    //         if (result && result[0].affectedRows > 0) {
-    //             // If affectedRows is greater than 0, the parcel was successfully created
-    //             res.status(201).json({ message: 'Parcel created successfully' });
-    //         } else {
-    //             res.status(500).json({ error: 'Failed to create the parcel' });
-    //         }
-    //     } catch (err) {
-    //         console.error('Error creating a parcel:', err);
-    //         res.status(500).json({ error: 'Internal server error' });
-    //     }
-    // }
-
     // This endpoint allows updating the status of a parcel by its parcelID.
     async updateParcelStatus(req: Request, res: Response) {
         try {
