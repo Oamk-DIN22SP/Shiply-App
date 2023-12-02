@@ -3,7 +3,8 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Container } from '@mui/system';
-
+import BACKEND_HOSTNAME from '../config/backend.config';
+import { useAuthState } from "react-firebase-hooks/auth";
 export default function Track() {
   const [trackingNumber, settrackingNumber] = useState('');
     const [user] = useAuthState(auth);
@@ -71,8 +72,8 @@ export default function Track() {
           </Button>
         </div>
       </Grid>
-    </div>
+ 
     </Container>
-   </div>
+ 
   );
 }
