@@ -1,8 +1,6 @@
 require('dotenv').config();
 import express, { Application } from "express";
 import Server from "./src/index";
-import cors from "cors";
-import morgan from 'morgan';
 
 const app: Application = express();
 const server: Server = new Server(app);
@@ -20,5 +18,4 @@ app
       console.log("---------------------------")
     }
   });
-// Firebase Admin SDK initialization
 

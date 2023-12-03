@@ -1,2 +1,4 @@
 .env
 service_account.json
+/backend/build
+/consumerApp/node_modules
