@@ -46,7 +46,7 @@ export default function Track() {
     <p className='heading' style={{border:'1px solid #FFFAF6', padding:'10px', backgroundColor:'#FFFAF6',borderRadius:'10px 10px 0 0'}}>Track</p>
       <Grid style={{ backgroundColor: '#FFFAF6', padding: '10px', borderRadius: '5px',marginTop: '10px', height: '70vh' }}>
       <h5 className='send_parcel'>Track Your Delivery!</h5>
-        <p className='track_content'>Your 5 digit delivery number is enough to know the status<br></br>
+        <p className='track_content'>Your 8 digit delivery number is enough to know the status<br></br>
           of your delivery.</p>
           <div className='text_field'>
           <TextField

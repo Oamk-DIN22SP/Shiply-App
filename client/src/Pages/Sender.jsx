@@ -67,9 +67,6 @@ export default function Sender() {
   const handleChooseLocation = (chosenLocation) => {
     setFormData({ ...formData, senderDropOffLocation: chosenLocation });
   };
-const closeConfirmationDialog = () => {
-  setConfirmationDialogOpen(false);
-};
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -104,7 +101,7 @@ const closeConfirmationDialog = () => {
 
       const result = await response.json();
       setResponseData(result);
-  closeConfirmationDialog();
+ 
       // Handle the API response as needed
       console.log("API Response:", result);
     } catch (error) {
@@ -177,7 +174,7 @@ const closeConfirmationDialog = () => {
             <div className='main_send'>
               <h3 style={{color:'#686868', textAlign:'center', margin:'auto'}}>Consignee Detials</h3>
             <TextField
-            placeholder='Reciver Name'
+            placeholder='Receiver Name'
               type="text"
               required
               variant="outlined"
@@ -188,7 +185,7 @@ const closeConfirmationDialog = () => {
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
-            placeholder='Reciver Email Address'
+            placeholder='Receiver Email Address'
               type="email"
               variant="outlined"
               fullWidth
@@ -199,7 +196,7 @@ const closeConfirmationDialog = () => {
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
-            placeholder='Reciver Address'
+            placeholder='Receiver Address'
              type='text'
               variant="outlined"
               fullWidth
@@ -210,7 +207,7 @@ const closeConfirmationDialog = () => {
               style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.1)" }}
             />
             <TextField
-            placeholder='Reciver Phone Number'
+            placeholder='Receiver Phone Number'
               type="number"
               variant="outlined"
               fullWidth
@@ -272,7 +269,7 @@ const closeConfirmationDialog = () => {
             <h5 className="send_parcel">Drop Off Location</h5>
             <p className='p_sender'>Please choose a drop off location...</p>
             <div className='main_send'>
-              <h3 style={{color:'#686868', textAlign:'center', margin:'auto'}}>Location</h3>
+              <h4 style={{color:'#686868', textAlign:'center', margin:'auto'}}>Location</h4>
             <List>
               {[
                 "Kangastie 001C / Tuiron kakku 24, Marikkonta, Oulu / Finland",
@@ -281,8 +278,8 @@ const closeConfirmationDialog = () => {
                 "Kangastie 88CW / Tuiron kakku 87, Paivaonta, Kokolla / Finland",
                 "Kangastie 901S / Tuiron kakku 45, Marikkonta, Espoo / Finland",
               ].map((location) => (
-                <ListItem key={location} style={{backgroundColor:'#D5F9B8', margin:'5px'}}>
-                  <ListItemText primary={location} style={{ backgroundColor:'red', fontSize:'small' }} />
+                <ListItem key={location} style={{backgroundColor:'#D5F9B8', margin:'2px'}}>
+                  <ListItemText primary={location} style={{fontSize:'small' }} />
                   <Button
                     variant="outlined"
                     style={{ marginLeft: "10px", backgroundColor: "#ADADAD", color: "black", fontSize:'9px', padding:'5px', border:'none' }}
@@ -303,11 +300,11 @@ const closeConfirmationDialog = () => {
            <h5 className="set_heading">Final Confirmation</h5>
             <p>Review your information before confirming.</p>
             <div className='main_send'>
-              <h3 style={{color:'#686868', textAlign:'center', margin:'auto'}}>Final Detials</h3>
+              <h3 style={{color:'#686868', textAlign:'center', margin:'auto'}}>Final Details</h3>
             <Card
               style={{
                 width: "100%",
-                lineHeight: "10px",
+                lineHeight: "14px",
                 fontSize: "small",
                 boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.1)",
                 backgroundColor: "#fffdfb",
@@ -316,28 +313,28 @@ const closeConfirmationDialog = () => {
               <CardContent>
                 <div className="parcel_info_main">
                   <p className="parcel_info">
-                    <b>Tracking number </b>: {response?.trackingNumber}
+                    <b>Tracking number : </b> {response?.trackingNumber}
                   </p>
 
                   <p className="parcel_info">
-                    <b>Address of parcel locker (to send package) </b>{" "}
+                    <b>Address of parcel locker (to send package) :  </b>{" "}
                     {response?.senderDropOffLocation}
                   </p>
 
                   <p className="parcel_info">
-                    <b>Receiver name </b>: {response?.receiverName}
+                    <b>Receiver name : </b> {response?.receiverName}
                   </p>
                   <p className="parcel_info">
-                    <b>Receiver email </b>: {response?.receiverEmailAddress}
+                    <b>Receiver email : </b> {response?.receiverEmailAddress}
                   </p>
                   <p className="parcel_info">
-                    <b>Cabinet number </b> to be done
+                    <b>Cabinet number : </b> to be done
                   </p>
                   <p className="parcel_info">
-                    <b>Parcel status</b> {response?.status}
+                    <b>Parcel status : </b> {response?.status}
                   </p>
                   <p className="parcel_info">
-                    <b>Pin code for parcel locker </b>: {response?.pinCode}
+                    <b>Pin code for parcel locker : </b> {response?.pinCode}
                   </p>
                 </div>
               </CardContent>
