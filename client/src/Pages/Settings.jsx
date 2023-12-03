@@ -47,18 +47,17 @@ export default function Settings() {
     try {
       const result = await Swal.fire({
         title: 'Are you sure?',
-        text: 'You will not be able to recover your account!',
+        text: 'You will be able to sign in again!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#BF5000',
         cancelButtonColor: '#42820F',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'Yes, sign out!',
       });
 
       if (result.isConfirmed) {
         await signOut(auth);
         console.log("User signed out successfully");
-        alert("User signed out successfully");
         navigate("/login");
       }
     } catch (error) {
@@ -76,7 +75,7 @@ export default function Settings() {
           <p className='setting_content'>Of course, there are a lot of settings that should be included. Yet, we have limited time and compulsory requirements to fulfill. Priorities :D</p>
           <br></br>
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-            <Button variant="contained" onClick={handleSignOut} style={{ backgroundColor: '#BF5000', color: '#FDF9F3' }}>Delete Account</Button>
+            <Button variant="contained" onClick={handleSignOut} style={{ backgroundColor: '#BF5000', color: '#FDF9F3' }}>Sign out</Button>
           </div>
         </Grid>
       </div>
