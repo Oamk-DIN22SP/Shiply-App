@@ -1,10 +1,12 @@
 // routes/parcel.route.js
 // Router for parcels
-const express = require('express');
+import { Router } from 'express';
 import parcelController from "../controllers/parcel.controller";
-const router = express.Router();
+const router = Router();
+
 //NOTE -  Endpoint structure for parcels /api/parcels/
 // Define the route to get all parcels
+
 router.get('/getAllParcels', parcelController.getAllParcels);
 
 // Get Parcel by ID (Read)

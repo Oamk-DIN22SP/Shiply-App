@@ -7,8 +7,6 @@ import morgan from 'morgan';
 const app: Application = express();
 const server: Server = new Server(app);
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-app.use(cors());
-app.use(morgan('dev'));
 app
   .listen(PORT, function () {
     console.log(`Server is running on port ${PORT}.`);
