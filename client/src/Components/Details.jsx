@@ -38,7 +38,7 @@ export default function Details({
           height: "100vh",
         }}
       >
-         <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" gutterBottom>
           Welcome, {auth.currentUser?.displayName}
         </Typography>
         {selectedItem === "recivedparecl" ? (
@@ -48,13 +48,23 @@ export default function Details({
         ) : (
           <OtherParcel />
         )}
-   
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-          <Button variant="contained"  style={{ backgroundColor: '#60326A', color:'#FDF9F3' }} onClick={() => handleTrackClick(true)}>Track</Button>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "10px",
+          }}
+        >
+          <Button
+            variant="contained"
+            style={{ backgroundColor: "#60326A", color: "#FDF9F3" }}
+            onClick={() => handleTrackClick(true)}
+          >
+            Track
+          </Button>
         </div>
-       
-              </Grid>
-          
+      </Grid>
     </Container>
   );
 }
