@@ -1,8 +1,7 @@
 // parcel.controller.ts
 import { Request, Response } from 'express';
 import db from '../config/db.config'; // Import your database connection
-import { Field, FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
-import {nanoid} from "nanoid";
+import { FieldPacket, ResultSetHeader} from 'mysql2';
 import { generateNumericString } from '../robot';
 // RowData packet is used for An array with the returned rows
 // ResultSetHeader is used for For multiples INSERT, UPDATE, DELETE, TRUNCATE, etc. when using multipleStatements as true
