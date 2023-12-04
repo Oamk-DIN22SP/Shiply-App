@@ -1,0 +1,35 @@
+/* styles.css */
+
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dialog-content {
+    width: 30rem;
+    background: green;
+    padding: 20px;
+    border-radius: 8px;
+    position: fixed;
+    top: 50px; /* Adjust this value to control the distance from the top */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center horizontally */
+    font-size: large;
+    color: white;
+  }
+  
+  .close-button {
+    float: right;
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: white;
+    cursor: pointer;
+  }
+  
