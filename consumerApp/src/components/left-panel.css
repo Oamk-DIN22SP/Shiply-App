@@ -1,0 +1,41 @@
+.menu_container {
+    height: 100vh;
+    background-color: #FFFAF6;
+    width: 280px;
+    padding: 20px;
+    margin-top: 12px;
+    border-radius: 0px 10px 0px 0px;
+  }
+  
+  button.btn-component.menu-btn {
+    display: flex;
+    width: 240px;
+    padding: 15px 20px;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    background: #F3F3F3;
+    color: #686868;
+    text-align: center; /* Center text within the button */
+  }
+  
+  button.btn-component.menu-btn:hover {
+    opacity: 0.75;
+    background-color: #FEDBC2;
+  }
+  
+  button.btn-component.menu-btn.active {
+    background-color: #FF8D6D;
+  }
+  
+  /* Style the SVG icons */
+  button.btn-component.menu-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Add margin to the left of the SVG icon to separate it from the text */
+  button.btn-component.menu-btn svg + span {
+    margin-left: 8px;
+  }
+  

@@ -81,6 +81,12 @@ input {
     align-items: flex-start;
     gap: 2.4rem;
 }
-/* End of Login.css */
 
-/* Signup.css */
+/* Home */
+.home_div {
+    display: grid;
+    grid-template-columns: 280px 1fr 1fr; /* Adjust column widths as needed */
+    grid-gap: 20px; /* Adjust the gap between columns */
+    background: #FFFFFF;
+  }
+
