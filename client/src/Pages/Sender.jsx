@@ -90,7 +90,7 @@ export default function Sender() {
         return;
       } 
 
-      const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/createParcel`;
+      const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/`;
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {

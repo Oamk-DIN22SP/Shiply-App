@@ -59,7 +59,7 @@ A parcel in the system has the following unique properties:
 ---
 ## Retrieve All Parcels
 
-**Endpoint:** `GET /getAllParcels`
+**Endpoint:** `GET /`
 
 This endpoint retrieves a list of all parcels from the Parcels table.
 
@@ -104,7 +104,7 @@ This endpoint allows you to create a new parcel.
 **Request:**
 
 - Method: `POST`
-- URL: `/createParcel`
+- URL: `/`
 - Body: JSON object with the following fields:
   - `receiverID` (number): ID of the receiver.
   - `driverID` (number): ID of the driver.

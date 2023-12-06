@@ -18,7 +18,7 @@ class DriverController {
 
       // Check if the parcel with the given tracking_number and parcel_id exists
       const [parcelResult] = await (await db).query(
-        'SELECT * FROM package WHERE tracking_number = ? AND id = ?',
+        'SELECT * FROM Parcels WHERE trackingNumber = ? AND parcelID = ?',
         [tracking_number, parcel_id]
       );
 
@@ -26,12 +26,12 @@ class DriverController {
         return res.status(404).json({ error: 'No matching parcel found for the provided details' });
       }
 
-      // Update package table with new security_code, new status as "delivered", update receiver location id, and locker id
-      // Generate a new code for both cabinet and package
+      // Update Parcels table with new security_code, new status as "delivered", update receiver location id, and locker id
+      // Generate a new code for both cabinet and parcel
       const newCode = Math.floor(100000 + Math.random() * 900000).toString();
 
       let res1 = await (await db).query(
-        'UPDATE package SET security_code = ?, status = "delivered", locker_id = ? WHERE id = ?',
+        'UPDATE Parcels SET pinCode = ?, status = "delivered", lockerID = ? WHERE parcelID = ?',
         [newCode, cabinet_id, parcel_id]
       );
 
@@ -79,7 +79,7 @@ class DriverController {
 
       // Update parcel status to 'picked'
       const result2 = await (await db).query(
-        'UPDATE package SET status = "picked" WHERE id = ?',
+        'UPDATE Parcels SET status = "picked" WHERE parcelID = ?',
         [parcel_id]
       );
 

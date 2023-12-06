@@ -21,7 +21,7 @@ interface ParcelRequest {
             return;
         }
 
-        const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/createParcel`;
+        const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/`;
         // Create a request payload with the expected structure
         const requestBody: ParcelRequest = {
             receiverEmailAddress: user.email,

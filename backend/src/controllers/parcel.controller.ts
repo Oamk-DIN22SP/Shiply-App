@@ -121,7 +121,13 @@ class ParcelController {
                 
                 packageWidth,
                 packageHeight,
-                packageMass
+                packageMass,
+
+            // new features for lockers
+                receiverLocationId,
+                senderLocationId,
+                lockerID
+
             } = req.body;
 
          
@@ -130,7 +136,7 @@ class ParcelController {
             try {
                 // Insert parcel data into the database
                 const [result]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
-                    'INSERT INTO Parcels (trackingNumber, pinCode, status, senderName, senderEmailAddress, senderAddress, senderPhoneNumber, senderID, senderDropOffPoint, receiverName, receiverEmailAddress, receiverAddress, receiverPhoneNumber, packageWidth, packageHeight, packageMass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO Parcels (trackingNumber, pinCode, status, senderName, senderEmailAddress, senderAddress, senderPhoneNumber, senderID, senderDropOffPoint, receiverName, receiverEmailAddress, receiverAddress, receiverPhoneNumber, packageWidth, packageHeight, packageMass , receiverLocationId, senderLocationId, lockerID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)',
                     [
                         trackingNumber,
                         pinCode,
@@ -151,9 +157,23 @@ class ParcelController {
                         packageWidth,
                         packageHeight,
                         packageMass,
+
+                        // new features for lockers
+                        receiverLocationId,
+                        senderLocationId,
+                        lockerID
                     ]
                 );
+                // Get the last inserted parcel ID
+                const parcelId = (result[0] as ResultSetHeader).insertId;
 
+
+                const code =
+                    // Update the corresponding cabinet with parcel ID, code, traking number and status
+                    await (await db).query(
+                        'UPDATE cabinets SET parcel_id = ?, code = ?, tracking_number = ?, status = "reserved" WHERE id = ?',
+                        [parcelId, pinCode, trackingNumber, lockerID]
+                    );
 
                 if (result) {
                     res.json({ success: true, trackingNumber, pinCode, status: "Sent", receiverName, receiverEmailAddress,  senderDropOffLocation });
