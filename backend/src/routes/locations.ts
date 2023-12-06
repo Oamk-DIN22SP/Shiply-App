@@ -6,10 +6,11 @@ const router = express.Router();
 // get all locations
 router.get('/', LocationCabinetController.getAllLocations);
 
-router.get('/reserve', LocationCabinetController.reserveRandomEmptyCabinet);
+// router.get('/reserve', LocationCabinetController.reserveRandomEmptyCabinet);
 router.post('/reserve', LocationCabinetController.reserveEmptyCabinetByLocation);
 
 router.post('/verify-drop-off', LocationCabinetController.verifyDropOff);
+router.post('/verify-pick-up', LocationCabinetController.verifyPickUp);
 
 
 // Get all cabinets by location ID

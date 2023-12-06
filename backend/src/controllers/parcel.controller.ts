@@ -201,6 +201,18 @@ class ParcelController {
             res.status(500).json({ error: 'Internal server error' });
         }
     }
+
+    // Get parcel by receiverLocationId
+    async getParcelByReceiverLocationId(req: Request, res: Response) {
+        try {
+            const receiverLocationId = req.params.receiverLocationId;
+            const [rows] = await (await db).query('SELECT * FROM shiply.Parcels WHERE receiverLocationId = ?', [receiverLocationId]);
+            res.status(200).json(rows);
+        } catch (err) {
+            console.error('Error fetching parcels:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
 }
 
 

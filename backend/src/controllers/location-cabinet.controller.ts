@@ -41,27 +41,24 @@ class LocationCabinetController {
     }
   }
 
-  async reserveRandomEmptyCabinet(req: Request, res: Response) {
+  async reserveRandomEmptyCabinet() {
     try {
       const [cabinetResult] = await (await db).query('SELECT c.id AS cabinet_id, l.id AS location_id FROM cabinets c JOIN locations l ON c.location_id = l.id WHERE c.status = "empty" LIMIT 1');
 
       if (!Array.isArray(cabinetResult) || cabinetResult.length === 0) {
-        return res.status(404).json({ error: 'No available empty cabinets in any location' });
+        return null;
       }
-
 
       const { cabinet_id, location_id } = cabinetResult[0] as { cabinet_id: number, location_id: number };
 
       if (!cabinet_id || !location_id) {
-        return res.status(404).json({ error: 'No available empty cabinets in any location' });
+        return null;
       }
 
-      await (await db).query('UPDATE cabinets SET status = "reserved", location_id = ? WHERE id = ?', [location_id, cabinet_id]);
+      return location_id;
 
-      res.status(200).json({ message: 'Cabinet reserved successfully', location_id, cabinet_id });
     } catch (err) {
       console.error('Error reserving empty cabinet:', err);
-      res.status(500).json({ error: 'Internal server error' });
     }
   }
 
@@ -111,29 +108,80 @@ class LocationCabinetController {
       );
 
       if (!Array.isArray(cabinetResult) || cabinetResult.length === 0) {
-        return res.status(404).json({ error: 'No matching cabinet found for the provided details' });
+        return res.status(404).json({ error: 'No matching cabinet found for this location to drop your parcel' });
       }
 
       const { cabinet_id, parcel_id } = cabinetResult[0] as { cabinet_id: number, parcel_id: string };
 
       if (!cabinet_id || !parcel_id) {
-        return res.status(404).json({ error: 'No matching cabinet found for the provided details' });
+        return res.status(404).json({ error: 'No matching cabinet found for this location to drop your parcel' });
       }
 
       // Generate a new code for both cabinet and package
       const newCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-      // Update cabinet status to 'to-be-delivered'
-      await (await db).query('UPDATE cabinets SET status = "to-be-delivered", code = ? WHERE id = ?', [newCode, cabinet_id]);
+      
+      // 1 - 5
+      let tempReceiverLocationId = Math.floor(Math.random() * 5) + 1;
+     
+      while (tempReceiverLocationId == locationId) {
+        tempReceiverLocationId = Math.floor(Math.random() * 5) + 1;
+      }
 
-      // Update package status to 'sent'
-      await (await db).query('UPDATE package SET status = "sent", security_code = ?  WHERE id = ?', [newCode, parcel_id]);
+
+      // Update cabinet status to 'to-be-delivered'
+      await (await db).query('UPDATE cabinets SET status = "to-be-delivered", parcel_destination = ?, code = ? WHERE id = ?', [tempReceiverLocationId, newCode, cabinet_id]);
+
+      // ##############################
+
+      // const receiverLocationId = await this.reserveRandomEmptyCabinet();
+
+      // Update package status to 'sent' and set receiver location ID
+      await (await db).query('UPDATE package SET status = "sent", receiver_location_id = ?, security_code = ?  WHERE id = ?', [tempReceiverLocationId , newCode, parcel_id]);
 
 
       res.status(200).json({ message: 'Drop-off verified successfully', cabinet_id, parcel_id });
 
     } catch (err) {
       console.error('Error verifying drop-off:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+  
+  async verifyPickUp(req: Request, res: Response) {
+    try {
+      const { locationId, deliveryNumber, code } = req.body;
+
+      if (!locationId || !deliveryNumber || !code) {
+        return res.status(400).json({ error: 'Please provide locationId, deliveryNumber, and code in the request body' });
+      }
+
+      const [cabinetResult] = await (await db).query(
+        'SELECT id AS cabinet_id, parcel_id FROM cabinets WHERE location_id = ? AND status = "delivered" AND tracking_number IS NOT NULL AND tracking_number <> "" AND tracking_number = ? AND code = ?',
+        [locationId, deliveryNumber, code]
+      );
+
+      if (!Array.isArray(cabinetResult) || cabinetResult.length === 0) {
+        return res.status(404).json({ error: 'Pick up details not matching' });
+      }
+
+      const { cabinet_id, parcel_id } = cabinetResult[0] as { cabinet_id: number, parcel_id: string };
+
+      if (!cabinet_id || !parcel_id) {
+        return res.status(404).json({ error: 'Pick up details not matching' });
+      }
+
+      // Update cabinet status to 'empty'
+      await (await db).query('UPDATE cabinets SET status = "empty", parcel_destination = NULL, code = NULL, tracking_number = NULL WHERE id = ?', [cabinet_id]);
+
+      // Update package status to received
+      await (await db).query('UPDATE package SET status = "received" WHERE id = ?', [parcel_id]);
+
+
+      res.status(200).json({ message: 'Pick up verified successfully', cabinet_id, parcel_id });
+
+    } catch (err) {
+      console.error('Error verifying pick up:', err);
       res.status(500).json({ error: 'Internal server error' });
     }
   }

@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/', ParcelControllerTest.getAllParcels);
 router.post('/', ParcelControllerTest.createParcel);
+router.get('/location/:receiver_location_id', ParcelControllerTest.getParcelByReceiverLocationId);
 
 
 export default router;

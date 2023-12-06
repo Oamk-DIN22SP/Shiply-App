@@ -4,14 +4,16 @@ import { ResultSetHeader } from 'mysql2';
 
 class ParcelControllerTest {
 
+  
+
   // Create a new parcel
   async createParcel(req: Request, res: Response) {
     try {
-      // Tracking number (10 digits)
-      const tracking_number = Math.floor(1000000000 + Math.random() * 9000000000).toString();
-      // pin code (6 digits)
+      // Tracking number
+      const tracking_number = Math.floor(100000 + Math.random() * 900000).toString();
+      // security code
       const security_code = Math.floor(100000 + Math.random() * 900000).toString();
-
+      
       const {
         parcel_details,
         sender_details,
@@ -52,8 +54,10 @@ class ParcelControllerTest {
       // Get the last inserted parcel ID
       const parcelId = (result[0] as ResultSetHeader).insertId;
 
+
+      const code =
       // Update the corresponding cabinet with parcel ID, code, traking number and status
-      const updateCabinetResult = await (await db).query(
+      await (await db).query(
         'UPDATE cabinets SET parcel_id = ?, code = ?, tracking_number = ?, status = "reserved" WHERE id = ?',
         [parcelId, security_code, tracking_number, locker_id]
       );
@@ -71,6 +75,18 @@ class ParcelControllerTest {
   async getAllParcels(req: Request, res: Response) {
     try {
       const [rows] = await (await db).query('SELECT * FROM shiply.package');
+      res.status(200).json(rows);
+    } catch (err) {
+      console.error('Error fetching parcels:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  // Get parcel by receiver_location_id
+  async getParcelByReceiverLocationId(req: Request, res: Response) {
+    try {
+      const receiver_location_id = req.params.receiver_location_id;
+      const [rows] = await (await db).query('SELECT * FROM shiply.package WHERE receiver_location_id = ?', [receiver_location_id]);
       res.status(200).json(rows);
     } catch (err) {
       console.error('Error fetching parcels:', err);

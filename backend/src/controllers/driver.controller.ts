@@ -8,6 +8,14 @@ class DriverController {
     try {
       const { parcel_id, tracking_number, cabinet_id, location_id } = req.body;
 
+      console.log(req.body);
+
+      // error handling
+      if (!parcel_id || !tracking_number || !cabinet_id || !location_id) {
+        return res.status(400).json({ error: 'Please provide parcel_id, tracking_number, cabinet_id, and location_id in the request body' });
+      }
+      
+
       // Check if the parcel with the given tracking_number and parcel_id exists
       const [parcelResult] = await (await db).query(
         'SELECT * FROM package WHERE tracking_number = ? AND id = ?',
@@ -18,24 +26,74 @@ class DriverController {
         return res.status(404).json({ error: 'No matching parcel found for the provided details' });
       }
 
-      const parcel = parcelResult[0];
-
       // Update package table with new security_code, new status as "delivered", update receiver location id, and locker id
-      const newSecurityCode = Math.floor(100000 + Math.random() * 900000).toString();
-      await (await db).query(
-        'UPDATE package SET security_code = ?, status = "delivered", receiver_location_id = ?, locker_id = ? WHERE id = ?',
-        [newSecurityCode, location_id, cabinet_id, parcel_id]
+      // Generate a new code for both cabinet and package
+      const newCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+      let res1 = await (await db).query(
+        'UPDATE package SET security_code = ?, status = "delivered", locker_id = ? WHERE id = ?',
+        [newCode, cabinet_id, parcel_id]
       );
+
+      //error handling
+      if ((res1[0] as ResultSetHeader).affectedRows === 0) {
+        return res.status(404).json({ error: 'No matching parcel found for the provided details' });
+      }
 
       // Update cabinet table with the new code, parcel id, status, and tracking number
-      await (await db).query(
+      let res2 = await (await db).query(
         'UPDATE cabinets SET code = ?, parcel_id = ?, status = "delivered", tracking_number = ? WHERE id = ?',
-        [newSecurityCode, parcel_id, tracking_number, cabinet_id]
+        [newCode, parcel_id, tracking_number, cabinet_id]
       );
 
-      res.status(200).json({ message: 'Parcel successfully dropped off'});
+      //error handling
+      if ((res2[0] as ResultSetHeader).affectedRows === 0) {
+        return res.status(404).json({ error: 'No matching cabinet found for the provided details' });
+      }
+      
+      res.status(200).json({ message: 'Parcel successfully dropped off', parcel_id});
     } catch (err) {
       console.error('Error dropping off parcel:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  async pickUpParcel(req: Request, res: Response) {
+    try {
+      const { parcel_id, cabinet_id } = req.body;
+
+      // error handling
+      if (!parcel_id || !cabinet_id) {
+        return res.status(400).json({ error: 'Please provide parcel_id and cabinet_id in the request body' });
+      }
+
+      // Update cabinet status to 'empty' for the picked-up parcel
+      const result = await (await db).query(
+        'UPDATE cabinets SET status = "empty", parcel_id = NULL, code = NULL, tracking_number = NULL, parcel_destination = NULL WHERE id = ?',
+        [cabinet_id]
+      );
+
+      if ((result[0] as ResultSetHeader).affectedRows === 0) {
+        return res.status(404).json({ error: 'No matching cabinet found for the provided details' });
+      }
+
+      // Update parcel status to 'picked'
+      const result2 = await (await db).query(
+        'UPDATE package SET status = "picked" WHERE id = ?',
+        [parcel_id]
+      );
+
+      if ((result2[0] as ResultSetHeader).affectedRows === 0) {
+        return res.status(404).json({ error: 'No matching parcel found for the provided details' });
+      }
+
+      res.status(200).json({ message: 'Parcel successfully picked up', parcel_id});
+
+      
+
+
+    } catch (err) {
+      console.error('Error picking up parcel:', err);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
