@@ -165,8 +165,12 @@ class ParcelController {
                     ]
                 );
                 // Get the last inserted parcel ID
-                const parcelId = (result[0] as ResultSetHeader).insertId;
+                const parcelId = (result as any).insertId;
 
+                
+                if(!parcelId) {
+                    res.status(500).json({ error: 'Failed to create the parcel' });
+                }
 
                 const code =
                     // Update the corresponding cabinet with parcel ID, code, traking number and status

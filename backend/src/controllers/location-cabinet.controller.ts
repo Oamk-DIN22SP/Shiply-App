@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import db from '../config/db.config';
+import { generateNumericString } from '../robot';
 
+const newCode = generateNumericString(4);
 class LocationCabinetController {
   // Get all locations
   async getAllLocations(req: Request, res: Response) {
@@ -117,10 +119,6 @@ class LocationCabinetController {
         return res.status(404).json({ error: 'No matching cabinet found for this location to drop your parcel' });
       }
 
-      // Generate a new code for both cabinet and package
-      const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-      
       // 1 - 5
       let tempReceiverLocationId = Math.floor(Math.random() * 5) + 1;
      
@@ -137,7 +135,7 @@ class LocationCabinetController {
       // const receiverLocationId = await this.reserveRandomEmptyCabinet();
 
       // Update package status to 'sent' and set receiver location ID
-      await (await db).query('UPDATE package SET status = "sent", receiver_location_id = ?, security_code = ?  WHERE id = ?', [tempReceiverLocationId , newCode, parcel_id]);
+      await (await db).query('UPDATE Parcels SET status = "sent", receiverLocationId = ?, pinCode = ?  WHERE parcelID = ?', [tempReceiverLocationId , newCode, parcel_id]);
 
 
       res.status(200).json({ message: 'Drop-off verified successfully', cabinet_id, parcel_id });
@@ -172,7 +170,7 @@ class LocationCabinetController {
       }
 
       // Update cabinet status to 'empty'
-      await (await db).query('UPDATE cabinets SET status = "empty", parcel_destination = NULL, code = NULL, tracking_number = NULL WHERE id = ?', [cabinet_id]);
+      await (await db).query('UPDATE cabinets SET status = "empty", parcel_destination = NULL, code = NULL, tracking_number = NULL, parcel_id = NULL WHERE id = ?', [cabinet_id]);
 
       // Update package status to received
       await (await db).query('UPDATE package SET status = "received" WHERE id = ?', [parcel_id]);
