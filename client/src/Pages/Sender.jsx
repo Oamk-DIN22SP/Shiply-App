@@ -69,8 +69,8 @@ export default function Sender() {
     );
   };
 
-  const handleChooseLocation = (chosenLocation) => {
-    setFormData({ ...formData, senderLocationId: chosenLocation });
+  const handleChooseLocation = (locationId, locationAddress) => {
+    setFormData({ ...formData, senderLocationId: locationId, senderDropOffLocation: locationAddress });
   };
 
   useEffect(() => {
@@ -88,40 +88,60 @@ export default function Sender() {
     };
   }, []);
 
-  const submithandleClick = async () => {
-    try {
-      if (!validateForm()) {
-        alert("Please fill out all fields before confirming.");
-        return;
-      }
-
-      const apiUrl = `${DEV_HOSTNAME}/api/parcels`;
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const result = await response.json();
-      setResponseData(result);
-
-      // Handle the API response as needed
-      console.log("API Response:", result);
-    } catch (error) {
-      console.error("Error sending data to API:", error);
+//NOTE -  Endpoint to reserve a cabinet and create parcel on submit
+const submithandleClick = async () => {
+  try {
+    if (!validateForm()) {
+      alert("Please fill out all fields before confirming.");
+      return;
     }
-    console.log(formData);
-  };
-  // Getting locations from backend
+
+    // First API request to reserve a cabinet
+    const reserveApiUrl = `${BACKEND_HOSTNAME}/api/locations/reserve`;
+    const reserveResponse = await fetch(reserveApiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ location_id: formData.senderLocationId }), // Adjust the location_id as needed
+    });
+
+    const reserveResult = await reserveResponse.json();
+    const { cabinet_id } = reserveResult; // get cabinet id and pass it to store in db
+    
+    // Include cabinet_id in the second API request body
+    const parcelsApiUrl = `${DEV_HOSTNAME}/api/parcels`;
+    const parcelsResponse = await fetch(parcelsApiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...formData,
+        lockerID: cabinet_id,
+      }),
+    });
+
+    const parcelsResult = await parcelsResponse.json();
+
+    // Handle the API responses as needed
+    setResponseData(parcelsResult);
+    console.log("Reserved locker!:", reserveResult);
+    console.log("Created parcels!:", parcelsResult);
+  } catch (error) {
+    console.error("Error sending data to API:", error);
+  }
+
+  console.log("Form data:",formData);
+};
+
 
   useEffect(() => {
     const fetchLocations = async () => {
       try {
         const response = await fetch(`${BACKEND_HOSTNAME}/api/locations`);
         const data = await response.json();
-        console.log(data);
+        console.log("Fetched parcel locker locations:", data);
         setLocations(data); // Assuming your API returns an array of locations
       } catch (error) {
         console.error("Error fetching locations:", error);
@@ -334,12 +354,13 @@ export default function Sender() {
                   <ListItem
                     key={location.id}
                     style={{ backgroundColor: "#D5F9B8", margin: "2px" }}
-                     value={formData.senderLocationId}
+                    value={formData.senderLocationId}
                   >
                     <ListItemText
                       primary={location.title}
                       secondary={location.address}
                       style={{ fontSize: "small" }}
+                      value={formData.senderDropOffLocation}
                     />
                     <Button
                       variant="outlined"
@@ -351,7 +372,7 @@ export default function Sender() {
                         padding: "5px",
                         border: "none",
                       }}
-                      onClick={() => handleChooseLocation(location.id)}
+                      onClick={() => handleChooseLocation(location.id, location.address)}
                     >
                       Choose
                     </Button>
@@ -404,7 +425,7 @@ export default function Sender() {
                       <b>Receiver email : </b> {response?.receiverEmailAddress}
                     </p>
                     <p className="parcel_info">
-                      <b>Cabinet number : </b> to be done
+                      <b>Cabinet number : </b> {response?.lockerID}
                     </p>
                     <p className="parcel_info">
                       <b>Parcel status : </b> {response?.status}

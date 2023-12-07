@@ -111,7 +111,7 @@ class ParcelController {
                 senderAddress,
                 senderPhoneNumber,
                 senderID,
-                senderDropOffLocation,
+              
 
                 receiverName,
                 receiverEmailAddress,
@@ -124,9 +124,10 @@ class ParcelController {
                 packageMass,
 
             // new features for lockers
-                receiverLocationId,
-                senderLocationId,
-                lockerID
+                receiverLocationId, // is empty
+                senderLocationId, // ID of a parcel locker location
+                senderDropOffLocation, // Address of  a parcel locker location from table "locations"
+                lockerID // to be assigned when user chooses sending parcel locker location
 
             } = req.body;
 
@@ -180,7 +181,7 @@ class ParcelController {
                     );
 
                 if (result) {
-                    res.json({ success: true, trackingNumber, pinCode, status: "Sent", receiverName, receiverEmailAddress,  senderDropOffLocation });
+                    res.json({ success: true, trackingNumber, pinCode, status: "Sent", receiverName, receiverEmailAddress,  senderDropOffLocation, senderLocationId, lockerID});
                 } else  {
                     console.error();
                     res.status(500).json({ error: 'Failed to create the parcel' });
