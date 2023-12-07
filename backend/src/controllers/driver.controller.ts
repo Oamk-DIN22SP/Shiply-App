@@ -1,14 +1,13 @@
 import { Request, Response } from 'express';
 import db from '../config/db.config';
 import { ResultSetHeader } from 'mysql2';
-
+import { generateNumericString } from '../robot';
+const newCode = generateNumericString(4);
 class DriverController {
 
   async dropOffParcel(req: Request, res: Response) {
     try {
       const { parcel_id, tracking_number, cabinet_id, location_id } = req.body;
-
-      console.log(req.body);
 
       // error handling
       if (!parcel_id || !tracking_number || !cabinet_id || !location_id) {
@@ -27,8 +26,6 @@ class DriverController {
       }
 
       // Update Parcels table with new security_code, new status as "delivered", update receiver location id, and locker id
-      // Generate a new code for both cabinet and parcel
-      const newCode = Math.floor(100000 + Math.random() * 900000).toString();
 
       let res1 = await (await db).query(
         'UPDATE Parcels SET pinCode = ?, status = "delivered", lockerID = ? WHERE parcelID = ?',
