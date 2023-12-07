@@ -1,4 +1,3 @@
-import React from 'react';
 import './left-panel.css';
 import Button from './ui/buttons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

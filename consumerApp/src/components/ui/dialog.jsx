@@ -1,18 +1,27 @@
-import React from 'react'
-
-export default function Dialog({ isOpen, onClose, children }) {
-    if (!isOpen) {
-        return null;
-      }
-    
-      return (
-        <div className="dialog-overlay">
-          <div className="dialog-content">
-            <button className="close-button" onClick={onClose}>
-              &times;
-            </button>
-            {children}
-          </div>
+import './dialog.css';
+import PropTypes from "prop-types";
+import Button from "./buttons";
+const Dialog = ({ isOpen, title, message, onConfirm, onCancel }) => {
+  return (
+    <div className={`dialog ${isOpen ? "open" : "closed"}`}>
+      <div className="dialog-content">
+        <h2>{title}</h2>
+        <p>{message}</p>
+        <div className="dialog-buttons">
+          <Button onClick={onCancel} className='cancel-btn'>Cancel</Button>
+          <Button onClick={onConfirm} className='confirm-btn'>Confirm</Button>
         </div>
-      );
-    };
+      </div>
+    </div>
+  );
+};
+
+Dialog.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+};
+
+export default Dialog;
