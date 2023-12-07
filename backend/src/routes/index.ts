@@ -8,7 +8,7 @@ import ParcelRoutes from './parcels';
 import AuthRoutes from './auth'
 export default class Routes {
   constructor(app: Application) {
-    app.use("/api", homeRoutes);
+    app.use("/", homeRoutes);
     app.use("/api/users", userRoutes);
     app.use("/api/parcels", ParcelRoutes);
     app.use("/api/driver", DriverRoutes);

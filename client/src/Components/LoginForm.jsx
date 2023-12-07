@@ -201,7 +201,7 @@ const LoginForm = () => {
           >
             <NavLink to="/signup" style={{color:'orange'}}>Don't have an account? Sign Up</NavLink>
           </Button>
-          <Button
+          {/* <Button
             variant="contained"
             color="warning"
             style={{ marginTop: 16, textAlign: "center" }}
@@ -209,7 +209,7 @@ const LoginForm = () => {
           >
             Login with Google doesnt work now
           </Button>
-          <Button variant="contained" color="warning" style={{ marginTop: 16, textAlign: "center" }} onClick={loginWithGoogle}>Login with Google doesnt work now</Button>
+         */}
         </form>
       </Paper>
       <Snackbar

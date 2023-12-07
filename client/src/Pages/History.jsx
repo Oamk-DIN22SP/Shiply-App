@@ -21,7 +21,7 @@ export default function History() {
           `${BACKEND_HOSTNAME}/api/parcels/getMyParcels/${user.uid}`
         );
         const data = await response.json();
-
+          
         if (response.ok) {
           // If the response status is okay, proceed with your logic
           console.log("Response from server:", data);

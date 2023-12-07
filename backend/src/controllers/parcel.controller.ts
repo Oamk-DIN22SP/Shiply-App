@@ -164,16 +164,16 @@ class ParcelController {
                         lockerID
                     ]
                 );
-                // Get the last inserted parcel ID
-                const parcelId = (result[0] as ResultSetHeader).insertId;
+                // // Get the last inserted parcel ID
+                // const parcelId = (result[0] as ResultSetHeader).insertId;
 
 
-                const code =
-                    // Update the corresponding cabinet with parcel ID, code, traking number and status
-                    await (await db).query(
-                        'UPDATE cabinets SET parcel_id = ?, code = ?, tracking_number = ?, status = "reserved" WHERE id = ?',
-                        [parcelId, pinCode, trackingNumber, lockerID]
-                    );
+                // const code =
+                //     // Update the corresponding cabinet with parcel ID, code, traking number and status
+                //     await (await db).query(
+                //         'UPDATE cabinets SET parcel_id = ?, code = ?, tracking_number = ?, status = "reserved" WHERE id = ?',
+                //         [parcelId, pinCode, trackingNumber, lockerID]
+                //     );
 
                 if (result) {
                     res.json({ success: true, trackingNumber, pinCode, status: "Sent", receiverName, receiverEmailAddress,  senderDropOffLocation });
