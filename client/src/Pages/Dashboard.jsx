@@ -43,6 +43,7 @@ import { useState } from "react";
 import BACKEND_HOSTNAME from "../config/backend.config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, authenticateUser } from "../config/firebase.config";
+import DetailParcel from "./DetailParcel";
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props, userId) {
@@ -78,15 +79,24 @@ function ResponsiveDrawer(props, userId) {
   }, [userId]);
 
   const drawer = (
-    <div style={{ overflow: 'hidden'}}> 
+    <div style={{ overflow: "hidden" }}>
       <img
-    src={logo}
-    alt="Logo"
-    style={{ width: "240px", backgroundColor:'#FFFAF6', height:'4em', objectFit:'contain'}}
-  />
-   
+        src={logo}
+        alt="Logo"
+        style={{
+          width: "240px",
+          backgroundColor: "#FFFAF6",
+          height: "4em",
+          objectFit: "contain",
+        }}
+      />
+
       <List>
-        <ListItem disablePadding onClick={() => navigate("/home")} sx={{ backgroundColor: "#F3F3F3" }}>
+        <ListItem
+          disablePadding
+          onClick={() => navigate("/home")}
+          sx={{ backgroundColor: "#F3F3F3" }}
+        >
           <ListItemButton>
             <ListItemIcon>
               <HomeIcon />
@@ -104,7 +114,7 @@ function ResponsiveDrawer(props, userId) {
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding onClick={() => navigate("/receiver")} >
+        <ListItem disablePadding onClick={() => navigate("/receiver")}>
           <ListItemButton>
             <ListItemIcon>
               <MoveToInboxIcon />
@@ -158,7 +168,7 @@ function ResponsiveDrawer(props, userId) {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: '100%' },
+          width: { sm: "100%" },
           ml: { sm: `${drawerWidth}px` },
           backgroundColor: "#FFFAF6",
         }}
@@ -173,7 +183,7 @@ function ResponsiveDrawer(props, userId) {
           >
             <MenuIcon />
           </IconButton>
-         
+
           <img
             src={smile}
             alt="Logo"
@@ -251,7 +261,9 @@ function ResponsiveDrawer(props, userId) {
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/home" element={<Home />} />
           <Route path="/sender" element={<Sender />} />
+
           <Route path="/receiver" element={<Receiver />} />
+          <Route path="/receiver/parcel/:parcelID" element={<DetailParcel />} />
           <Route path="/track" element={<Track />} />
           <Route path="/history" element={<History />} />
           <Route path="/settings" element={<Settings />} />

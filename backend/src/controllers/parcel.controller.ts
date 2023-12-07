@@ -141,7 +141,7 @@ class ParcelController {
                     [
                         trackingNumber,
                         pinCode,
-                        'Sent',
+                        'created',
 
                         senderName,
                         senderEmailAddress,

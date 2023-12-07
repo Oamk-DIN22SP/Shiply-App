@@ -1,51 +1,48 @@
-import React from 'react'
-import {  CardContent, Card } from '@mui/material';
-import Grid from "@mui/material/Grid";
-export default function DetailParcel({parcels}) {
-  return (
-    <div className='details'>
-      <Card
-        style={{
-          width: "100%",
-          lineHeight: "14px",
-          fontSize: "small",
-          boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.1)",
-          backgroundColor: "#fffdfb",
-        }}
-      >
-        <CardContent>
-         
-            {parcels.map((parcel) => (
-             
-          <div className="parcel_info_main">
-            <p className="parcel_info">
-              <b>Tracking number : </b> {parcel.trackingNumber}
-            </p>
+import React from "react";
+import { useParams } from "react-router-dom";
+import DetailParcelSent from "./DetailParcelSent";
+import DetailParcelDelivered from "./DetailParcelDelivered";
+import DetailParcelPicked from "./DetailParcelPicked";
+import DetailParcelDefault from "./DetailParcelDefault";
+import BACKEND_HOSTNAME from "../config/backend.config";
+import axios from "axios";
 
-            <p className="parcel_info">
-              <b>Address of parcel locker (to receive package) : </b>{" "}
-              {parcel?.receiverDropOffPoint}
-            </p>
+const DetailParcel = () => {
+  const { parcelID } = useParams();
+  const [parcelDetails, setParcelDetails] = React.useState(null);
 
-            <p className="parcel_info">
-              <b>Receiver name : </b> {parcel?.receiverName}
-            </p>
-            <p className="parcel_info">
-              <b>Receiver email : </b> {parcel?.receiverEmailAddress}
-            </p>
-            <p className="parcel_info">
-              <b>Cabinet number : </b> to be done
-            </p>
-            <p className="parcel_info">
-              <b>Parcel status : </b> {parcel?.status}
-            </p>
-            <p className="parcel_info">
-              <b>Pin code for parcel locker : </b> {parcel?.pinCode}
-            </p>
-          </div>
-           ))}
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
+  React.useEffect(() => {
+    const fetchParcelDetails = async () => {
+      try {
+        const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/${parcelID}`;
+        const response = await axios.get(apiUrl);
+        setParcelDetails(response.data[0]);
+      } catch (error) {
+        console.error("Error fetching parcel details:", error);
+      }
+    };
+
+    if (parcelID) {
+      fetchParcelDetails();
+    }
+  }, [parcelID]);
+
+  if (!parcelDetails) {
+    return <p>Loading parcel details...</p>;
+  }
+
+  // Render the appropriate component based on the parcel status
+  switch (parcelDetails.status) {
+    case "sent":
+      return <DetailParcelSent parcelDetails={parcelDetails} />;
+    case "delivered":
+      return <DetailParcelDelivered parcelDetails={parcelDetails} />;
+    case "picked":
+      return <DetailParcelPicked parcelDetails={parcelDetails} />;
+    // Add more cases for other statuses as needed
+    default:
+      return <DetailParcelDefault parcelDetails={parcelDetails} />;
+  }
+};
+
+export default DetailParcel;
