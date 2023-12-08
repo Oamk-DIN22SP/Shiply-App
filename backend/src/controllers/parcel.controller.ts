@@ -61,7 +61,7 @@ class ParcelController {
     // retrieve parcel by sender ID (in history to see all parcels which you sent, and which are sent to you)
     async getParcelBySenderID(req: Request, res: Response) {
         try {
-            const senderID = req.body.senderID;
+            const senderID = req.params.senderID;
             const [rows] = await (await db).query('SELECT * FROM Parcels WHERE senderID = ?', [senderID]);
             if (rows) {
                 res.json(rows);
@@ -204,10 +204,11 @@ class ParcelController {
             const parcelID = req.params.parcelID;
             const newStatus = req.body.status;
             const lockerID = req.body.lockerID; // chosen by receiver
+            const receiverDropOffPoint = req.body.receiverDropOffPoint;
             // Execute the UPDATE query to update the status of the parcel
-            await (await db).query('UPDATE Parcels SET status = ?, lockerID = ? WHERE parcelID = ?', [newStatus, lockerID, parcelID]);
+            await (await db).query('UPDATE Parcels SET status = ?, lockerID = ?, receiverDropOffPoint = ? WHERE parcelID = ?', [newStatus, lockerID, receiverDropOffPoint, parcelID]);
 
-            res.status(200).json({ message: 'Parcel status updated successfully', lockerID, parcelID, newStatus });
+            res.status(200).json({ message: 'Parcel status updated successfully', lockerID, parcelID, newStatus, receiverDropOffPoint });
         } catch (err) {
             console.error('Error updating parcel status:', err);
             res.status(500).json({ error: 'Internal server error' });

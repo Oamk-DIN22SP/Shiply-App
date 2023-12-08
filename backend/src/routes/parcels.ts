@@ -27,7 +27,7 @@ router.post('/receiver/getParcels', parcelController.getParcelByReceiverEmail)
 router.get('/trackParcel/:trackingNumber', parcelController.trackParcel)
 
 // Get info about parcel which are sent from current user
-router.get('/sender/getSentParcels', parcelController.getParcelBySenderID)
+router.get('/sender/getSentParcels/:senderID', parcelController.getParcelBySenderID)
 
 // Update Parcel Status (Update)
 router.put('/status/:parcelID', parcelController.updateParcelStatus);
