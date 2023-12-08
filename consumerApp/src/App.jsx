@@ -6,6 +6,8 @@ import Home from "./components/right-panel/home";
 import Send from "./components/right-panel/send";
 import Settings from "./components/right-panel/settings";
 import Track from "./components/right-panel/track";
+import Receive from './components/right-panel/receive';
+import History from './components/right-panel/history';
 
 
 
@@ -20,6 +22,8 @@ function App() {
         <Route path="/send" element={<Send />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/track" element={<Track />} />
+        <Route path="/history" element={<History />} />
+        <Route path="/receive" element={<Receive />} />
       </Routes>
     </Router>
   );

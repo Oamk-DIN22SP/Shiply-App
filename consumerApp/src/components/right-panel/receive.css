@@ -1,0 +1,5 @@
+.receiver-container {
+    display: grid;
+    grid-template-columns: 280px 1fr 1fr;
+    grid-gap: 20px;
+}

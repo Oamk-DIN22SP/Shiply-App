@@ -5,6 +5,7 @@ import { faHome, faPaperPlane, faInbox, faSearch, faCog } from '@fortawesome/fre
 import { useNavigate } from 'react-router-dom';
 
 export default function LeftPanel() {
+ // ['home', 'send', 'receive', 'track', 'history', 'settings']
   const navigate = useNavigate();
 
   return (
@@ -20,6 +21,9 @@ export default function LeftPanel() {
       </Button>
       <Button className='menu-btn' onClick={() => navigate('/track')}>
         <FontAwesomeIcon icon={faSearch} /> Track
+      </Button>
+      <Button className='menu-btn' onClick={() => navigate('/history')}>
+        <FontAwesomeIcon icon={faCog} /> History
       </Button>
       <Button className='menu-btn' onClick={() => navigate('/settings')}>
         <FontAwesomeIcon icon={faCog} /> Setting

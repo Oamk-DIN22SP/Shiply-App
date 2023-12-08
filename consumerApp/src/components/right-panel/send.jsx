@@ -3,6 +3,9 @@ import Input from '../ui/input';
 import Button from '../ui/buttons';
 import { useState } from 'react';
 import LocationPopup from "../ui/location-popup"
+import Navbar from '../navbar';
+import LeftPanel from '../left-panel';
+import MidPanel from '../mid-panel';
 
 export default function Send() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -33,29 +36,65 @@ export default function Send() {
     switch (currentStep) {
       case 1:
         return (
-          <div className='card'>
-            <h5 className='card-title'>Consigner Details</h5>
-            <Input type='text' placeholder='Sender Name' />
-            <Input type='text' placeholder='Sender Address' />
-            <Input type='number' placeholder='Phone Number' />
+          <div className="card">
+            <h5 className="card-title">Consigner Details</h5>
+            <Input
+              type="text"
+              placeholder="Sender Name"
+              className="sender-input"
+            />
+            <Input
+              type="text"
+              placeholder="Sender Address"
+              className="sender-input"
+            />
+            <Input
+              type="number"
+              placeholder="Phone Number"
+              className="sender-input"
+            />
           </div>
         );
       case 2:
         return (
-          <div className='card'>
-            <h5 className='card-title'>Receiver Details</h5>
-            <Input type='text' placeholder='Receiver Name' />
-            <Input type='text' placeholder='Receiver Address' />
-            <Input type='number' placeholder='Receiver Phone Number' />
+          <div className="card">
+            <h5 className="card-title">Receiver Details</h5>
+            <Input
+              type="text"
+              placeholder="Receiver Name"
+              className="sender-input"
+            />
+            <Input
+              type="text"
+              placeholder="Receiver Address"
+              className="sender-input"
+            />
+            <Input
+              type="number"
+              placeholder="Receiver Phone Number"
+              className="sender-input"
+            />
           </div>
         );
       case 3:
         return (
-          <div className='card'>
-            <h5 className='card-title'>Package Details</h5>
-            <Input type='text' placeholder='Package Type' />
-            <Input type='text' placeholder='Package Weight' />
-            <Input type='text' placeholder='Package Dimensions' />
+          <div className="card">
+            <h5 className="card-title">Package Details</h5>
+            <Input
+              type="number"
+              placeholder="Package Type"
+              className="sender-input"
+            />
+            <Input
+              type="number"
+              placeholder="Package Weight"
+              className="sender-input"
+            />
+            <Input
+              type="number"
+              placeholder="Package Dimensions"
+              className="sender-input"
+            />
           </div>
         );
         case 4:
@@ -115,37 +154,44 @@ export default function Send() {
   };
 
   return (
-    <div className="main-container">
-      <p className="notification_heading">Send</p>
-      <div className="sub-container">
-        <h5 className="send_heading">To send a package</h5>
-        <p className="text">
-          Please fill out the required information completely
-        </p>
-        {selectedLocation && (
-          <LocationPopup
-            location={selectedLocation.location}
-            cabinet={selectedLocation.cabinet}
-            status={selectedLocation.status}
-            tracking={selectedLocation.tracking}
-            pincode={selectedLocation.pincode}
-            onClose={() => setSelectedLocation(null)}
-          />
-        )}
-        {renderForm()}
-        <div className="button-container">
-          {currentStep > 1 && (
-            <Button className="btn-previous" onClick={handlePrevious}>
-              Previous
-            </Button>
+    <>
+      <Navbar />
+      <div className="send-container">
+        <LeftPanel />
+        <MidPanel />
+        <div>
+        <p className="notification_heading">Send</p>
+        <div className="sub-container">
+          <h5 className="send_heading">To send a package</h5>
+          <p className="text">
+            Please fill out the required information completely
+          </p>
+          {selectedLocation && (
+            <LocationPopup
+              location={selectedLocation.location}
+              cabinet={selectedLocation.cabinet}
+              status={selectedLocation.status}
+              tracking={selectedLocation.tracking}
+              pincode={selectedLocation.pincode}
+              onClose={() => setSelectedLocation(null)}
+            />
           )}
-          {currentStep < 4 && (
-            <Button className="btn-next" onClick={handleNext}>
-              Next
-            </Button>
-          )}
+          {renderForm()}
+          <div className="button-container">
+            {currentStep > 1 && (
+              <Button className="btn-previous" onClick={handlePrevious}>
+                Previous
+              </Button>
+            )}
+            {currentStep < 4 && (
+              <Button className="btn-next" onClick={handleNext}>
+                Next
+              </Button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

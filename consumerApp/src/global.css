@@ -8,6 +8,9 @@ html {
     font-family: 'Poppins', sans-serif;
     font-size: 62.5%;
 }
+body {
+    overflow: hidden; /* Disable scroll on the body */
+}
 /* input_ field */
 input {
     display: flex;
@@ -85,8 +88,19 @@ input {
 /* Home */
 .home_div {
     display: grid;
-    grid-template-columns: 280px 1fr 1fr; /* Adjust column widths as needed */
-    grid-gap: 20px; /* Adjust the gap between columns */
+    grid-template-columns: 220px 1fr 1fr; /* Adjust column widths as needed */
+    grid-gap: 10px; /* Adjust the gap between columns */
     background: #FFFFFF;
   }
+  /* Mobile devices (portrait and landscape) */
+@media only screen and (max-width: 600px) {
+    /* Adjust styles for mobile devices here */
+    input {
+        width: 100%; /* Make input full width for smaller screens */
+    }
+
+    .home_div {
+        grid-template-columns: 1fr; /* Change column layout for smaller screens */
+    }
+}
 

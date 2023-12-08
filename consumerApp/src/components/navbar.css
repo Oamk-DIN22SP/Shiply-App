@@ -16,23 +16,124 @@ header {
 .box_icon {
     width: 5rem;
     height: 5rem;
-    border: 0.5rem solid #BF5000;
+    border: 0.5rem solid orange;
     border-radius: 50%; 
     margin-left: auto; 
+    cursor: pointer;
+}
+/* Notification styles */
+.notification-circle {
+  position: absolute;
+  top: 10px; /* Adjust the top position as needed */
+  right: 10px; /* Adjust the right position as needed */
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 14px;
+}
+/* Hamburger menu styles */
+.hamburger {
+  display: none; /* Hide by default on larger screens */
+  cursor: pointer;
 }
 
-@media (max-width: 768px) {
-    header {
-        padding: 15px; /* Adjust padding for smaller screens */
-    }
+.bar {
+  height: 3px;
+  width: 25px;
+  background-color: #000;
+  margin: 6px 0;
+  transition: 0.4s;
+}
 
-    .shiply_logo {
-        width: 150px;
-        height: 40px;
-    }
+.open .bar:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
 
-    .box_icon {
-        width: 40px;
-        height: 40px;
-    }
+.open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.open .bar:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Mobile menu styles */
+.mobile-menu {
+  display: none;
+  background-color: #fff; /* Adjust background color as needed */
+  position: absolute;
+  top: 70px; /* Adjust the top distance based on your header height */
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+/* Menu button styles */
+.menu-button {
+  display: none; /* Hide by default on larger screens */
+  cursor: pointer;
+  padding: 10px;
+}
+.cross-icon {
+  font-size: 20px;
+  background-color: black;
+  width: 40px; /* Adjust the width as needed */
+  height: 40px; /* Adjust the height as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white; /* Set the text color to be visible on the red background */
+  cursor: pointer;
+  border-radius: 50%;
+      margin-top: -14px;
+    margin-left: 250px;
+
+}
+
+  
+
+/* Media query for mobile devices */
+@media only screen and (max-width: 600px) {
+  /* Show menu button on mobile */
+  .menu-button {
+    display: block;
+  }
+
+  /* Hide regular navigation items on mobile */
+  header img {
+    display: none;
+  }
+
+  /* Show mobile menu on mobile */
+  .mobile-menu {
+    padding: none;
+  }
+  .notification-circle {
+    display: none;
+  }
+}
+
+/* Media query for mobile devices */
+@media only screen and (max-width: 600px) {
+  /* Show hamburger on mobile */
+  .hamburger {
+    display: block;
+  }
+
+  /* Hide regular navigation items on mobile */
+  header img {
+    display: none;
+  }
+
+  /* Show mobile menu on mobile */
+  .mobile-menu {
+    display: block;
+  }
 }

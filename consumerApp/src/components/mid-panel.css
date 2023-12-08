@@ -1,6 +1,6 @@
 p.notification_heading {
     display: flex;
-    width: 100%;
+    width: 95%;
     height: 70px;
     padding: 17px 20px;
     align-items: center;
@@ -20,15 +20,13 @@ p.notification_heading {
 .sort-container {
     width: 550px;
     height: 732px;
-    flex-shrink: 0;
-    background: aqua;
     margin-top: 10px;
 }
 
 /* mid-panel.css */
 /* mid-panel.css */
 .list-container {
-    width: 100%;
+    width: 95%;
     height: 100vh;
     background-color: #FFFAF6;
     margin: auto;

@@ -3,6 +3,9 @@ import  { useState } from "react";
 import Button from "../ui/buttons";
 import "./settings.css";
 import Dialog from "../ui/dialog";
+import Navbar from "../navbar";
+import LeftPanel from "../left-panel";
+import MidPanel from "../mid-panel";
 
 export default function Settings() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +27,12 @@ export default function Settings() {
   };
 
   return (
-    <div className="main-container">
+    <>
+    <Navbar />
+    <div className="setting-container">
+      <LeftPanel />
+      <MidPanel />
+      <div>
       <p className="notification_heading">Settings</p>
       <div className="sub-container">
         <h1 className="mian-heading">Time is limited!</h1>
@@ -47,5 +55,8 @@ export default function Settings() {
         />
       </div>
     </div>
+    </div>
+    
+    </>
   );
 }
