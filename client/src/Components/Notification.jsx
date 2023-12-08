@@ -1,104 +1,131 @@
-import React,{useState, useEffect} from 'react';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import message from '../Images/msg1.png'
-import envelope from '../Images/envelope.png'
-import whtup from '../Images/whtup.png'
-import { Container } from '@mui/system';
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Container,
+  ListItemAvatar,
+  Avatar,
+  Grid,
+  Typography,
+} from "@mui/material";
+import message from "../Images/msg1.png";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, authenticateUser } from "../config/firebase.config";
+import DetailParcel from "../Pages/DetailParcel";
+import axios from "axios";
+import BACKEND_HOSTNAME from "../config/backend.config";
+import { Link, useNavigate } from "react-router-dom";
 
-
-
-const notificationItems = [
-  { imageSrc: message, text: "New package received" },
-  { imageSrc: envelope, text: "Paracel has been received" },
-  { imageSrc: whtup, text: "New Parcel is waiting..." },
-  { imageSrc: envelope, text: "New package sent..." },
-  { imageSrc: envelope, text: "Thanks for choosing us..." },
-];
-
-const Item = (props) => (
-  <Paper
-    sx={{
-      p: 2,
-      margin: 1,
-      display: "inline_block",
-      flexDirection: "column",
-      background: "#FFFAF6",
-      transition: "background 0.3s",
-      "&:hover": {
-        background: "#D5F9B8",
-      },
-      ...props.style,
-    }}
-    onClick={props.onClick}
-  >
-    <div>
-      <img
-        src={props.imageSrc}
-        alt="msg"
-        style={{ width: "35px", height: "35px" }}
-      />
-      {props.text}
-      {props.dateTime}
-    </div>
-  </Paper>
-);
-export default function Notification({ onNotificationItemClick }) {
-  const [selectedOption, setSelectedOption] = React.useState("");
-  const [currentTime, setCurrentTime] = useState("");
+export default function Receiver() {
+  const [parcels, setParcels] = useState([]);
+  const [selectedParcel, setSelectedParcel] = useState({});
+  const [user] = useAuthState(auth);
+  const navigate = useNavigate();
+  // Ensure the user is authenticated before making the request
+  authenticateUser();
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      const now = new Date();
-      const formattedTime = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
-      setCurrentTime(formattedTime);
-    }, 1000); // Update every second
+    // Fetch parcels from the backend API
+    const fetchParcels = async () => {
+      try {
+        const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/receiver/getParcels`;
+        // Create a request payload with the expected structure
+        const requestBody = {
+          receiverEmailAddress: user?.email,
+        };
 
-    return () => clearInterval(intervalId);
-  }, []); // Run the effect only once
+        const res = await axios.post(apiUrl, requestBody);
+        console.log(res);
 
-  const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
+        setParcels(res.data);
+      } catch (error) {
+        console.error("Error fetching parcels:", error);
+      }
+    };
 
-  const handleItemClick = (text) => {
-    // Redirect to another page based on the clicked item
-    if (text === "New package received") {
-      onNotificationItemClick("receivedparcel");
-    } else if (text === "Paracel has been received") {
-      onNotificationItemClick("sendparcel");
-    } else if (text === "New Parcel is waiting...") {
-      onNotificationItemClick("otherparcel");
-    }
+    fetchParcels();
+  }, []); // Empty dependency array ensures the effect runs once when the component mounts
+
+  const handleListItemClick = (parcel) => {
+    setSelectedParcel(parcel);
   };
 
   return (
-    <Container>
-    <p className='heading' style={{border:'1px solid #FFFAF6', padding:'10px', backgroundColor:'#FFFAF6',borderRadius: '10px 10px 0 0 '}}>Notification Content</p>
-    <Grid style={{backgroundColor:'#FFFAF6', height:'100vh'}}>
-      <Select
-        style={{ marginTop: 15, width: '95%', marginLeft:'1em'}}
-        value={selectedOption}
-        onChange={handleSelectChange}
-      >
-        <MenuItem value="option1">Send First</MenuItem>
-        <MenuItem value="option2">Receive First</MenuItem>
-        <MenuItem value="option3">Send and Receive</MenuItem>
-      </Select>
-      <br /><br />
-      {notificationItems.map((item, index) => (
-        <Item
-          key={index}
-          onClick={() => handleItemClick(item.text)}
-          style={{ cursor: 'pointer' }}
-          imageSrc={item.imageSrc}
-          text={item.text}
-          dateTime={currentTime}  // Pass the currentTime to the Item component
-        />
-      ))}
-    </Grid>
-  </Container>
-);
+    <Container
+      component="main"
+      maxWidth="xl"
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        flexDirection: "column",
+        minHeight: "100vh", // Set minimum height to 100% of viewport
+      }}
+    >
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <Typography
+          variant="h5"
+          className="heading"
+          style={{
+            border: "1px solid #FFFAF6",
+            padding: "10px",
+            backgroundColor: "#FFFAF6",
+            borderRadius: "10px 10px 0 0",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          Notifications
+        </Typography>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} md={6}>
+            <Box
+              style={{
+                backgroundColor: "#FFFAF6",
+                padding: "10px",
+                borderRadius: "5px",
+                marginTop: "10px",
+                width: "100%",
+              }}
+            >
+              <p className="setting_content">
+                All your packages will be shown here.
+              </p>
+              <List>
+                {parcels.map((parcel) => (
+                  <ListItem
+                    key={parcel.parcelID}
+                    className="list-item"
+                    component={Link}
+                    to={`/receiver/parcel/${parcel.parcelID}`}
+                    onClick={() => handleListItemClick(parcel)}
+                  >
+                    <ListItemAvatar>
+                      <Avatar src={message}></Avatar>
+                    </ListItemAvatar>
+                    {parcel.status === "created" && (
+                      <ListItemText primary="You are sending a new parcel!" />
+                    )}
+                    {parcel.status === "sent" && (
+                      <ListItemText primary="A new package was sent to you.." />
+                    )}
+                    {parcel.status === "picked" && (
+                      <ListItemText primary="Your parcel is on the way..." />
+                    )}
+                    {parcel.status === "delivered" && (
+                      <ListItemText primary="Your parcel is ready to pick up..." />
+                    )}
+                    {parcel.status === "received" && (
+                      <ListItemText primary="Your parcel has been received..." />
+                    )}
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
+  );
 }
