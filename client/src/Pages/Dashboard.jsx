@@ -109,7 +109,7 @@ function ResponsiveDrawer(props, userId) {
           disablePadding
           onClick={() => handleSectionClick("/home")}
           sx={{
-            backgroundColor: activeSection === "/home" ? "#grey" : "inherit",
+            backgroundColor: activeSection === "/home" ? "#fecaa4" : "inherit",
           }}
         >
           <ListItemButton>
@@ -124,7 +124,8 @@ function ResponsiveDrawer(props, userId) {
           disablePadding
           onClick={() => handleSectionClick("/sender")}
           sx={{
-            backgroundColor: activeSection === "/sender" ? "#grey" : "inherit",
+            backgroundColor:
+              activeSection === "/sender" ? "#fecaa4" : "inherit",
           }}
         >
           <ListItemButton>
@@ -140,14 +141,14 @@ function ResponsiveDrawer(props, userId) {
           onClick={() => handleSectionClick("/receiver")}
           sx={{
             backgroundColor:
-              activeSection === "/receiver" ? "#grey" : "inherit",
+              activeSection === "/receiver" ? "#fecaa4" : "inherit",
           }}
         >
           <ListItemButton>
             <ListItemIcon>
               <MoveToInboxIcon />
             </ListItemIcon>
-            <ListItemText> Receive </ListItemText>
+            <ListItemText> Incoming parcels </ListItemText>
           </ListItemButton>
         </ListItem>
 
@@ -155,7 +156,7 @@ function ResponsiveDrawer(props, userId) {
           disablePadding
           onClick={() => handleSectionClick("/track")}
           sx={{
-            backgroundColor: activeSection === "/track" ? "#grey" : "inherit",
+            backgroundColor: activeSection === "/track" ? "#fecaa4" : "inherit",
           }}
         >
           <ListItemButton>
@@ -170,14 +171,15 @@ function ResponsiveDrawer(props, userId) {
           disablePadding
           onClick={() => handleSectionClick("/history")}
           sx={{
-            backgroundColor: activeSection === "/history" ? "#grey" : "inherit",
+            backgroundColor:
+              activeSection === "/history" ? "#fecaa4" : "inherit",
           }}
         >
           <ListItemButton>
             <ListItemIcon>
               <ManageHistoryIcon />
             </ListItemIcon>
-            <ListItemText> All parcels </ListItemText>
+            <ListItemText> History </ListItemText>
           </ListItemButton>
         </ListItem>
 
@@ -186,7 +188,7 @@ function ResponsiveDrawer(props, userId) {
           onClick={() => handleSectionClick("/settings")}
           sx={{
             backgroundColor:
-              activeSection === "/settings" ? "#grey" : "inherit",
+              activeSection === "/settings" ? "#fecaa4" : "inherit",
           }}
         >
           <ListItemButton>
@@ -199,10 +201,9 @@ function ResponsiveDrawer(props, userId) {
 
         <ListItem
           disablePadding
-          onClick={() => handleSectionClick("/settings")}
           sx={{
             backgroundColor:
-              activeSection === "/settings" ? "#grey" : "inherit",
+              activeSection === "/" ? "#grey" : "inherit",
           }}
         >
           <ListItemButton>
@@ -222,7 +223,7 @@ function ResponsiveDrawer(props, userId) {
             </ListItemText>
             <Link
               to="https://shiply-touchscreen.vercel.app/"
-              style={{ color: "rgba(0, 0, 0, 0.87)" }}
+              style={{ color: "#fecaa4" }}
               target="_blank"
             >
               <ExitToAppIcon fontSize="small" />

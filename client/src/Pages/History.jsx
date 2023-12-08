@@ -41,7 +41,6 @@ export default function History() {
         // Second API request to get received parcels
 
         // Fetch parcels from the backend API
-
         const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/receiver/getParcels`;
         // Create a request payload with the expected structure
         const requestBody = {
@@ -73,11 +72,7 @@ export default function History() {
         return Array.isArray(sentParcels) ? sentParcels : [];
       case "receiveFirst":
         return Array.isArray(receivedParcels) ? receivedParcels : [];
-      case "sendAndReceive":
-        return [
-          ...(Array.isArray(sentParcels) ? sentParcels : []),
-          ...(Array.isArray(receivedParcels) ? receivedParcels : []),
-        ];
+     
       default:
         // Show all parcels, but differentiate between sent and received based on user email
         const userReceivedParcels = Array.isArray(receivedParcels)
@@ -116,9 +111,9 @@ export default function History() {
           onChange={(e) => setSelectedFilter(e.target.value)}
         >
           <MenuItem value="all">All Parcels</MenuItem>
-          <MenuItem value="sendFirst">Send First</MenuItem>
-          <MenuItem value="receiveFirst">Receive First</MenuItem>
-          <MenuItem value="sendAndReceive">Send and Receive</MenuItem>
+          <MenuItem value="sendFirst">Sent parcels</MenuItem>
+          <MenuItem value="receiveFirst">Incoming parcels</MenuItem>
+         
         </Select>
 
         {filterParcels().length > 0 ? (
@@ -135,14 +130,14 @@ export default function History() {
                 <ListItemAvatar>
                   <Avatar src={message}></Avatar>
                 </ListItemAvatar>
-                {parcel.receiverEmailAddress === user?.email && (
+                {parcel.receiverEmailAddress !== user?.email && (
                   <ListItemText>
                     Your parcel to {parcel.receiverEmailAddress}{" "}
                   </ListItemText>
                 )}
-               {parcel.receiverEmailAddress !== user?.email && (
+               {parcel.receiverEmailAddress === user?.email && (
                   <ListItemText>
-                    Parcel from {parcel.receiverEmailAddress}{" "}
+                    Parcel from {parcel.senderEmailAddress}{" "}
                   </ListItemText>
                 )} 
               </ListItem>

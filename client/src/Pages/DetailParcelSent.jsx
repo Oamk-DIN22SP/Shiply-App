@@ -105,7 +105,8 @@ const DetailParcelSent = ({ parcelDetails }) => {
             lineHeight: "10px",
             fontSize: "small",
             boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.1)",
-            backgroundColor: "#fffdfb",
+            backgroundColor: "#FFFAF6"
+
           }}
         >
           <CardContent style={{ display: "flex" }}>
