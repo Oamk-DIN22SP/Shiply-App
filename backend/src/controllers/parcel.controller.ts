@@ -203,11 +203,11 @@ class ParcelController {
         try {
             const parcelID = req.params.parcelID;
             const newStatus = req.body.status;
-
+            const lockerID = req.body.lockerID; // chosen by receiver
             // Execute the UPDATE query to update the status of the parcel
-            await (await db).query('UPDATE Parcels SET status = ? WHERE parcelID = ?', [newStatus, parcelID]);
+            await (await db).query('UPDATE Parcels SET status = ?, lockerID = ? WHERE parcelID = ?', [newStatus, lockerID, parcelID]);
 
-            res.status(200).json({ message: 'Parcel status updated successfully' });
+            res.status(200).json({ message: 'Parcel status updated successfully', lockerID, parcelID, newStatus });
         } catch (err) {
             console.error('Error updating parcel status:', err);
             res.status(500).json({ error: 'Internal server error' });

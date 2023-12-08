@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  Link,
   Navigate,
   Route,
   HashRouter as Router,
@@ -25,6 +26,9 @@ import Toolbar from "@mui/material/Toolbar";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
 import HomeIcon from "@mui/icons-material/Home";
+import LaptopIcon from "@mui/icons-material/Laptop";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+
 import Home from "./Home";
 import Sender from "./Sender";
 import Receiver from "./Receiver";
@@ -55,6 +59,7 @@ function ResponsiveDrawer(props, userId) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const [activeSection, setActiveSection] = useState("/home"); // Default active section
   authenticateUser();
   useEffect(() => {
     // Ensure the user is authenticated before making the request
@@ -78,6 +83,14 @@ function ResponsiveDrawer(props, userId) {
     fetchUserParcels();
   }, [userId]);
 
+//  const handleDrawerToggle = () => {
+//    setMobileOpen(!mobileOpen);
+//  };
+
+ const handleSectionClick = (section) => {
+   navigate(section);
+   setActiveSection(section);
+ };
   const drawer = (
     <div style={{ overflow: "hidden" }}>
       <img
@@ -94,8 +107,10 @@ function ResponsiveDrawer(props, userId) {
       <List>
         <ListItem
           disablePadding
-          onClick={() => navigate("/home")}
-          sx={{ backgroundColor: "#F3F3F3" }}
+          onClick={() => handleSectionClick("/home")}
+          sx={{
+            backgroundColor: activeSection === "/home" ? "#grey" : "inherit",
+          }}
         >
           <ListItemButton>
             <ListItemIcon>
@@ -105,7 +120,13 @@ function ResponsiveDrawer(props, userId) {
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding onClick={() => navigate("/sender")}>
+        <ListItem
+          disablePadding
+          onClick={() => handleSectionClick("/sender")}
+          sx={{
+            backgroundColor: activeSection === "/sender" ? "#grey" : "inherit",
+          }}
+        >
           <ListItemButton>
             <ListItemIcon>
               <SendIcon />
@@ -114,7 +135,14 @@ function ResponsiveDrawer(props, userId) {
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding onClick={() => navigate("/receiver")}>
+        <ListItem
+          disablePadding
+          onClick={() => handleSectionClick("/receiver")}
+          sx={{
+            backgroundColor:
+              activeSection === "/receiver" ? "#grey" : "inherit",
+          }}
+        >
           <ListItemButton>
             <ListItemIcon>
               <MoveToInboxIcon />
@@ -123,7 +151,13 @@ function ResponsiveDrawer(props, userId) {
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding onClick={() => navigate("/track")}>
+        <ListItem
+          disablePadding
+          onClick={() => handleSectionClick("/track")}
+          sx={{
+            backgroundColor: activeSection === "/track" ? "#grey" : "inherit",
+          }}
+        >
           <ListItemButton>
             <ListItemIcon>
               <GpsFixedIcon />
@@ -132,7 +166,13 @@ function ResponsiveDrawer(props, userId) {
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding onClick={() => navigate("/history")}>
+        <ListItem
+          disablePadding
+          onClick={() => handleSectionClick("/history")}
+          sx={{
+            backgroundColor: activeSection === "/history" ? "#grey" : "inherit",
+          }}
+        >
           <ListItemButton>
             <ListItemIcon>
               <ManageHistoryIcon />
@@ -141,12 +181,52 @@ function ResponsiveDrawer(props, userId) {
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding onClick={() => navigate("/settings")}>
+        <ListItem
+          disablePadding
+          onClick={() => handleSectionClick("/settings")}
+          sx={{
+            backgroundColor:
+              activeSection === "/settings" ? "#grey" : "inherit",
+          }}
+        >
           <ListItemButton>
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
             <ListItemText> Settings </ListItemText>
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem
+          disablePadding
+          onClick={() => handleSectionClick("/settings")}
+          sx={{
+            backgroundColor:
+              activeSection === "/settings" ? "#grey" : "inherit",
+          }}
+        >
+          <ListItemButton>
+            <ListItemIcon>
+              <LaptopIcon />
+            </ListItemIcon>
+            <ListItemText>
+              <Link
+                to="https://shiply-touchscreen.vercel.app/"
+                className="tags"
+                style={{ color: "rgba(0, 0, 0, 0.87)" }}
+                target="_blank"
+              >
+                {" "}
+                Touchscreen
+              </Link>
+            </ListItemText>
+            <Link
+              to="https://shiply-touchscreen.vercel.app/"
+              style={{ color: "rgba(0, 0, 0, 0.87)" }}
+              target="_blank"
+            >
+              <ExitToAppIcon fontSize="small" />
+            </Link>
           </ListItemButton>
         </ListItem>
       </List>

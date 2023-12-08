@@ -13,7 +13,13 @@ const DetailParcelDefault = ({ parcelDetails }) => {
         </Typography>
         {/* Add default details or handle other statuses as needed */}
         <Typography variant="body2" color="text.secondary">
-          <strong>Status:</strong> Unknown status
+          <strong>Status:</strong> {parcelDetails.status}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <strong>Tracking number:</strong> {parcelDetails.trackingNumber}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <strong>Pin Code</strong> {parcelDetails.pinCode}
         </Typography>
       </CardContent>
     </Card>

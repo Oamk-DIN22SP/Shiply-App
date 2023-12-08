@@ -97,22 +97,25 @@ export default function Receiver() {
                     <ListItemAvatar>
                       <Avatar src={message}></Avatar>
                     </ListItemAvatar>
-
                     {parcel.status === "created" && (
                       <ListItemText primary="You are sending a new parcel!" />
                     )}
                     {parcel.status === "sent" && (
-                      <ListItemText primary="Your parcel is sent..." />
+                      <ListItemText primary="A new package was sent to you.." />
                     )}
-                    {parcel.status === "delivered" && (
-                      <ListItemText primary="Your parcel is ready to pick up..." />
-                    )}
+                    {/* // let the user choose the pick up location */}
                     {parcel.status === "picked" && (
                       <ListItemText primary="Your parcel is on the way..." />
                     )}
+                    {/* // picked by driver */}
+                    {parcel.status === "delivered" && (
+                      <ListItemText primary="Your parcel is ready to pick up..." />
+                    )}
+                    {/* // go to touchscreen to pick up */}
                     {parcel.status === "received" && (
                       <ListItemText primary="Your parcel has been received..." />
                     )}
+                    {/* // displayed in history part */}
                   </ListItem>
                 ))}
               </List>

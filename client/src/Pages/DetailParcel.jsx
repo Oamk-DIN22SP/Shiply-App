@@ -35,10 +35,11 @@ const DetailParcel = () => {
   switch (parcelDetails.status) {
     case "sent":
       return <DetailParcelSent parcelDetails={parcelDetails} />;
-    case "delivered":
-      return <DetailParcelDelivered parcelDetails={parcelDetails} />;
     case "picked":
       return <DetailParcelPicked parcelDetails={parcelDetails} />;
+    case "delivered":
+      return <DetailParcelDelivered parcelDetails={parcelDetails} />;
+
     // Add more cases for other statuses as needed
     default:
       return <DetailParcelDefault parcelDetails={parcelDetails} />;
