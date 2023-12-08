@@ -1,67 +1,157 @@
 import React, { useEffect, useState } from "react";
-import BACKEND_HOSTNAME from "../config/backend.config";
-import { getAuth } from "firebase/auth";
+import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
+import { useAuthState } from "react-firebase-hooks/auth";
 import Grid from "@mui/material/Grid";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-
-import { useNavigate } from "react-router-dom";
-import { authenticateUser } from "../config/firebase.config";
+import message from "../Images/msg1.png";
+import { auth, authenticateUser } from "../config/firebase.config";
+import axios from "axios";
+import { List, ListItem, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export default function History() {
-  const [parcels, setParcels] = useState([]);
-  const navigate = useNavigate();
+  const [sentParcels, setSentParcels] = useState([]);
+  const [receivedParcels, setReceivedParcels] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("all"); // Default to show all parcels
+    const [selectedParcel, setSelectedParcel] = useState({});
+  const [user] = useAuthState(auth);
+
+  const handleListItemClick = (parcel) => {
+    setSelectedParcel(parcel);
+  };
+  // Ensure the user is authenticated before making the request
+  authenticateUser();
   useEffect(() => {
     const fetchUserParcels = async () => {
       try {
-        let user = getAuth().currentUser;
-        // Ensure the user is authenticated before making the request
-        await authenticateUser();
-        const response = await fetch(
-          `${BACKEND_HOSTNAME}/api/parcels/getMyParcels/${user.uid}`
+        const sentParcelsResponse = await fetch(
+          `${DEV_HOSTNAME}/api/parcels/sender/getSentParcels/${user?.uid}`
         );
-        const data = await response.json();
-          
-        if (response.ok) {
+        const data = await sentParcelsResponse.json();
+
+        if (sentParcelsResponse.ok) {
           // If the response status is okay, proceed with your logic
-          console.log("Response from server:", data);
-          setParcels(data.parcels);
+          console.log("History- sent parcels:", data);
+          setSentParcels(data);
+        } else {
+          // If there's an error in the response, handle it
+          console.error("Error from server:", data);
+        }
+        // Second API request to get received parcels
+
+        // Fetch parcels from the backend API
+
+        const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/receiver/getParcels`;
+        // Create a request payload with the expected structure
+        const requestBody = {
+          receiverEmailAddress: user?.email,
+        };
+
+        const res = await axios.post(apiUrl, requestBody);
+        console.log(res);
+        if (res) {
+          // If the response status is okay, proceed with your logic
+          console.log("History- received parcels:", data);
+          setReceivedParcels(res.data);
         } else {
           // If there's an error in the response, handle it
           console.error("Error from server:", data);
         }
       } catch (error) {
-        console.error("Error fetching user parcels:", error);
+        throw new Error("History function collapsed", error);
       }
     };
+
     // Call the function to fetch user parcels when the component mounts
     fetchUserParcels();
   }, []);
-return (
-  <div className="notification">
-    <p className='heading' style={{border:'1px solid #FFFAF6', padding:'10px', backgroundColor:'#FFFAF6',borderRadius: '10px 10px 0 0 '}}>Notification Content</p>
-    <Grid style={{backgroundColor:'#FFFAF6',height: '70vh'}}>
-      <Select
-        style={{ marginTop: 15, width: '95%', marginLeft:'1em'}}
-      
+
+  const filterParcels = () => {
+    switch (selectedFilter) {
+      case "sendFirst":
+        return Array.isArray(sentParcels) ? sentParcels : [];
+      case "receiveFirst":
+        return Array.isArray(receivedParcels) ? receivedParcels : [];
+      case "sendAndReceive":
+        return [
+          ...(Array.isArray(sentParcels) ? sentParcels : []),
+          ...(Array.isArray(receivedParcels) ? receivedParcels : []),
+        ];
+      default:
+        // Show all parcels, but differentiate between sent and received based on user email
+        const userReceivedParcels = Array.isArray(receivedParcels)
+          ? receivedParcels.filter(
+              (parcel) => parcel.receiverEmailAddress === user?.email
+            )
+          : [];
+
+        const userSentParcels = Array.isArray(sentParcels)
+          ? sentParcels.filter(
+              (parcel) => parcel.receiverEmailAddress !== user?.email
+            )
+          : [];
+
+        return [...userSentParcels, ...userReceivedParcels];
+    }
+  };
+
+  return (
+    <div className="notification">
+      <p
+        className="heading"
+        style={{
+          border: "1px solid #FFFAF6",
+          padding: "10px",
+          backgroundColor: "#FFFAF6",
+          borderRadius: "10px 10px 0 0 ",
+        }}
       >
-        <MenuItem value="option1">Send First</MenuItem>
-        <MenuItem value="option2">Receive First</MenuItem>
-        <MenuItem value="option3">Send and Receive</MenuItem>
-      </Select>
+        History
+      </p>
+      <Grid style={{ backgroundColor: "#FFFAF6", height: "70vh" }}>
+        <Select
+          style={{ marginTop: 15, width: "95%", marginLeft: "1em" }}
+          value={selectedFilter}
+          onChange={(e) => setSelectedFilter(e.target.value)}
+        >
+          <MenuItem value="all">All Parcels</MenuItem>
+          <MenuItem value="sendFirst">Send First</MenuItem>
+          <MenuItem value="receiveFirst">Receive First</MenuItem>
+          <MenuItem value="sendAndReceive">Send and Receive</MenuItem>
+        </Select>
+
+        {filterParcels().length > 0 ? (
+          <List>
+            {filterParcels().map((parcel) => (
+              <ListItem
+                key={parcel.parcelID}
+                className="list-item"
+                component={Link}
+                to={`/receiver/parcel/${parcel.parcelID}`}
+                onClick={() => handleListItemClick(parcel)}
+              >
+              
+                <ListItemAvatar>
+                  <Avatar src={message}></Avatar>
+                </ListItemAvatar>
+                {parcel.receiverEmailAddress === user?.email && (
+                  <ListItemText>
+                    Your parcel to {parcel.receiverEmailAddress}{" "}
+                  </ListItemText>
+                )}
+               {parcel.receiverEmailAddress !== user?.email && (
+                  <ListItemText>
+                    Parcel from {parcel.receiverEmailAddress}{" "}
+                  </ListItemText>
+                )} 
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <p>No parcels available.</p>
+        )}
       </Grid>
-    {parcels ? (
-      <ul>
-        {parcels.map((parcel) => (
-          <li key={parcel.id}>{parcel.name}</li>
-        ))}
-      </ul>
-    ) : (
-      <p>No parcels available.</p>
-    )}
-    
-
-
-  </div>
-);
+    </div>
+  );
 }

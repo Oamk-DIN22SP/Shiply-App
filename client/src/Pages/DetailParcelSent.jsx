@@ -1,32 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, CardContent, Grid, List, ListItem, ListItemText, Typography } from "@mui/material";
 import { useAuthState } from "react-firebase-hooks/auth";
-import BACKEND_HOSTNAME from "../config/backend.config";
-import { auth } from "../config/firebase.config";
+import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
+import { auth, authenticateUser } from "../config/firebase.config";
 
  
 const DetailParcelSent = ({ parcelDetails }) => {
   const [user] = useAuthState(auth);
   const [response, setResponseData] = useState(null);
   const [locations, setLocations] = useState([]);
-
+ authenticateUser()
   const handleChooseLocation = (locationId, locationAddress) => {
     setFormData({
       ...formData,
-      senderLocationId: locationId,
-      senderDropOffLocation: locationAddress,
+      receiverLocationId: locationId,
+      receiverDropOffPoint: locationAddress,
     });
   };
+  
   const [formData, setFormData] = useState({
-    receiverName: user ? user.displayName : "",
-    receiverEmailAddress: user ? user.email : "",
-    receiverAddress: "",
-    receiverPhoneNumber: user ? user.phoneNumber : "",
-    receiverID: user?.uid,
     receiverDropOffPoint: "",
     // new features for lockers
     receiverLocationId: "",
-    senderLocationId: "",
     lockerID: "",
   });
 
@@ -41,10 +36,14 @@ const DetailParcelSent = ({ parcelDetails }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ location_id: formData.senderLocationId }), // Adjust the location_id as needed
+        body: JSON.stringify({ location_id: formData.receiverLocationId }), // Adjust the location_id as needed
       });
 
       const reserveResult = await reserveResponse.json();
+       if (!reserveResponse.ok) {
+         throw new Error("Error reserving cabinet");
+         return
+       }
       const { cabinet_id } = reserveResult; // get cabinet id and pass it to store in db
 
       // Include cabinet_id in the second API request body
@@ -57,9 +56,12 @@ const DetailParcelSent = ({ parcelDetails }) => {
         body: JSON.stringify({
           status : "picked",
           lockerID: cabinet_id,
+          receiverDropOffPoint : formData.receiverDropOffPoint
         }),
       });
-
+ if (!parcelsResponse.ok) {
+   throw new Error("Error updating parcel status");
+ }
       const parcelsResult = await parcelsResponse.json();
 
       // Handle the API responses as needed
@@ -88,6 +90,7 @@ const DetailParcelSent = ({ parcelDetails }) => {
   }, []);
   return (
     <div className="main-div">
+     
       <p className="heading">Your new package awaits...</p>
       <Grid>
         <p className="parecl_content">
@@ -98,83 +101,91 @@ const DetailParcelSent = ({ parcelDetails }) => {
         </p>
         <Card
           style={{
-            maxWidth: 600,
+           
             lineHeight: "10px",
             fontSize: "small",
             boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.1)",
             backgroundColor: "#fffdfb",
           }}
         >
-          <h5 className="send_parcel">Drop Off Locations</h5>
-          <p className="p_sender">Please choose a drop off location...</p>
-          <div className="main_send">
-            <h4
-              style={{
-                color: "#686868",
-                textAlign: "center",
-                margin: "auto",
-              }}
-            >
-              Location
-            </h4>
-            <List>
-              {locations.map((location) => (
-                <ListItem
-                  key={location.id}
-                  style={{ backgroundColor: "#D5F9B8", margin: "2px" }}
-                  value={formData.senderLocationId}
-                >
-                  <ListItemText
-                    primary={location.title}
-                    secondary={location.address}
-                    style={{ fontSize: "small" }}
-                    value={formData.senderDropOffLocation}
-                  />
-                  <Button
-                    variant="outlined"
-                    style={{
-                      marginLeft: "10px",
-                      backgroundColor: "#ADADAD",
-                      color: "black",
-                      fontSize: "9px",
-                      padding: "5px",
-                      border: "none",
-                    }}
-                    onClick={() =>
-                      handleChooseLocation(location.id, location.address)
-                    }
+          <CardContent style={{ display: "flex" }}>
+          
+            <div className="main_send">
+              <h4
+                style={{
+                  color: "#686868",
+                  textAlign: "center",
+                  margin: "auto",
+                }}
+              >
+                Location
+              </h4>
+              <List>
+                {locations.map((location) => (
+                  <ListItem
+                    key={location.id}
+                    style={{ backgroundColor: "#D5F9B8", margin: "1px" }}
+                    value={formData.receiverLocationId}
                   >
-                    Choose
-                  </Button>
-                </ListItem>
-              ))}
-            </List>
-          </div>
-          <CardContent>
+                    <ListItemText
+                      primary={location.title}
+                      secondary={location.address}
+                      style={{ fontSize: "small" }}
+                      value={formData.receiverDropOffPoint}
+                    />
+                    <Button
+                      variant="outlined"
+                      style={{
+                        marginLeft: "10px",
+                        backgroundColor: "#ADADAD",
+                        color: "black",
+                        fontSize: "9px",
+                        padding: "5px",
+                        border: "none",
+                      }}
+                      onClick={() =>
+                        handleChooseLocation(location.id, location.address)
+                      }
+                    >
+                      Choose
+                    </Button>
+                  </ListItem>
+                ))}
+              </List>
+
+              <Button
+                variant="contained"
+                style={{ backgroundColor: "#42820F", marginTop: "10px" }}
+                onClick={submithandleClick}
+              >
+                Submit
+              </Button>
+            </div>
+
             <div className="parcel_info_main">
               <p className="parcel_info">
                 <b>Tracking number : </b> {parcelDetails?.trackingNumber}
               </p>
 
               <p className="parcel_info">
-                <b>Address of parcel locker (to send package) : </b>{" "}
-                {parcelDetails?.senderDropOffLocation}
+                <b>Address of parcel locker: </b>{" "}
+                {response?.receiverDropOffPoint}
               </p>
 
               <p className="parcel_info">
-                <b>Receiver name : </b> {parcelDetails?.receiverName}
+                <b>Sender name : </b> {parcelDetails?.senderName}
               </p>
               <p className="parcel_info">
-                <b>Receiver email : </b> {parcelDetails?.receiverEmailAddress}
+                <b>Sender email : </b> {parcelDetails?.senderEmailAddress}
               </p>
               <p className="parcel_info">
-                <b>Cabinet number : </b> {parcelDetails?.lockerID}
-              </p>
-              <p className="parcel_info">
-                <b>Parcel status : </b> {parcelDetails?.status}
+                <b>Cabinet number : </b> {response?.lockerID}
               </p>
               <p className="parcel_info">
                 <b>Pin code for parcel locker : </b> {parcelDetails?.pinCode}
+              </p>
+              <p className="parcel_info">
+                <b>Parcel status : </b> {response?.newStatus}
               </p>
             </div>
           </CardContent>
