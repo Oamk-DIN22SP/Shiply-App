@@ -7,9 +7,7 @@ import {
   Container,
   ListItemAvatar,
   Avatar,
-  CardContent,
   Grid,
-  Card,
   Typography,
 } from "@mui/material";
 import message from "../Images/msg1.png";
@@ -55,7 +53,16 @@ export default function Receiver() {
   };
 
   return (
-    <Container style={{ display: "flex", justifyContent: "space-between" }}>
+    <Container
+      component="main"
+      maxWidth="xl"
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        flexDirection: "column",
+        minHeight: "100vh", // Set minimum height to 100% of viewport
+      }}
+    >
       <Box display="flex" flexDirection="column" alignItems="center">
         <Typography
           variant="h5"
@@ -103,41 +110,18 @@ export default function Receiver() {
                     {parcel.status === "sent" && (
                       <ListItemText primary="A new package was sent to you.." />
                     )}
-                    {/* // let the user choose the pick up location */}
                     {parcel.status === "picked" && (
                       <ListItemText primary="Your parcel is on the way..." />
                     )}
-                    {/* // picked by driver */}
                     {parcel.status === "delivered" && (
                       <ListItemText primary="Your parcel is ready to pick up..." />
                     )}
-                    {/* // go to touchscreen to pick up */}
                     {parcel.status === "received" && (
                       <ListItemText primary="Your parcel has been received..." />
                     )}
-                    {/* // displayed in history part */}
                   </ListItem>
                 ))}
               </List>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Box
-              style={{
-                backgroundColor: "#FFFAF6",
-                padding: "10px",
-                borderRadius: "5px",
-                marginTop: "10px",
-                width: "100%",
-              }}
-            >
-              {selectedParcel ? (
-                <DetailParcel parcel={selectedParcel} />
-              ) : (
-                <Typography variant="body1">
-                  Select a parcel to view details.
-                </Typography>
-              )}
             </Box>
           </Grid>
         </Grid>

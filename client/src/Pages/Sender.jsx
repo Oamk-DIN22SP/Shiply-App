@@ -132,7 +132,7 @@ const submithandleClick = async () => {
     console.error("Error sending data to API:", error);
   }
 
-  console.log("Form data:",formData);
+  console.log("Form data:", formData);
 };
 
 
