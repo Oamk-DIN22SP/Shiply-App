@@ -127,8 +127,8 @@ class ParcelController {
                 receiverLocationId, // is empty
                 senderLocationId, // ID of a parcel locker location
                 senderDropOffLocation, // Address of  a parcel locker location from table "locations"
-                lockerID // to be assigned when user chooses sending parcel locker location
-
+                lockerID, // to be assigned when user chooses sending parcel locker location
+                lockerNumber
             } = req.body;
 
          
@@ -137,7 +137,7 @@ class ParcelController {
             try {
                 // Insert parcel data into the database
                 const [result]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
-                    'INSERT INTO Parcels (trackingNumber, pinCode, status, senderName, senderEmailAddress, senderAddress, senderPhoneNumber, senderID, senderDropOffPoint, receiverName, receiverEmailAddress, receiverAddress, receiverPhoneNumber, packageWidth, packageHeight, packageMass , receiverLocationId, senderLocationId, lockerID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)',
+                    'INSERT INTO Parcels (trackingNumber, pinCode, status, senderName, senderEmailAddress, senderAddress, senderPhoneNumber, senderID, senderDropOffPoint, receiverName, receiverEmailAddress, receiverAddress, receiverPhoneNumber, packageWidth, packageHeight, packageMass , receiverLocationId, senderLocationId, lockerID, lockerNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)',
                     [
                         trackingNumber,
                         pinCode,
@@ -162,7 +162,8 @@ class ParcelController {
                         // new features for lockers
                         receiverLocationId,
                         senderLocationId,
-                        lockerID
+                        lockerID,
+                        lockerNumber
                     ]
                 );
                 // Get the last inserted parcel ID
@@ -176,12 +177,12 @@ class ParcelController {
                 const code =
                     // Update the corresponding cabinet with parcel ID, code, traking number and status
                     await (await db).query(
-                        'UPDATE cabinets SET parcel_id = ?, code = ?, tracking_number = ?, status = "reserved" WHERE id = ?',
-                        [parcelId, pinCode, trackingNumber, lockerID]
+                        'UPDATE cabinets SET parcel_id = ?, code = ?, tracking_number = ?, status = "reserved" , number = ? WHERE id = ?',
+                        [parcelId, pinCode, trackingNumber, lockerNumber, lockerID]
                     );
 
                 if (result) {
-                    res.json({ success: true, trackingNumber, pinCode, status: "Sent", receiverName, receiverEmailAddress,  senderDropOffLocation, senderLocationId, lockerID});
+                    res.json({ success: true, trackingNumber, pinCode, status: "Sent", receiverName, receiverEmailAddress,  senderDropOffLocation, senderLocationId, lockerNumber,lockerID});
                 } else  {
                     console.error();
                     res.status(500).json({ error: 'Failed to create the parcel' });
@@ -204,11 +205,12 @@ class ParcelController {
             const parcelID = req.params.parcelID;
             const newStatus = req.body.status;
             const lockerID = req.body.lockerID; // chosen by receiver
+            const lockerNumber = req.body.lockerNumber
             const receiverDropOffPoint = req.body.receiverDropOffPoint;
             // Execute the UPDATE query to update the status of the parcel
-            await (await db).query('UPDATE Parcels SET status = ?, lockerID = ?, receiverDropOffPoint = ? WHERE parcelID = ?', [newStatus, lockerID, receiverDropOffPoint, parcelID]);
+            await (await db).query('UPDATE Parcels SET status = ?, lockerID = ?, lockerNumber = ?, receiverDropOffPoint = ? WHERE parcelID = ?', [newStatus, lockerID, lockerNumber,receiverDropOffPoint, parcelID]);
 
-            res.status(200).json({ message: 'Parcel status updated successfully', lockerID, parcelID, newStatus, receiverDropOffPoint });
+            res.status(200).json({ message: 'Parcel status updated successfully', lockerID, lockerNumber, parcelID, newStatus, receiverDropOffPoint });
         } catch (err) {
             console.error('Error updating parcel status:', err);
             res.status(500).json({ error: 'Internal server error' });

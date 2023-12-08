@@ -38,7 +38,8 @@ export default function Sender() {
      // new features for lockers
      receiverLocationId: "",
      senderLocationId: "",
-     lockerID: ""
+     lockerID: "",
+     lockerNumber: ""
   });
 
   const [step, setStep] = useState(1);
@@ -118,7 +119,7 @@ const submithandleClick = async () => {
       },
       body: JSON.stringify({
         ...formData,
-        lockerID: cabinet_id,
+        lockerNumber: cabinet_id,
       }),
     });
 

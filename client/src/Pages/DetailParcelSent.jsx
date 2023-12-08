@@ -23,6 +23,7 @@ const DetailParcelSent = ({ parcelDetails }) => {
     // new features for lockers
     receiverLocationId: "",
     lockerID: "",
+    lockerNumber: ""
   });
 
   //NOTE -  Endpoint to reserve a cabinet and create parcel on submit
@@ -42,9 +43,9 @@ const DetailParcelSent = ({ parcelDetails }) => {
       const reserveResult = await reserveResponse.json();
        if (!reserveResponse.ok) {
          throw new Error("Error reserving cabinet");
-         return
+         
        }
-      const { cabinet_id } = reserveResult; // get cabinet id and pass it to store in db
+      const { cabinet_id, locker_number } = reserveResult; // get cabinet id and pass it to store in db
 
       // Include cabinet_id in the second API request body
       const parcelsApiUrl = `${DEV_HOSTNAME}/api/parcels/status/${parcelDetails.parcelID}`;
@@ -56,6 +57,7 @@ const DetailParcelSent = ({ parcelDetails }) => {
         body: JSON.stringify({
           status : "picked",
           lockerID: cabinet_id,
+          lockerNumber : locker_number,
           receiverDropOffPoint : formData.receiverDropOffPoint
         }),
       });
@@ -180,7 +182,7 @@ const DetailParcelSent = ({ parcelDetails }) => {
                 <b>Sender email : </b> {parcelDetails?.senderEmailAddress}
               </p>
               <p className="parcel_info">
-                <b>Cabinet number : </b> {response?.lockerID}
+                <b>Cabinet number : </b> {response?.lockerNumber}
               </p>
               <p className="parcel_info">
                 <b>Pin code for parcel locker : </b> {parcelDetails?.pinCode}

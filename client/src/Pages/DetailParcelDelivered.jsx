@@ -41,7 +41,7 @@ export default function DetailParcelDelivered({ parcelDetails }) {
                 <b>Receiver email : </b> {parcelDetails?.receiverEmailAddress}
               </p>
               <p className="parcel_info">
-                <b>Cabinet number : </b> {parcelDetails?.lockerID}
+                <b>Cabinet number : </b> {parcelDetails?.lockerNumber}
               </p>
               <p className="parcel_info">
                 <b>Parcel status : </b> {parcelDetails?.status}
