@@ -88,7 +88,7 @@ input {
 /* Home */
 .home_div {
     display: grid;
-    grid-template-columns: 220px 1fr 1fr; /* Adjust column widths as needed */
+    grid-template-columns: 300px 1fr 1fr; /* Adjust column widths as needed */
     grid-gap: 10px; /* Adjust the gap between columns */
     background: #FFFFFF;
   }

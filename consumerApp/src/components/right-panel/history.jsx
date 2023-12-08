@@ -1,5 +1,8 @@
 import Sort from "../ui/sort";
 import "./history.css";
+import LeftPanel from "../left-panel";
+import MidPanel from "../mid-panel";
+import Navbar from "../navbar";
 
 export default function History() {
   const sortOptions = [  // Add more options as needed
@@ -11,12 +14,16 @@ export default function History() {
     console.log("Sorting by:", selectedOption.value);
   };
   return (
-    <div className="custom-container">
+    <>
+    <Navbar />
+    <div className="history-container">
+      <LeftPanel />
+      <MidPanel />
+      <div>
       <p className="notification_heading">Histroy</p>
-
       <div className="list-container">
-        <h5>All Action Here</h5>
-        <p>All passed and processing deliveries here!</p>
+        <h5 className="history-heading">All Action Here</h5>
+        <p className="sub-para">All passed and processing deliveries here!</p>
         <Sort
           options={sortOptions}
           onSelect={handleSortSelect}
@@ -31,5 +38,7 @@ export default function History() {
         </ul>
       </div>
     </div>
+    </div>
+    </>
   );
 }

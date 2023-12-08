@@ -5,7 +5,7 @@ button.btn-component.sort-btn {
     color: black;
     font-size: 1.6rem;
     background: none;
-    border: 2px solid black;
+    border: 2px solid orange;
     margin-bottom: 1.2rem;
 }
 ul.sort-order {
