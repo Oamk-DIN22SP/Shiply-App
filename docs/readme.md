@@ -7,7 +7,7 @@ Here we will be documenting the work we do in this repository.
 
 How we are designing our application in figma:
 
-- [Figma Link](https://www.figma.com/proto/xz63yMWRJ0Xqt07eThEDxC/Untitled?page-id=0%3A1&type=design&node-id=1-2&viewport=515%2C90%2C0.1&t=xf3bQCdmQI7nwDhK-1&scaling=scale-down&starting-point-node-id=1%3A2&mode=design)
+- [Figma Link](https://www.figma.com/proto/jijAvzmo9h8uR9TxKqVhCe/Shiply-Main-Design?page-id=0%3A1&type=design&node-id=15-4&viewport=222%2C182%2C0.05&t=KbLIB6hUaViY5jxd-1&scaling=scale-down&starting-point-node-id=15%3A4&mode=design)
 
 ## :computer: Frontend
 
