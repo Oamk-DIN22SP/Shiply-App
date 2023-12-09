@@ -13,9 +13,9 @@ import {
 import message from "../Images/msg1.png";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, authenticateUser } from "../config/firebase.config";
-import DetailParcel from "./DetailParcel";
+import DetailParcel from "../Components/DetailParcel";
 import axios from "axios";
-import BACKEND_HOSTNAME from "../config/backend.config";
+import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Receiver() {
@@ -30,7 +30,7 @@ export default function Receiver() {
     // Fetch parcels from the backend API
     const fetchParcels = async () => {
       try {
-        const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/receiver/getParcels`;
+        const apiUrl = `${DEV_HOSTNAME}/api/parcels/receiver/getDelivered`;
         // Create a request payload with the expected structure
         const requestBody = {
           receiverEmailAddress: user?.email,
@@ -91,38 +91,38 @@ export default function Receiver() {
             >
               <p className="setting_content">
                 All your packages will be shown here.
+                <br />
+                Click to get more information about parcel.
               </p>
               <List>
                 {parcels.map((parcel) => (
                   <ListItem
                     key={parcel.parcelID}
                     className="list-item"
-                    component={Link}
-                    to={`/receiver/parcel/${parcel.parcelID}`}
+                    
                     onClick={() => handleListItemClick(parcel)}
                   >
                     <ListItemAvatar>
                       <Avatar src={message}></Avatar>
                     </ListItemAvatar>
-                    {parcel.status === "created" && (
-                      <ListItemText primary="You are sending a new parcel!" />
-                    )}
-                    {parcel.status === "sent" && (
-                      <ListItemText primary="A new package was sent to you.." />
-                    )}
-                    {parcel.status === "picked" && (
-                      <ListItemText primary="Your parcel is on the way..." />
-                    )}
+
                     {parcel.status === "delivered" && (
-                      <ListItemText primary="Your parcel is ready to pick up..." />
-                    )}
-                    {parcel.status === "received" && (
-                      <ListItemText primary="Your parcel has been received..." />
+                      <ListItemText>Ready for pick up!</ListItemText>
                     )}
                   </ListItem>
                 ))}
               </List>
             </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <div>
+              
+              {selectedParcel ? (
+                <DetailParcel parcelID={selectedParcel.parcelID} />
+              ) : (
+                <p>You don't currently have any selected parcel details.</p>
+              )}
+            </div>
           </Grid>
         </Grid>
       </Box>

@@ -8,9 +8,10 @@ import BACKEND_HOSTNAME from "../config/backend.config";
 import axios from "axios";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../config/firebase.config";
+import DetailParcelReceived from "./DetailParcelReceived";
 
-const DetailParcel = () => {
-  const { parcelID } = useParams();
+const DetailParcel = ({parcelID}) => {
+
   const [parcelDetails, setParcelDetails] = React.useState(null);
     const [user] = useAuthState(auth);
   React.useEffect(() => {
@@ -46,7 +47,8 @@ const DetailParcel = () => {
       return <DetailParcelPicked parcelDetails={parcelDetails} />;
     case "delivered":
       return <DetailParcelDelivered parcelDetails={parcelDetails} />;
-
+    case "received":
+      return <DetailParcelReceived parcelDetails={parcelDetails} />;
     // Add more cases for other statuses as needed
     default:
       return <DetailParcelDefault parcelDetails={parcelDetails} />;

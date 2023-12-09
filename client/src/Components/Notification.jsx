@@ -13,16 +13,13 @@ import {
 import message from "../Images/msg1.png";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, authenticateUser } from "../config/firebase.config";
-import DetailParcel from "../Pages/DetailParcel";
 import axios from "axios";
 import BACKEND_HOSTNAME from "../config/backend.config";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function Receiver() {
+export default function Notification({ onNotificationItemClick }) {
   const [parcels, setParcels] = useState([]);
-  const [selectedParcel, setSelectedParcel] = useState({});
   const [user] = useAuthState(auth);
-  const navigate = useNavigate();
   // Ensure the user is authenticated before making the request
   authenticateUser();
 
@@ -49,7 +46,7 @@ export default function Receiver() {
   }, []); // Empty dependency array ensures the effect runs once when the component mounts
 
   const handleListItemClick = (parcel) => {
-    setSelectedParcel(parcel);
+    onNotificationItemClick(parcel);
   };
 
   return (
@@ -97,8 +94,6 @@ export default function Receiver() {
                   <ListItem
                     key={parcel.parcelID}
                     className="list-item"
-                    component={Link}
-                    to={`/receiver/parcel/${parcel.parcelID}`}
                     onClick={() => handleListItemClick(parcel)}
                   >
                     <ListItemAvatar>

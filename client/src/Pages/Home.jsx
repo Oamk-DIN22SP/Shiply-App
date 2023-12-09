@@ -5,16 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, authenticateUser } from "../config/firebase.config";
 import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
-import { Typography } from "@mui/material";
-
+import { Typography, Grid } from "@mui/material";
+import DetailParcel from "../Components/DetailParcel";
 export default function Home() {
-  const [data, setData] = useState([]);
+  const [selectedParcel, setSelectedParcel] = useState(null);
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   authenticateUser();
 
   const handleNotificationItemClick = (item) => {
-    setData(item);
+    setSelectedParcel(item);
   };
 
   useEffect(() => {
@@ -26,7 +26,6 @@ export default function Home() {
         const requestBody = {
           receiverEmailAddress: user?.email,
         };
-        console.log(requestBody);
         const response = await fetch(apiUrl, {
           method: "POST",
           headers: {
@@ -37,7 +36,7 @@ export default function Home() {
 
         const fetchedData = await response.json();
         console.log("Fetched parcels", fetchedData);
-        setData(fetchedData);
+        setSelectedParcel(null); // Reset selectedParcel when fetching new data
       } catch (error) {
         console.error("Error fetching parcels:", error);
       }
@@ -45,25 +44,24 @@ export default function Home() {
 
     fetchParcels();
   }, [user]);
-  let allPackagesDeliveredOrNull;
-
 
   return (
-    <div className="home_page">
-      <Notification onNotificationItemClick={handleNotificationItemClick} />
-
-      {allPackagesDeliveredOrNull ? (
+    <Grid container className="home_page">
+      <Grid item xs={6}>
+        <Notification onNotificationItemClick={handleNotificationItemClick} />
+      </Grid>
+      <Grid item xs={6}>
         <div>
           <Typography variant="h4" gutterBottom>
             Welcome, {auth.currentUser?.displayName}
           </Typography>
-          <p>You don`t currently have any incoming or outgoing parcels.</p>
+          {selectedParcel ? (
+            <DetailParcel parcelID={selectedParcel.parcelID} />
+          ) : (
+            <p>You don't currently have any selected parcel details.</p>
+          )}
         </div>
-      ) : (
-        <div>
-          <Details selectedItem={data} />
-        </div>
-      )}
-    </div>
+      </Grid>
+    </Grid>
   );
 }

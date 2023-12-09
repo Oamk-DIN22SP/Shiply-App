@@ -10,6 +10,7 @@ import { auth } from "../config/firebase.config";
 export default function Track() {
   const [trackingNumber, setTrackingNumber] = useState("");
   const [parcelData, setParcelData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [user] = useAuthState(auth);
 
   const handleTrackingNumberChange = (event) => {
@@ -18,6 +19,14 @@ export default function Track() {
 
   const handleTrackButtonClick = async () => {
     try {
+      // Validate tracking number
+      if (!trackingNumber.trim()) {
+        console.error("Tracking number is required");
+        return;
+      }
+
+      setLoading(true);
+
       // Ensure the user is authenticated before making the request
       if (!user) {
         console.error("User not authenticated");
@@ -37,12 +46,14 @@ export default function Track() {
 
       const result = await response.json();
       // Handle the API response as needed
-      console.log("API Response:", result);
+      console.log("API Response:", result[0]);
 
       // Update parcelData with the fetched data
-      setParcelData(result);
+      setParcelData(result[0]);
     } catch (error) {
-      console.error("Error sending data to API:", error);
+      console.error("Error tracking parcel:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -102,8 +113,9 @@ export default function Track() {
             variant="contained"
             onClick={handleTrackButtonClick}
             style={{ backgroundColor: "#60326A", color: "#FDF9F3" }}
+            disabled={loading}
           >
-            Track
+            {loading ? "Tracking..." : "Track"}
           </Button>
         </div>
 

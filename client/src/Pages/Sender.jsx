@@ -414,6 +414,12 @@ const submithandleClick = async () => {
                     <p className="parcel_info">
                       <b>Tracking number : </b> {response?.trackingNumber}
                     </p>
+                    <p className="parcel_info">
+                      <b>Receiver name : </b> {response?.receiverName}
+                    </p>
+                    <p className="parcel_info">
+                      <b>Receiver email : </b> {response?.receiverEmailAddress}
+                    </p>
 
                     <p className="parcel_info">
                       <b>Address of parcel locker (to send package) : </b>{" "}
@@ -421,13 +427,7 @@ const submithandleClick = async () => {
                     </p>
 
                     <p className="parcel_info">
-                      <b>Receiver name : </b> {response?.receiverName}
-                    </p>
-                    <p className="parcel_info">
-                      <b>Receiver email : </b> {response?.receiverEmailAddress}
-                    </p>
-                    <p className="parcel_info">
-                      <b>Cabinet number : </b> {response?.lockerID}
+                      <b>Cabinet number : </b> {response?.lockerNumber}
                     </p>
                     <p className="parcel_info">
                       <b>Parcel status : </b> {response?.status}

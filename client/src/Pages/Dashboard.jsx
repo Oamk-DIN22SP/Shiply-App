@@ -47,7 +47,7 @@ import { useState } from "react";
 import BACKEND_HOSTNAME from "../config/backend.config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, authenticateUser } from "../config/firebase.config";
-import DetailParcel from "./DetailParcel";
+import DetailParcelPage from "./DetailParcelPage";
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props, userId) {
@@ -83,14 +83,14 @@ function ResponsiveDrawer(props, userId) {
     fetchUserParcels();
   }, [userId]);
 
-//  const handleDrawerToggle = () => {
-//    setMobileOpen(!mobileOpen);
-//  };
+  //  const handleDrawerToggle = () => {
+  //    setMobileOpen(!mobileOpen);
+  //  };
 
- const handleSectionClick = (section) => {
-   navigate(section);
-   setActiveSection(section);
- };
+  const handleSectionClick = (section) => {
+    navigate(section);
+    setActiveSection(section);
+  };
   const drawer = (
     <div style={{ overflow: "hidden" }}>
       <img
@@ -202,8 +202,7 @@ function ResponsiveDrawer(props, userId) {
         <ListItem
           disablePadding
           sx={{
-            backgroundColor:
-              activeSection === "/" ? "#grey" : "inherit",
+            backgroundColor: activeSection === "/" ? "#grey" : "inherit",
           }}
         >
           <ListItemButton>
@@ -344,7 +343,10 @@ function ResponsiveDrawer(props, userId) {
           <Route path="/sender" element={<Sender />} />
 
           <Route path="/receiver" element={<Receiver />} />
-          <Route path="/receiver/parcel/:parcelID" element={<DetailParcel />} />
+          <Route
+            path="/receiver/parcel/:parcelID"
+            element={<DetailParcelPage />}
+          />
           <Route path="/track" element={<Track />} />
           <Route path="/history" element={<History />} />
           <Route path="/settings" element={<Settings />} />

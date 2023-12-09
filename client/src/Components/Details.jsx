@@ -1,70 +1,85 @@
-import React from 'react';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import OtherParcel from '../Right_Side_Pannel/OtherParcel'
-import ReceivedParcel from '../Right_Side_Pannel/RecivedParcel'
-import SendParcel from '../Right_Side_Pannel/SendParcel'
-import { auth } from '../config/firebase.config';
-import { Container } from '@mui/system';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import DetailParcelSent from "./DetailParcelSent";
+import DetailParcelDelivered from "./DetailParcelDelivered";
+import DetailParcelPicked from "./DetailParcelPicked";
+import DetailParcelDefault from "./DetailParcelDefault";
+import BACKEND_HOSTNAME from "../config/backend.config";
+import axios from "axios";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../config/firebase.config";
+import DetailParcelReceived from "./DetailParcelReceived";
 
+const Details = () => {
+  const { parcelID } = useParams();
+  const [parcelDetails, setParcelDetails] = useState(null);
+  const [user] = useAuthState(auth);
 
-export default function Details({
-  selectedItem,
-  handleTrackClick,
- 
-}) {
- 
-  return (
-    <Container>
-      <p
-        className="heading"
-        style={{
-          border: "1px solid #FFFAF6",
-          padding: "10px",
-          backgroundColor: "#FFFAF6",
-          borderRadius: "10px 10px 0 0",
-        }}
-      >
-        Details
-      </p>
-      {/* Grid with different background colors */}
-      <Grid
-        style={{
-          backgroundColor: "#FFFAF6",
-          padding: "10px",
-          borderRadius: "5px",
-          marginTop: "10px",
-          height: "100vh",
-        }}
-      >
-        <Typography variant="h5" gutterBottom>
-          Welcome, {auth.currentUser?.displayName}
-        </Typography>
-        {selectedItem === "recivedparecl" ? (
-          <ReceivedParcel />
-        ) : selectedItem === "sendparcel" ? (
-          <SendParcel />
-        ) : (
-          <OtherParcel />
-        )}
+  useEffect(() => {
+    const fetchParcelDetails = async () => {
+      try {
+        const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/${parcelID}`;
+        const response = await axios.get(apiUrl);
+        setParcelDetails(response.data[0]);
+      } catch (error) {
+        console.error("Error fetching parcel details:", error);
+      }
+    };
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "10px",
-          }}
-        >
-          <Button
-            variant="contained"
-            style={{ backgroundColor: "#60326A", color: "#FDF9F3" }}
-            onClick={() => handleTrackClick(true)}
-          >
-            Track
-          </Button>
-        </div>
-      </Grid>
-    </Container>
-  );
-}
+    if (parcelID) {
+      fetchParcelDetails();
+    }
+  }, [parcelID]);
+
+  useEffect(() => {
+    // Check if the user is authenticated and parcelDetails is available
+    if (user && parcelDetails) {
+      // Redirect logic based on parcel status
+      // Render the appropriate component based on the parcel status
+      switch (parcelDetails.status) {
+        case "sent":
+          // Check if the parcel is sent and the receiver email matches the user's email
+          if (parcelDetails.receiverEmailAddress === user?.email) {
+            return <DetailParcelSent parcelDetails={parcelDetails} />;
+          }
+          // If the receiver email does not match, fall through to the next case
+          return <DetailParcelSent parcelDetails={parcelDetails} />;
+        case "picked":
+          return <DetailParcelPicked parcelDetails={parcelDetails} />;
+        case "delivered":
+          return <DetailParcelDelivered parcelDetails={parcelDetails} />;
+        case "received":
+          return <DetailParcelReceived parcelDetails={parcelDetails} />;
+        // Add more cases for other statuses as needed
+        default:
+          return <DetailParcelDefault parcelDetails={parcelDetails} />;
+      }
+    }
+  }, [user, parcelDetails, history, parcelID]);
+
+  if (!parcelDetails) {
+    return <p>Loading parcel details...</p>;
+  }
+
+  // Render the appropriate component based on the parcel status
+  switch (parcelDetails.status) {
+    case "sent":
+      // Check if the parcel is sent and the receiver email matches the user's email
+      if (parcelDetails.receiverEmailAddress === user?.email) {
+        return <DetailParcelSent parcelDetails={parcelDetails} />;
+      }
+      // If the receiver email does not match, fall through to the next case
+      return <DetailParcelSent parcelDetails={parcelDetails} />;
+    case "picked":
+      return <DetailParcelPicked parcelDetails={parcelDetails} />;
+    case "delivered":
+      return <DetailParcelDelivered parcelDetails={parcelDetails} />;
+    case "received":
+      return <DetailParcelReceived parcelDetails={parcelDetails} />;
+    // Add more cases for other statuses as needed
+    default:
+      return <DetailParcelDefault parcelDetails={parcelDetails} />;
+  }
+};
+
+export default Details;

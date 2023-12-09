@@ -20,13 +20,15 @@ const DetailParcelPicked = ({ parcelDetails }) => {
   
   return (
     <div className="main-div">
-      <p className="heading">Your new package awaits...</p>
+      <p className="heading">Your package is on the way...</p>
       <Grid>
         <p className="parecl_content">
           {parcelDetails.senderName} sent a new package to you.
         </p>
         <p className="parecl_content">
-          Choose the parcel center to pick up your delivery.
+    Our driver will deliver package to one of parcel lockers locations.
+   <br/>
+    We will notify you when the parcel is delivered.
         </p>
         <Card
           style={{
@@ -37,19 +39,6 @@ const DetailParcelPicked = ({ parcelDetails }) => {
           }}
         >
           <CardContent style={{ display: "flex" }}>
-            <div className="main_send">
-              <h4
-                style={{
-                  color: "#686868",
-                  textAlign: "center",
-                  margin: "auto",
-                }}
-              >
-                Location
-              </h4>
-              
-            </div>
-
             <div className="parcel_info_main">
               <p className="parcel_info">
                 <b>Tracking number : </b> {parcelDetails?.trackingNumber}
@@ -61,18 +50,10 @@ const DetailParcelPicked = ({ parcelDetails }) => {
                 <b>Sender Email: </b> {parcelDetails?.senderEmailAddress}
               </p>
               <p className="parcel_info">
-                <b>Address of parcel locker: </b>{" "}
-                {response?.receiverDropOffPoint}
-              </p>
-
-              <p className="parcel_info">
-                <b>Cabinet number : </b> {response?.lockerNumber}
-              </p>
-              <p className="parcel_info">
                 <b>Pin code for parcel locker : </b> {parcelDetails?.pinCode}
               </p>
               <p className="parcel_info">
-                <b>Parcel status : </b> {response?.newStatus}
+                <b>Parcel status : </b> {parcelDetails?.status}
               </p>
             </div>
           </CardContent>

@@ -23,6 +23,9 @@ router.get('/getMyParcels/:receiverID', parcelController.getParcelByReceiverID)
 // Get all parcels by user email (currently logged in)
 router.post('/receiver/getParcels', parcelController.getParcelByReceiverEmail)
 
+// Get all parcels by user email (currently logged in)
+router.post('/receiver/getDelivered', parcelController.getParcelByReceiverEmail_Delivered)
+
 // Get info about parcel with tracking number
 router.get('/trackParcel/:trackingNumber', parcelController.trackParcel)
 
