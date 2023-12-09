@@ -173,7 +173,7 @@ class LocationCabinetController {
       await (await db).query('UPDATE cabinets SET status = "empty", parcel_destination = NULL, code = NULL, tracking_number = NULL, parcel_id = NULL WHERE id = ?', [cabinet_id]);
 
       // Update package status to received
-      await (await db).query('UPDATE package SET status = "received" WHERE id = ?', [parcel_id]);
+      await (await db).query('UPDATE Parcels SET status = "received" WHERE parcelID = ?', [parcel_id]);
 
 
       res.status(200).json({ message: 'Pick up verified successfully', cabinet_id, cabinet_number, parcel_id });
