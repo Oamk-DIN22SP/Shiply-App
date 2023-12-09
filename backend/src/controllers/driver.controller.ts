@@ -7,22 +7,11 @@ class DriverController {
 
   async dropOffParcel(req: Request, res: Response) {
     try {
-      const { parcel_id, tracking_number, cabinet_id, location_id } = req.body;
+      const { parcel_id, cabinet_id, location_id } = req.body;
 
       // error handling
-      if (!parcel_id || !tracking_number || !cabinet_id || !location_id) {
+      if (!parcel_id || !cabinet_id || !location_id) {
         return res.status(400).json({ error: 'Please provide parcel_id, tracking_number, cabinet_id, and location_id in the request body' });
-      }
-      
-
-      // Check if the parcel with the given tracking_number and parcel_id exists
-      const [parcelResult] = await (await db).query(
-        'SELECT * FROM Parcels WHERE trackingNumber = ? AND parcelID = ?',
-        [tracking_number, parcel_id]
-      );
-
-      if (!Array.isArray(parcelResult) || parcelResult.length === 0) {
-        return res.status(404).json({ error: 'No matching parcel found for the provided details' });
       }
 
       // Update Parcels table with new security_code, new status as "delivered", update receiver location id, and locker id
@@ -36,6 +25,31 @@ class DriverController {
       if ((res1[0] as ResultSetHeader).affectedRows === 0) {
         return res.status(404).json({ error: 'No matching parcel found for the provided details' });
       }
+      
+      // select traking number by parcel_id
+      const [parcelResult] = await (await db).query(
+        'SELECT trackingNumber AS tracking_number FROM Parcels WHERE parcelID = ?',
+        [parcel_id]
+      );
+
+      if (!Array.isArray(parcelResult) || parcelResult.length === 0) {
+        return res.status(404).json({ error : 'No matching cabinet found for the provided details' });
+      }
+
+      const { tracking_number } = parcelResult[0] as { tracking_number: number };
+      
+      // select cabinet number by cabinet_id
+      const [cabinetResult] = await (await db).query(
+        'SELECT number AS cabinet_number FROM cabinets WHERE id = ?',
+        [cabinet_id]
+      );
+      
+      if (!Array.isArray(cabinetResult) || cabinetResult.length === 0) {
+        return res.status(404).json({ error : 'No matching cabinet found for the provided details' });
+      }
+
+      const { cabinet_number } = cabinetResult[0] as { cabinet_number: number };
+
 
       // Update cabinet table with the new code, parcel id, status, and tracking number
       let res2 = await (await db).query(
@@ -48,7 +62,7 @@ class DriverController {
         return res.status(404).json({ error: 'No matching cabinet found for the provided details' });
       }
       
-      res.status(200).json({ message: 'Parcel successfully dropped off', parcel_id});
+      res.status(200).json({ message: 'Parcel successfully dropped off', parcel_id, cabinet_number, tracking_number, newCode});
     } catch (err) {
       console.error('Error dropping off parcel:', err);
       res.status(500).json({ error: 'Internal server error' });

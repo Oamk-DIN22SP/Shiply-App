@@ -73,7 +73,7 @@ class LocationCabinetController {
       }
 
       const [cabinetResult] = await (await db).query(
-        'SELECT id AS cabinet_id FROM cabinets WHERE location_id = ? AND status = "empty" ORDER BY RAND() LIMIT 1',
+        'SELECT id AS cabinet_id, number AS cabinet_number FROM cabinets WHERE location_id = ? AND status = "empty" ORDER BY RAND() LIMIT 1',
         [location_id]
       );
 
@@ -81,7 +81,7 @@ class LocationCabinetController {
         return res.status(404).json({ error: 'No available empty cabinets in the specified location' });
       }
 
-      const { cabinet_id } = cabinetResult[0] as { cabinet_id: number };
+      const { cabinet_id, cabinet_number } = cabinetResult[0] as { cabinet_id: number, cabinet_number: number };
 
       if (!cabinet_id) {
         return res.status(404).json({ error: 'No available empty cabinets in the specified location' });
@@ -89,7 +89,7 @@ class LocationCabinetController {
 
       await (await db).query('UPDATE cabinets SET status = "reserved" WHERE id = ?', [cabinet_id]);
 
-      res.status(200).json({ message: 'Cabinet reserved successfully', location_id, cabinet_id });
+      res.status(200).json({ message: 'Cabinet reserved successfully', location_id, cabinet_id, cabinet_number });
     } catch (err) {
       console.error('Error reserving random empty cabinet:', err);
       res.status(500).json({ error: 'Internal server error' });
@@ -105,7 +105,7 @@ class LocationCabinetController {
       }
 
       const [cabinetResult] = await (await db).query(
-        'SELECT id AS cabinet_id, parcel_id FROM cabinets WHERE location_id = ? AND status = "reserved" AND tracking_number IS NOT NULL AND tracking_number <> "" AND tracking_number = ? AND code = ?',
+        'SELECT id AS cabinet_id, number AS cabinet_number, parcel_id FROM cabinets WHERE location_id = ? AND status = "reserved" AND tracking_number IS NOT NULL AND tracking_number <> "" AND tracking_number = ? AND code = ?',
         [locationId, deliveryNumber, code]
       );
 
@@ -113,7 +113,7 @@ class LocationCabinetController {
         return res.status(404).json({ error: 'No matching cabinet found for this location to drop your parcel' });
       }
 
-      const { cabinet_id, parcel_id } = cabinetResult[0] as { cabinet_id: number, parcel_id: string };
+      const { cabinet_id, cabinet_number, parcel_id } = cabinetResult[0] as { cabinet_id: number, parcel_id: string, cabinet_number: number };
 
       if (!cabinet_id || !parcel_id) {
         return res.status(404).json({ error: 'No matching cabinet found for this location to drop your parcel' });
@@ -121,7 +121,7 @@ class LocationCabinetController {
 
       // 1 - 5
       let tempReceiverLocationId = Math.floor(Math.random() * 5) + 1;
-     
+
       while (tempReceiverLocationId == locationId) {
         tempReceiverLocationId = Math.floor(Math.random() * 5) + 1;
       }
@@ -135,17 +135,17 @@ class LocationCabinetController {
       // const receiverLocationId = await this.reserveRandomEmptyCabinet();
 
       // Update package status to 'sent' and set receiver location ID
-      await (await db).query('UPDATE Parcels SET status = "sent", receiverLocationId = ?, pinCode = ?  WHERE parcelID = ?', [tempReceiverLocationId , newCode, parcel_id]);
+      await (await db).query('UPDATE Parcels SET status = "sent", receiverLocationId = ?, pinCode = ?  WHERE parcelID = ?', [tempReceiverLocationId, newCode, parcel_id]);
 
 
-      res.status(200).json({ message: 'Drop-off verified successfully', cabinet_id, parcel_id });
+      res.status(200).json({ message: 'Drop-off verified successfully', cabinet_id, cabinet_number, parcel_id });
 
     } catch (err) {
       console.error('Error verifying drop-off:', err);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
-  
+
   async verifyPickUp(req: Request, res: Response) {
     try {
       const { locationId, deliveryNumber, code } = req.body;
@@ -155,7 +155,7 @@ class LocationCabinetController {
       }
 
       const [cabinetResult] = await (await db).query(
-        'SELECT id AS cabinet_id, parcel_id FROM cabinets WHERE location_id = ? AND status = "delivered" AND tracking_number IS NOT NULL AND tracking_number <> "" AND tracking_number = ? AND code = ?',
+        'SELECT id AS cabinet_id, number AS cabinet_number, parcel_id FROM cabinets WHERE location_id = ? AND status = "delivered" AND tracking_number IS NOT NULL AND tracking_number <> "" AND tracking_number = ? AND code = ?',
         [locationId, deliveryNumber, code]
       );
 
@@ -163,7 +163,7 @@ class LocationCabinetController {
         return res.status(404).json({ error: 'Pick up details not matching' });
       }
 
-      const { cabinet_id, parcel_id } = cabinetResult[0] as { cabinet_id: number, parcel_id: string };
+      const { cabinet_id, cabinet_number, parcel_id } = cabinetResult[0] as { cabinet_id: number, parcel_id: string, cabinet_number: number };
 
       if (!cabinet_id || !parcel_id) {
         return res.status(404).json({ error: 'Pick up details not matching' });
@@ -176,7 +176,7 @@ class LocationCabinetController {
       await (await db).query('UPDATE package SET status = "received" WHERE id = ?', [parcel_id]);
 
 
-      res.status(200).json({ message: 'Pick up verified successfully', cabinet_id, parcel_id });
+      res.status(200).json({ message: 'Pick up verified successfully', cabinet_id, cabinet_number, parcel_id });
 
     } catch (err) {
       console.error('Error verifying pick up:', err);
