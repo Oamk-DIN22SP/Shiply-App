@@ -45,7 +45,7 @@ const DetailParcelSent = ({ parcelDetails }) => {
          throw new Error("Error reserving cabinet");
          
        }
-      const { cabinet_id, locker_number } = reserveResult; // get cabinet id and pass it to store in db
+      const { cabinet_id, cabinet_number } = reserveResult; // get cabinet id and pass it to store in db
 
       // Include cabinet_id in the second API request body
       const parcelsApiUrl = `${DEV_HOSTNAME}/api/parcels/status/${parcelDetails.parcelID}`;
@@ -57,7 +57,7 @@ const DetailParcelSent = ({ parcelDetails }) => {
         body: JSON.stringify({
           status : "picked",
           lockerID: cabinet_id,
-          lockerNumber : locker_number,
+          lockerNumber : cabinet_number,
           receiverDropOffPoint : formData.receiverDropOffPoint
         }),
       });
@@ -92,7 +92,6 @@ const DetailParcelSent = ({ parcelDetails }) => {
   }, []);
   return (
     <div className="main-div">
-     
       <p className="heading">Your new package awaits...</p>
       <Grid>
         <p className="parecl_content">
@@ -103,16 +102,13 @@ const DetailParcelSent = ({ parcelDetails }) => {
         </p>
         <Card
           style={{
-           
             lineHeight: "10px",
             fontSize: "small",
             boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.1)",
-            backgroundColor: "#FFFAF6"
-
+            backgroundColor: "#FFFAF6",
           }}
         >
           <CardContent style={{ display: "flex" }}>
-          
             <div className="main_send">
               <h4
                 style={{
@@ -169,18 +165,17 @@ const DetailParcelSent = ({ parcelDetails }) => {
               <p className="parcel_info">
                 <b>Tracking number : </b> {parcelDetails?.trackingNumber}
               </p>
-
+              <p className="parcel_info">
+                <b>Sender Name: </b> {parcelDetails?.senderName}
+              </p>
+              <p className="parcel_info">
+                <b>Sender Email: </b> {parcelDetails?.senderEmailAddress}
+              </p>
               <p className="parcel_info">
                 <b>Address of parcel locker: </b>{" "}
                 {response?.receiverDropOffPoint}
               </p>
 
-              <p className="parcel_info">
-                <b>Sender name : </b> {parcelDetails?.senderName}
-              </p>
-              <p className="parcel_info">
-                <b>Sender email : </b> {parcelDetails?.senderEmailAddress}
-              </p>
               <p className="parcel_info">
                 <b>Cabinet number : </b> {response?.lockerNumber}
               </p>

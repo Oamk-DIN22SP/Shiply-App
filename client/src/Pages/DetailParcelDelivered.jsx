@@ -11,7 +11,7 @@ export default function DetailParcelDelivered({ parcelDetails }) {
       <Grid>
         <h5 className="send_parcel">Parcel is waiting for you!</h5>
         <p className="parecl_content">
-          Our driver will soon pick your package to be delivered.<br></br>
+          Our driver has delivered your package!<br></br>
           Below, you can see the details:
         </p>
         <Card

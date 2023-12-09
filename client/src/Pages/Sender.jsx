@@ -108,7 +108,7 @@ const submithandleClick = async () => {
     });
 
     const reserveResult = await reserveResponse.json();
-    const { cabinet_id } = reserveResult; // get cabinet id and pass it to store in db
+    const { cabinet_id, cabinet_number } = reserveResult; // get cabinet id and pass it to store in db
     
     // Include cabinet_id in the second API request body
     const parcelsApiUrl = `${DEV_HOSTNAME}/api/parcels`;
@@ -119,7 +119,8 @@ const submithandleClick = async () => {
       },
       body: JSON.stringify({
         ...formData,
-        lockerNumber: cabinet_id,
+        lockerNumber: cabinet_number,
+        lockerID: cabinet_id
       }),
     });
 

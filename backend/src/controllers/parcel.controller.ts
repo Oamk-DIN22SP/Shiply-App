@@ -141,7 +141,7 @@ class ParcelController {
                     [
                         trackingNumber,
                         pinCode,
-                        'created',
+                        'reserved', // locker has been reserved, but sender hasnt yet sent the parcel
 
                         senderName,
                         senderEmailAddress,
@@ -182,7 +182,7 @@ class ParcelController {
                     );
 
                 if (result) {
-                    res.json({ success: true, trackingNumber, pinCode, status: "Sent", receiverName, receiverEmailAddress,  senderDropOffLocation, senderLocationId, lockerNumber,lockerID});
+                    res.json({ success: true, trackingNumber, pinCode, status: "reserved", receiverName, receiverEmailAddress,  senderDropOffLocation, senderLocationId, lockerNumber,lockerID});
                 } else  {
                     console.error();
                     res.status(500).json({ error: 'Failed to create the parcel' });
