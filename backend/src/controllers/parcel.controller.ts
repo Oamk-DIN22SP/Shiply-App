@@ -194,8 +194,8 @@ class ParcelController {
                 const code =
                     // Update the corresponding cabinet with parcel ID, code, traking number and status
                     await (await db).query(
-                        'UPDATE cabinets SET parcel_id = ?, code = ?, tracking_number = ?, status = "reserved" , number = ? WHERE id = ?',
-                        [parcelId, pinCode, trackingNumber, lockerNumber, lockerID]
+                        'UPDATE cabinets SET parcel_id = ?, code = ?, tracking_number = ?, status = "reserved" WHERE id = ?',
+                        [parcelId, pinCode, trackingNumber, lockerID]
                     );
 
 
