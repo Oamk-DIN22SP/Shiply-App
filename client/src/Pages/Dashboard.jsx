@@ -35,10 +35,10 @@ import Receiver from "./Receiver";
 import Track from "./Track";
 import History from "./History";
 import Settings from "./Settings";
-import LoginForm from "../Components/LoginForm";
+import LoginForm from "./LoginPage";
 import logo from "../Images/img_shiplylogo1.png";
 import smile from "../Images/smile.png";
-import SignupForm from "../Components/SignupForm";
+import SignupForm from "./SignupPage";
 import RecivedParcel from "../Right_Side_Pannel/RecivedParcel";
 import OtherParcel from "../Right_Side_Pannel/OtherParcel";
 import SendParcel from "../Right_Side_Pannel/SendParcel";
@@ -326,34 +326,7 @@ function ResponsiveDrawer(props, userId) {
         }}
       >
         <Toolbar />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              user ? (
-                <Navigate to="/home" replace={true} />
-              ) : (
-                <Navigate to="/login" replace={true} />
-              )
-            }
-          />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/signup" element={<SignupForm />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/sender" element={<Sender />} />
-
-          <Route path="/receiver" element={<Receiver />} />
-          <Route
-            path="/receiver/parcel/:parcelID"
-            element={<DetailParcelPage />}
-          />
-          <Route path="/track" element={<Track />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/receivedparcel" element={<RecivedParcel />} />
-          <Route path="/sendparcel" element={<SendParcel />} />
-          <Route path="/otherparcel" element={<OtherParcel />} />
-        </Routes>
+       
       </Box>
     </Box>
   );
