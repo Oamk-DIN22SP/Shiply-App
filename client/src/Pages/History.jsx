@@ -26,7 +26,7 @@ export default function History() {
     const fetchUserParcels = async () => {
       try {
         const sentParcelsResponse = await fetch(
-          `${DEV_HOSTNAME}/api/parcels/sender/getSentParcels/${user?.uid}`
+          `${BACKEND_HOSTNAME}/api/parcels/sender/getSentParcels/${user?.uid}`
         );
         const data = await sentParcelsResponse.json();
 

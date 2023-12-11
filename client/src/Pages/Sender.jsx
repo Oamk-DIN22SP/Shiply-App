@@ -111,7 +111,7 @@ const submithandleClick = async () => {
     const { cabinet_id, cabinet_number } = reserveResult; // get cabinet id and pass it to store in db
     
     // Include cabinet_id in the second API request body
-    const parcelsApiUrl = `${DEV_HOSTNAME}/api/parcels`;
+    const parcelsApiUrl = `${BACKEND_HOSTNAME}/api/parcels`;
     const parcelsResponse = await fetch(parcelsApiUrl, {
       method: "POST",
       headers: {

@@ -30,7 +30,7 @@ export default function Receiver() {
     // Fetch parcels from the backend API
     const fetchParcels = async () => {
       try {
-        const apiUrl = `${DEV_HOSTNAME}/api/parcels/receiver/getDelivered`;
+        const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/receiver/getDelivered`;
         // Create a request payload with the expected structure
         const requestBody = {
           receiverEmailAddress: user?.email,
