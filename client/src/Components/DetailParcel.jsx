@@ -38,9 +38,7 @@ const DetailParcel = ({parcelID}) => {
   switch (parcelDetails.status) {
     case "sent":
       // Check if the parcel is sent and the receiver email matches the user's email
-      if (parcelDetails.receiverEmailAddress === user?.email) {
         return <DetailParcelSent parcelDetails={parcelDetails} />;
-      }
       // If the receiver email does not match, fall through to the next case
       return <DetailParcelSent parcelDetails={parcelDetails} />;
     case "picked":

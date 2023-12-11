@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, authenticateUser } from "../config/firebase.config";
 import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
-import { Typography, Grid } from "@mui/material";
+import { Typography, Grid, Box, Container } from "@mui/material";
 import DetailParcel from "../Components/DetailParcel";
 export default function Home() {
   const [selectedParcel, setSelectedParcel] = useState(null);
@@ -46,22 +46,28 @@ export default function Home() {
   }, [user]);
 
   return (
-    <Grid container className="home_page">
-      <Grid item xs={6}>
-        <Notification onNotificationItemClick={handleNotificationItemClick} />
-      </Grid>
-      <Grid item xs={6}>
-        <div>
-          <Typography variant="h4" gutterBottom>
-            Welcome, {auth.currentUser?.displayName}
-          </Typography>
-          {selectedParcel ? (
-            <DetailParcel parcelID={selectedParcel.parcelID} />
-          ) : (
-            <p>You don't currently have any selected parcel details.</p>
-          )}
-        </div>
-      </Grid>
-    </Grid>
+    <Container style={{ display: "flex" }}>
+      <Box sx={{ marginLeft: { xs: 0, sm: 30 }, padding: 3 }}>
+        <Typography variant="h5">
+          Welcome, {auth.currentUser?.displayName}
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6} xl={8}>
+            <Notification
+              onNotificationItemClick={handleNotificationItemClick}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} xl={8}>
+            <div>
+              {selectedParcel ? (
+                <DetailParcel parcelID={selectedParcel.parcelID} />
+              ) : (
+                <p>You don't currently have any selected parcel details.</p>
+              )}
+            </div>
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
   );
 }

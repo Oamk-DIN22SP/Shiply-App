@@ -41,12 +41,18 @@ export default function DetailParcelDelivered({ parcelDetails }) {
                   key={"location"}
                   style={{ backgroundColor: "#D5F9B8", margin: "1px" }}
                 >
-                  <ListItemText primary="Parcel is waiting at one of the lockers to be picked up by driver." />
+                  <ListItemText>
+                    Parcel is waiting for you at{" "}
+                    {parcelDetails.receiverDropOffPointTitle}!
+                  </ListItemText>
                 </ListItem>
               </List>
               <div className="parcel_info_main">
                 <p className="parcel_info">
                   <b>Tracking number : </b> {parcelDetails?.trackingNumber}
+                </p>
+                <p className="parcel_info">
+                  <b>Pin code : </b> {parcelDetails?.pinCode}
                 </p>
                 <p className="parcel_info">
                   <b>Sender Name: </b> {parcelDetails?.senderName}
@@ -59,8 +65,7 @@ export default function DetailParcelDelivered({ parcelDetails }) {
                   {parcelDetails.receiverDropOffPointTitle}
                 </p>
                 <p className="parcel_info">
-                  <b>Cabinet number: </b>{" "}
-                  {parcelDetails.lockerNumber}
+                  <b>Cabinet number: </b> {parcelDetails.lockerNumber}
                 </p>
                 <p className="parcel_info">
                   <b>Parcel status : </b> {parcelDetails.status}

@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import message from "../Images/msg1.png";
 import { auth, authenticateUser } from "../config/firebase.config";
 import axios from "axios";
-import { List, ListItem, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
+import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Container } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function History() {
@@ -92,6 +92,8 @@ export default function History() {
   };
 
   return (
+    <Container style={{ display: "flex" }}>
+      <Box sx={{ marginLeft: { xs: 0, sm: 30 } }}>
     <div className="notification">
       <p
         className="heading"
@@ -148,5 +150,8 @@ export default function History() {
         )}
       </Grid>
     </div>
+    
+    </Box>
+    </Container>
   );
 }

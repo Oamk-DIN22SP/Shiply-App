@@ -11,12 +11,13 @@ import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../config/firebase.config";
 import Notification from "../Components/Notification";
-import { Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 
 export default function Sender() {
   const [user] = useAuthState(auth);
   const [response, setResponseData] = useState(null);
   const [locations, setLocations] = useState([]);
+   const [selectedParcel, setSelectedParcel] = useState(null);
   // Form data and sending package section
   const [formData, setFormData] = useState({
     senderName: user ? user.displayName : "",
@@ -72,6 +73,9 @@ export default function Sender() {
 
   const handleChooseLocation = (locationId, locationAddress) => {
     setFormData({ ...formData, senderLocationId: locationId, senderDropOffLocation: locationAddress });
+  };
+  const handleNotificationItemClick = (item) => {
+    setSelectedParcel(item);
   };
 
   useEffect(() => {
@@ -157,10 +161,10 @@ const submithandleClick = async () => {
       case 1:
         return (
           <>
-            <h5 className="set_heading">To Send a package</h5>
-            <p className="set_para">
+            <h5 className="set_heading">
               Please fill out all required information completely...
-            </p>
+            </h5>
+            <p className="set_para"></p>
             <div className="main_send">
               <h3
                 style={{
@@ -456,58 +460,60 @@ const submithandleClick = async () => {
 
   return (
     <Container style={{ display: "flex" }}>
-      <Notification />
-      <div>
-        <p
-          className="heading"
-          style={{
-            border: "1px solid #FFFAF6",
-            padding: "10px",
-            backgroundColor: "#FFFAF6",
-            borderRadius: "10px 10px 0 0",
-          }}
-        >
-          Sender
-        </p>
-        <Grid
-          style={{
-            backgroundColor: "#F2FDE8",
-            padding: "10px",
-            borderRadius: "5px",
-            marginTop: "10px",
-            height: "100vh",
-            width: "100%",
-          }}
-        >
-          <h2></h2>
-          {renderStepContent()}
-          <br />
-          <div>
-            {step > 1 && (
-              <Button
-                variant="contained"
-                style={{ float: "left", backgroundColor: "#42820F" }}
-                onClick={handlePrevButtonClick}
-              >
-                Previous
-              </Button>
-            )}
-            {step < 5 && (
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: "#42820F",
-                  color: "#FDF9F3",
-                  float: "right",
-                }}
-                onClick={handleNextButtonClick}
-              >
-                Next
-              </Button>
-            )}
-          </div>
-        </Grid>
-      </div>
+      <Box sx={{ marginLeft: { xs: 0, sm: 30 } }}>
+        <div>
+          <p
+            className="heading"
+            style={{
+              border: "1px solid #FFFAF6",
+              padding: "10px",
+              backgroundColor: "#FFFAF6",
+              borderRadius: "10px 10px 0 0",
+              textAlign: "center",
+            }}
+          >
+            Send parcels
+          </p>
+          <Grid
+            style={{
+              backgroundColor: "#F2FDE8",
+              padding: "10px",
+              borderRadius: "5px",
+              marginTop: "10px",
+              height: "100vh",
+              width: "100%",
+            }}
+          >
+            <h2></h2>
+            {renderStepContent()}
+            <br />
+            <div>
+              {step > 1 && (
+                <Button
+                  variant="contained"
+                  style={{ float: "left", backgroundColor: "#42820F" }}
+                  onClick={handlePrevButtonClick}
+                >
+                  Previous
+                </Button>
+              )}
+              {step < 5 && (
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#42820F",
+                    color: "#FDF9F3",
+                    float: "right",
+                  }}
+                  onClick={handleNextButtonClick}
+                >
+                  Next
+                </Button>
+              )}
+            </div>
+          </Grid>
+        </div>
+      </Box>
     </Container>
   );
 }

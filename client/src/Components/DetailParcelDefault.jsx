@@ -13,7 +13,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { auth, authenticateUser } from "../config/firebase.config";
 
-const DetailParcelSent = ({ parcelDetails }) => {
+const DetailParcelDefault = ({ parcelDetails }) => {
   const [user] = useAuthState(auth);
   const [response, setResponseData] = useState(null);
   const [locations, setLocations] = useState([]);
@@ -99,7 +99,7 @@ const DetailParcelSent = ({ parcelDetails }) => {
   return (
     <div className="main-div">
       <p className="heading">Your new package awaits...</p>
-      <Grid>
+      <Grid item xs={10} sm={6} xl={10}>
         <p className="parecl_content">
           {parcelDetails.senderName} sent a new package to you.
         </p>
@@ -199,4 +199,4 @@ const DetailParcelSent = ({ parcelDetails }) => {
   );
 };
 
-export default DetailParcelSent;
+export default DetailParcelDefault;

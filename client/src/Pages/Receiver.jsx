@@ -54,22 +54,9 @@ export default function Receiver() {
   };
 
   return (
-    <Container style={{ display: "flex", flexDirection: "column" }}>
-      <Typography
-        variant="h5"
-        className="heading"
-        style={{
-          border: "1px solid #FFFAF6",
-          padding: "10px",
-          backgroundColor: "#FFFAF6",
-          borderRadius: "10px 10px 0 0",
-          textAlign: "center",
-        }}
-      >
-        Incoming packages
-      </Typography>
-
+    <Container style={{ display: "flex" }}>
       <Box
+        sx={{ marginLeft: { xs: 0, sm: 30 } }}
         style={{
           backgroundColor: "#FFFAF6",
           padding: "10px",
@@ -78,6 +65,18 @@ export default function Receiver() {
           width: "100%",
         }}
       >
+        <p
+          className="heading"
+          style={{
+            border: "1px solid #FFFAF6",
+            padding: "10px",
+            backgroundColor: "#FFFAF6",
+            borderRadius: "10px 10px 0 0",
+          }}
+        >
+          Incoming packages
+        </p>
+
         <p className="setting_content">
           All your packages will be shown here. Click to get more information
           about the parcel.
