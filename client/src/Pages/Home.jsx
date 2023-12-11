@@ -8,13 +8,13 @@ import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { Typography, Grid, Box, Container } from "@mui/material";
 import DetailParcel from "../Components/DetailParcel";
 export default function Home() {
-  const [selectedParcel, setSelectedParcel] = useState(null);
+ const [selectedParcel, setSelectedParcel] = useState(null);
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   authenticateUser();
 
   const handleNotificationItemClick = (item) => {
-    setSelectedParcel(item);
+  setSelectedParcel(item);
   };
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function Home() {
 
         const fetchedData = await response.json();
         console.log("Fetched parcels", fetchedData);
-        setSelectedParcel(null); // Reset selectedParcel when fetching new data
+       setSelectedParcel(null); // Reset selectedParcel when fetching new data
       } catch (error) {
         console.error("Error fetching parcels:", error);
       }
@@ -46,28 +46,28 @@ export default function Home() {
   }, [user]);
 
   return (
-    <Container style={{ display: "flex" }}>
-      <Box sx={{ marginLeft: { xs: 0, sm: 30 }, padding: 3 }}>
-        <Typography variant="h5">
-          Welcome, {auth.currentUser?.displayName}
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} xl={8}>
-            <Notification
-              onNotificationItemClick={handleNotificationItemClick}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} xl={8}>
-            <div>
-              {selectedParcel ? (
-                <DetailParcel parcelID={selectedParcel.parcelID} />
-              ) : (
-                <p>You don't currently have any selected parcel details.</p>
-              )}
-            </div>
-          </Grid>
-        </Grid>
-      </Box>
-    </Container>
+    <Grid
+      container
+      className="home_page"
+      xs={6}
+      xl={8}
+      sx={{ marginLeft: { xs: 0, sm: 45 } }}
+    >
+      <Grid item xs={6} >
+        <Notification onNotificationItemClick={handleNotificationItemClick} />
+      </Grid>
+      <Grid item xs={6}>
+        <div>
+          <Typography variant="h4" gutterBottom>
+            Welcome, {auth.currentUser?.displayName}
+          </Typography>
+          {selectedParcel ? (
+            <DetailParcel parcelID={selectedParcel.parcelID} />
+          ) : (
+            <p>You don't currently have any selected parcel details.</p>
+          )}
+        </div>
+      </Grid>
+    </Grid>
   );
 }

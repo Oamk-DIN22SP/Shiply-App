@@ -75,8 +75,8 @@ export default function Notification({ onNotificationItemClick }) {
         >
           Notifications
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} xl={8}>
+        <Grid container spacing={0}>
+          <Grid >
             <Box
               style={{
                 backgroundColor: "#FFFAF6",
@@ -89,7 +89,7 @@ export default function Notification({ onNotificationItemClick }) {
               <p className="setting_content">
                 All your packages will be shown here.
               </p>
-              <Grid item xs={12} sm={6} xl={8}>
+              <Grid>
                 <List>
                   {parcels.map((parcel) => (
                     <ListItem
