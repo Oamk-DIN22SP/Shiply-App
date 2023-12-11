@@ -23,6 +23,7 @@ export default function Receiver() {
   const [selectedParcel, setSelectedParcel] = useState({});
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
+
   // Ensure the user is authenticated before making the request
   authenticateUser();
 
@@ -53,70 +54,55 @@ export default function Receiver() {
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="xl"
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        flexDirection: "column",
-        minHeight: "100vh", // Set minimum height to 100% of viewport
-      }}
-    >
-      <Box display="flex" flexDirection="column" alignItems="center">
-        <Typography
-          variant="h5"
-          className="heading"
-          style={{
-            border: "1px solid #FFFAF6",
-            padding: "10px",
-            backgroundColor: "#FFFAF6",
-            borderRadius: "10px 10px 0 0",
-            width: "100%",
-            textAlign: "center",
-          }}
-        >
-          Incoming packages
-        </Typography>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={6}>
-            <Box
-              style={{
-                backgroundColor: "#FFFAF6",
-                padding: "10px",
-                borderRadius: "5px",
-                marginTop: "10px",
-                width: "100%",
-              }}
-            >
-              <p className="setting_content">
-                All your packages will be shown here.
-                <br />
-                Click to get more information about parcel.
-              </p>
-              <List>
-                {parcels.map((parcel) => (
-                  <ListItem
-                    key={parcel.parcelID}
-                    className="list-item"
-                    
-                    onClick={() => handleListItemClick(parcel)}
-                  >
-                    <ListItemAvatar>
-                      <Avatar src={message}></Avatar>
-                    </ListItemAvatar>
+    <Container style={{ display: "flex", flexDirection: "column" }}>
+      <Typography
+        variant="h5"
+        className="heading"
+        style={{
+          border: "1px solid #FFFAF6",
+          padding: "10px",
+          backgroundColor: "#FFFAF6",
+          borderRadius: "10px 10px 0 0",
+          textAlign: "center",
+        }}
+      >
+        Incoming packages
+      </Typography>
 
-                    {parcel.status === "delivered" && (
-                      <ListItemText>Ready for pick up!</ListItemText>
-                    )}
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
+      <Box
+        style={{
+          backgroundColor: "#FFFAF6",
+          padding: "10px",
+          borderRadius: "5px",
+          marginTop: "10px",
+          width: "100%",
+        }}
+      >
+        <p className="setting_content">
+          All your packages will be shown here. Click to get more information
+          about the parcel.
+        </p>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <List>
+              {parcels.map((parcel) => (
+                <ListItem
+                  key={parcel.parcelID}
+                  className="list-item"
+                  onClick={() => handleListItemClick(parcel)}
+                >
+                  <ListItemAvatar>
+                    <Avatar src={message}></Avatar>
+                  </ListItemAvatar>
+                  {parcel.status === "delivered" && (
+                    <ListItemText>Ready for pick up!</ListItemText>
+                  )}
+                </ListItem>
+              ))}
+            </List>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <div>
-              
               {selectedParcel ? (
                 <DetailParcel parcelID={selectedParcel.parcelID} />
               ) : (
