@@ -56,10 +56,11 @@ export default function DetailParcelDelivered({ parcelDetails }) {
                 </p>
                 <p className="parcel_info">
                   <b>Address of parcel locker: </b>{" "}
-                  {parcelDetails.receiverDropOffPoint}
+                  {parcelDetails.receiverDropOffPointTitle}
                 </p>
                 <p className="parcel_info">
-                  <b>Cabinet number: </b> to be done
+                  <b>Cabinet number: </b>{" "}
+                  {parcelDetails.lockerNumber}
                 </p>
                 <p className="parcel_info">
                   <b>Parcel status : </b> {parcelDetails.status}

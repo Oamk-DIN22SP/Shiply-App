@@ -101,7 +101,7 @@ class LocationCabinetController {
       const { locationId, deliveryNumber, code } = req.body;
 
       if (!locationId || !deliveryNumber || !code) {
-        return res.status(400).json({ error: 'Please provide locationId, deliveryNumber, and code in the request body' });
+        return res.status(400).json({ error: 'Please provide parcel_id, locationId, cabinet_id, deliveryNumber, and code in the request body' });
       }
 
       const [cabinetResult] = await (await db).query(
@@ -138,7 +138,7 @@ class LocationCabinetController {
       await (await db).query('UPDATE Parcels SET status = "sent", receiverLocationId = ?, pinCode = ?  WHERE parcelID = ?', [tempReceiverLocationId, newCode, parcel_id]);
 
 
-      res.status(200).json({ message: 'Drop-off verified successfully', cabinet_id, cabinet_number, parcel_id });
+      res.status(200).json({ message: 'Drop-off verified successfully', cabinet_id, cabinet_number, parcel_id, tempReceiverLocationId });
 
     } catch (err) {
       console.error('Error verifying drop-off:', err);

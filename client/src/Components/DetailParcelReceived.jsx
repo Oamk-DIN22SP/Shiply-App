@@ -66,7 +66,7 @@ const DetailParcelReceived = ({ parcelDetails }) => {
                 </p>
                 <p className="parcel_info">
                   <b>Address of parcel locker: </b>{" "}
-                  {response?.receiverDropOffPoint}
+                  {response?.receiverDropOffPointTitle}
                 </p>
 
                 <p className="parcel_info">

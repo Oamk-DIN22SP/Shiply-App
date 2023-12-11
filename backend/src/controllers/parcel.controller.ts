@@ -111,7 +111,11 @@ class ParcelController {
     async getParcelByID(req: Request, res: Response) {
         try {
             const parcelID = req.params.parcelID;
-            const [rows] = await (await db).query('SELECT * FROM Parcels WHERE parcelID = ?', [parcelID]);
+            const [rows] = await (await db).query(`
+            SELECT Parcels.*, locations.title as receiverDropOffPointTitle, locations.address as receiverDropOffPointAddress
+            FROM Parcels
+            JOIN locations ON Parcels.receiverLocationId = locations.id
+            WHERE Parcels.parcelID = ?;`, [parcelID]);
             res.status(200).json(rows)
         } catch (err) {
             console.error('Error fetching parcels:', err);

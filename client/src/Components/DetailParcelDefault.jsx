@@ -179,11 +179,11 @@ const DetailParcelSent = ({ parcelDetails }) => {
               </p>
               <p className="parcel_info">
                 <b>Address of parcel locker: </b>{" "}
-                {response?.receiverDropOffPoint}
+                {response?.receiverDropOffPointTitle}
               </p>
 
               <p className="parcel_info">
-                <b>Cabinet number : </b> {response?.lockerNumber}
+                <b>Cabinet ID : </b> {response?.lockerID}
               </p>
               <p className="parcel_info">
                 <b>Pin code for parcel locker : </b> {parcelDetails?.pinCode}
