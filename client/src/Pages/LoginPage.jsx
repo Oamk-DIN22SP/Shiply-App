@@ -91,9 +91,12 @@ const LoginForm = () => {
 
 
   const handleLogin = async () => {
-    setSnackbarMessage("Login successful");
-    setSnackbarColor("#4CAF50"); // Set color for success
-    setsnackbarOpen(true);
+    if (user) {
+ setSnackbarMessage("Login successful");
+ setSnackbarColor("#4CAF50"); // Set color for success
+ setsnackbarOpen(true);
+    }
+   
 
     try {
       const auth = getAuth();

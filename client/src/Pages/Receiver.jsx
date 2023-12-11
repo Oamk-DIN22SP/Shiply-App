@@ -17,6 +17,7 @@ import DetailParcel from "../Components/DetailParcel";
 import axios from "axios";
 import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { Link, useNavigate } from "react-router-dom";
+import Notification from "../Components/Notification";
 
 export default function Receiver() {
   const [parcels, setParcels] = useState([]);
@@ -26,7 +27,9 @@ export default function Receiver() {
 
   // Ensure the user is authenticated before making the request
   authenticateUser();
-
+  const handleNotificationItemClick = (item) => {
+    setSelectedParcel(item);
+  };
   useEffect(() => {
     // Fetch parcels from the backend API
     const fetchParcels = async () => {
@@ -49,68 +52,32 @@ export default function Receiver() {
     fetchParcels();
   }, []); // Empty dependency array ensures the effect runs once when the component mounts
 
-  const handleListItemClick = (parcel) => {
-    setSelectedParcel(parcel);
-  };
-
   return (
-    <Container style={{ display: "flex" }}>
-      <Box
-        sx={{ marginLeft: { xs: 0, sm: 30 } }}
-        style={{
-          backgroundColor: "#FFFAF6",
-          padding: "10px",
-          borderRadius: "5px",
-          marginTop: "10px",
-          width: "100%",
-        }}
-      >
-        <p
-          className="heading"
-          style={{
-            border: "1px solid #FFFAF6",
-            padding: "10px",
-            backgroundColor: "#FFFAF6",
-            borderRadius: "10px 10px 0 0",
-          }}
-        >
-          Incoming packages
-        </p>
+    <div>
+     
 
-        <p className="setting_content">
-          All your packages will be shown here. Click to get more information
-          about the parcel.
-        </p>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <List>
-              {parcels.map((parcel) => (
-                <ListItem
-                  key={parcel.parcelID}
-                  className="list-item"
-                  onClick={() => handleListItemClick(parcel)}
-                >
-                  <ListItemAvatar>
-                    <Avatar src={message}></Avatar>
-                  </ListItemAvatar>
-                  {parcel.status === "delivered" && (
-                    <ListItemText>Ready for pick up!</ListItemText>
-                  )}
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <div>
-              {selectedParcel ? (
-                <DetailParcel parcelID={selectedParcel.parcelID} />
-              ) : (
-                <p>You don't currently have any selected parcel details.</p>
-              )}
-            </div>
-          </Grid>
+      <Grid
+        container
+        className="home_page"
+        xs={6}
+        xl={8}
+        sx={{ marginLeft: { xs: 0, sm: 45 } }}
+      >
+        <Grid item xs={6}>
+          <Notification onNotificationItemClick={handleNotificationItemClick} />
         </Grid>
-      </Box>
-    </Container>
+
+        <Grid item xs={6}>
+          <Typography variant="h5">Click on any parcel to see more info.</Typography>
+          <div>
+            {selectedParcel ? (
+              <DetailParcel parcelID={selectedParcel.parcelID} />
+            ) : (
+              <p>You don't currently have any selected parcel details.</p>
+            )}
+          </div>
+        </Grid>
+      </Grid>
+    </div>
   );
 }

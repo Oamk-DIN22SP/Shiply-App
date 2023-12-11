@@ -46,28 +46,30 @@ export default function Home() {
   }, [user]);
 
   return (
-    <Grid
-      container
-      className="home_page"
-      xs={6}
-      xl={8}
-      sx={{ marginLeft: { xs: 0, sm: 45 } }}
-    >
-      <Grid item xs={6} >
-        <Notification onNotificationItemClick={handleNotificationItemClick} />
+    <div>
+      <Grid
+        container
+        className="home_page"
+        xs={6}
+        xl={8}
+        sx={{ marginLeft: { xs: 0, sm: 45 } }}
+      >
+        <Grid item xs={6}>
+          <Notification onNotificationItemClick={handleNotificationItemClick} />
+        </Grid>
+        <Grid item xs={6}>
+          <div>
+            <Typography variant="h4" gutterBottom>
+              Welcome, {auth.currentUser?.displayName}
+            </Typography>
+            {selectedParcel ? (
+              <DetailParcel parcelID={selectedParcel.parcelID} />
+            ) : (
+              <p>You don't currently have any selected parcel details.</p>
+            )}
+          </div>
+        </Grid>
       </Grid>
-      <Grid item xs={6}>
-        <div>
-          <Typography variant="h4" gutterBottom>
-            Welcome, {auth.currentUser?.displayName}
-          </Typography>
-          {selectedParcel ? (
-            <DetailParcel parcelID={selectedParcel.parcelID} />
-          ) : (
-            <p>You don't currently have any selected parcel details.</p>
-          )}
-        </div>
-      </Grid>
-    </Grid>
+    </div>
   );
 }
