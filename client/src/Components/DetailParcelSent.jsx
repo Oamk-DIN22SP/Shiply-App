@@ -17,7 +17,7 @@ const DetailParcelSent = ({ parcelDetails }) => {
   return (
     <div className="main-div">
       <p className="heading">New parcel has been sent to you!</p>
-      <Grid>
+      <Grid item xs={10} sm={6} xl={10}>
         <p className="parecl_content">
           {parcelDetails.senderName} sent a new package to you.
         </p>
@@ -63,8 +63,7 @@ const DetailParcelSent = ({ parcelDetails }) => {
                 <p className="parcel_info">
                   <b>Sender Email: </b> {parcelDetails?.senderEmailAddress}
                 </p>
-                
-             
+
                 <p className="parcel_info">
                   <b>Parcel status : </b> {parcelDetails.status}
                 </p>

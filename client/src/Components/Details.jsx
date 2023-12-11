@@ -38,10 +38,7 @@ const Details = () => {
       // Render the appropriate component based on the parcel status
       switch (parcelDetails.status) {
         case "sent":
-          // Check if the parcel is sent and the receiver email matches the user's email
-          if (parcelDetails.receiverEmailAddress === user?.email) {
-            return <DetailParcelSent parcelDetails={parcelDetails} />;
-          }
+          return <DetailParcelSent parcelDetails={parcelDetails} />;
           // If the receiver email does not match, fall through to the next case
           return <DetailParcelSent parcelDetails={parcelDetails} />;
         case "picked":
@@ -59,26 +56,6 @@ const Details = () => {
 
   if (!parcelDetails) {
     return <p>Loading parcel details...</p>;
-  }
-
-  // Render the appropriate component based on the parcel status
-  switch (parcelDetails.status) {
-    case "sent":
-      // Check if the parcel is sent and the receiver email matches the user's email
-      if (parcelDetails.receiverEmailAddress === user?.email) {
-        return <DetailParcelSent parcelDetails={parcelDetails} />;
-      }
-      // If the receiver email does not match, fall through to the next case
-      return <DetailParcelSent parcelDetails={parcelDetails} />;
-    case "picked":
-      return <DetailParcelPicked parcelDetails={parcelDetails} />;
-    case "delivered":
-      return <DetailParcelDelivered parcelDetails={parcelDetails} />;
-    case "received":
-      return <DetailParcelReceived parcelDetails={parcelDetails} />;
-    // Add more cases for other statuses as needed
-    default:
-      return <DetailParcelDefault parcelDetails={parcelDetails} />;
   }
 };
 

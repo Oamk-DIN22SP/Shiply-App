@@ -19,13 +19,16 @@ const DetailParcelReceived = ({ parcelDetails }) => {
 
   return (
     <div className="main-div">
-      <p className="heading">Your package has been received!</p>
-      <Grid>
+      <p className="heading">Your package has been delivered!</p>
+      <Grid item xs={10} sm={6} xl={10}>
         <p className="parecl_content">
           {parcelDetails.senderName} sent a new package to you.
         </p>
         <p className="parecl_content">
-          The package was successfully picked up. Thank you for being with us!
+          Your parcel has been received at{" "}
+          {parcelDetails.receiverDropOffPointTitle}.
+          <br />
+          Thank you for being with us!
         </p>
         <Card
           style={{
@@ -51,7 +54,7 @@ const DetailParcelReceived = ({ parcelDetails }) => {
                   key={"location"}
                   style={{ backgroundColor: "#D5F9B8", margin: "1px" }}
                 >
-                  <ListItemText primary="Parcel is waiting at one of the lockers to be picked up by driver." />
+                  <ListItemText primary="Parcel has been successfully delivered." />
                 </ListItem>
               </List>
               <div className="parcel_info_main">
@@ -66,7 +69,7 @@ const DetailParcelReceived = ({ parcelDetails }) => {
                 </p>
                 <p className="parcel_info">
                   <b>Address of parcel locker: </b>{" "}
-                  {response?.receiverDropOffPointTitle}
+                  {parcelDetails?.receiverDropOffPointTitle}
                 </p>
 
                 <p className="parcel_info">

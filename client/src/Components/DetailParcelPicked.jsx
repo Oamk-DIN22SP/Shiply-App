@@ -21,14 +21,14 @@ const DetailParcelPicked = ({ parcelDetails }) => {
   return (
     <div className="main-div">
       <p className="heading">Your package is on the way...</p>
-      <Grid>
+      <Grid item xs={10} sm={6} xl={10}>
         <p className="parecl_content">
           {parcelDetails.senderName} sent a new package to you.
         </p>
         <p className="parecl_content">
-    Our driver will deliver package to one of parcel lockers locations.
-   <br/>
-    We will notify you when the parcel is delivered.
+          Our driver will deliver package to one of parcel lockers locations.
+          <br />
+          We will notify you when the parcel is delivered.
         </p>
         <Card
           style={{

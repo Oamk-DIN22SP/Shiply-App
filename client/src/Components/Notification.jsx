@@ -56,11 +56,11 @@ export default function Notification({ onNotificationItemClick }) {
       style={{
         display: "flex",
         justifyContent: "space-between",
-        flexDirection: "column",
+        flexDirection: "row",
         minHeight: "100vh", // Set minimum height to 100% of viewport
       }}
     >
-      <Box display="flex" flexDirection="column" alignItems="center">
+      <Box sx={{ marginLeft: { xs: 0, sm: 0 } }}>
         <Typography
           variant="h5"
           className="heading"
@@ -75,8 +75,8 @@ export default function Notification({ onNotificationItemClick }) {
         >
           Notifications
         </Typography>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} md={6}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6} xl={8}>
             <Box
               style={{
                 backgroundColor: "#FFFAF6",
@@ -89,34 +89,36 @@ export default function Notification({ onNotificationItemClick }) {
               <p className="setting_content">
                 All your packages will be shown here.
               </p>
-              <List>
-                {parcels.map((parcel) => (
-                  <ListItem
-                    key={parcel.parcelID}
-                    className="list-item"
-                    onClick={() => handleListItemClick(parcel)}
-                  >
-                    <ListItemAvatar>
-                      <Avatar src={message}></Avatar>
-                    </ListItemAvatar>
-                    {parcel.status === "created" && (
-                      <ListItemText primary="You are sending a new parcel!" />
-                    )}
-                    {parcel.status === "sent" && (
-                      <ListItemText primary="A new package was sent to you.." />
-                    )}
-                    {parcel.status === "picked" && (
-                      <ListItemText primary="Your parcel is on the way..." />
-                    )}
-                    {parcel.status === "delivered" && (
-                      <ListItemText primary="Your parcel is ready to pick up..." />
-                    )}
-                    {parcel.status === "received" && (
-                      <ListItemText primary="Your parcel has been received..." />
-                    )}
-                  </ListItem>
-                ))}
-              </List>
+              <Grid item xs={12} sm={6} xl={8}>
+                <List>
+                  {parcels.map((parcel) => (
+                    <ListItem
+                      key={parcel.parcelID}
+                      className="list-item"
+                      onClick={() => handleListItemClick(parcel)}
+                    >
+                      <ListItemAvatar>
+                        <Avatar src={message}></Avatar>
+                      </ListItemAvatar>
+                      {parcel.status === "created" && (
+                        <ListItemText primary="You are sending a new parcel!" />
+                      )}
+                      {parcel.status === "sent" && (
+                        <ListItemText primary="A new package was sent to you.." />
+                      )}
+                      {parcel.status === "picked" && (
+                        <ListItemText primary="Your parcel is on the way..." />
+                      )}
+                      {parcel.status === "delivered" && (
+                        <ListItemText primary="Your parcel is ready to pick up..." />
+                      )}
+                      {parcel.status === "received" && (
+                        <ListItemText primary="Your parcel has been received..." />
+                      )}
+                    </ListItem>
+                  ))}
+                </List>
+              </Grid>
             </Box>
           </Grid>
         </Grid>

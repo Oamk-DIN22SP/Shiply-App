@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
+import MuiDrawer from '@mui/material/Drawer';
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
@@ -48,7 +49,14 @@ import BACKEND_HOSTNAME from "../config/backend.config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, authenticateUser } from "../config/firebase.config";
 import DetailParcelPage from "./DetailParcelPage";
-const drawerWidth = 240;
+import styled from "@emotion/styled";
+const drawerWidth = {
+  xs: 200,
+  sm: 240,
+  md: 280,
+  lg: 320,
+  xl: 360,
+};
 
 function ResponsiveDrawer(props, userId) {
   const { window } = props;
@@ -238,21 +246,23 @@ function ResponsiveDrawer(props, userId) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        backgroundColor: "#f0f0f0",
-      }}
-    >
+   <Box
+  component="main"
+  sx={{
+    flexGrow: 1,
+    p: 3,
+    width: { xs: "100%", sm: `calc(100% - ${drawerWidth.sm}px)` },
+  }}
+>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: "100%" },
-          ml: { sm: `${drawerWidth}px` },
-          backgroundColor: "#FFFAF6",
-        }}
-      >
+     <AppBar
+  position="fixed"
+  sx={{
+    width: { sm: `calc(100% - ${drawerWidth.sm}px)`, xs: "100%" },
+    ml: { sm: `${drawerWidth.sm}px` },
+    backgroundColor: "#FFFAF6",
+  }}
+>
         <Toolbar>
           <IconButton
             color="inherit"
