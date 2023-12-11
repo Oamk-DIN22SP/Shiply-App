@@ -63,11 +63,7 @@ const DetailParcelSent = ({ parcelDetails }) => {
                 <p className="parcel_info">
                   <b>Sender Email: </b> {parcelDetails?.senderEmailAddress}
                 </p>
-                <p className="parcel_info">
-                  <b>Address of parcel locker (location ID): </b>{" "}
-                  {parcelDetails?.receiverLocationId}
-                </p>
-
+                
              
                 <p className="parcel_info">
                   <b>Parcel status : </b> {parcelDetails.status}
