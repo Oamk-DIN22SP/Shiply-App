@@ -18,6 +18,18 @@ export default function Sender() {
   const [response, setResponseData] = useState(null);
   const [locations, setLocations] = useState([]);
    const [selectedParcel, setSelectedParcel] = useState(null);
+   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
+   const [errorMessage, setErrorMessage] = useState("");
+
+// Error handling
+   const handleSnackbarClose = () => {
+     setErrorSnackbarOpen(false);
+   };
+
+   const handleSnackbarOpen = (message) => {
+     setErrorMessage(message);
+     setErrorSnackbarOpen(true);
+   };
   // Form data and sending package section
   const [formData, setFormData] = useState({
     senderName: user ? user.displayName : "",
@@ -97,7 +109,7 @@ export default function Sender() {
 const submithandleClick = async () => {
   try {
     if (!validateForm()) {
-      alert("Please fill out all fields before confirming.");
+      handleSnackbarOpen("Please fill out all fields before confirming.");
       return;
     }
 
@@ -136,6 +148,7 @@ const submithandleClick = async () => {
     console.log("Created parcels!:", parcelsResult);
   } catch (error) {
     console.error("Error sending data to API:", error);
+    handleSnackbarOpen(error);
   }
 
   console.log("Form data:", formData);
@@ -151,6 +164,7 @@ const submithandleClick = async () => {
         setLocations(data); // Assuming your API returns an array of locations
       } catch (error) {
         console.error("Error fetching locations:", error);
+        handleSnackbarOpen(error);
       }
     };
 

@@ -7,6 +7,7 @@ import { auth, authenticateUser } from "../config/firebase.config";
 import BACKEND_HOSTNAME, { DEV_HOSTNAME } from "../config/backend.config";
 import { Typography, Grid, Box, Container } from "@mui/material";
 import DetailParcel from "../Components/DetailParcel";
+import axios from "axios";
 export default function Home() {
  const [selectedParcel, setSelectedParcel] = useState(null);
   const navigate = useNavigate();

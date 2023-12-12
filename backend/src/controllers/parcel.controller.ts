@@ -47,7 +47,7 @@ class ParcelController {
         try {
             const receiverEmailAddress = req.body.receiverEmailAddress;
             const [rows] = await (await db).query(
-                'SELECT Parcels.*, locations.title FROM Parcels JOIN locations ON Parcels.receiverLocationId = locations.id WHERE Parcels.receiverEmailAddress = ? AND Parcels.status = "delivered"', 
+                'SELECT Parcels.*, locations.title FROM Parcels JOIN locations ON Parcels.receiverLocationId = locations.id WHERE Parcels.receiverEmailAddress = ? ', 
                  [receiverEmailAddress]);
             if (rows) {
                 res.json(rows);
