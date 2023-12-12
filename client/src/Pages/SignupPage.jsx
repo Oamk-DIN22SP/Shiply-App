@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import BACKEND_HOSTNAME from '../config/backend.config';
 import { auth } from '../config/firebase.config';
+import background from "../images2/consumer-app-login-bg.png";
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -108,110 +109,124 @@ useEffect(() => {
 }, [errors, submitting]);
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Paper
-        elevation={3}
-        style={{
-          padding: 16,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h5">Sign Up</Typography>
-        {Object.keys(errors).length === 0 && submitting ? (
-    <span className="success">Successfully submitted ✓</span>
-  ) : null}
-        <form onSubmit={handleSubmit} style={{ width: "100%", marginTop: 16 }}>
-          <TextField
-            placeholder='Username'
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            value={formData.username}
-            name="username"
-            onChange={handleChange}
-          />
-         {errors.username ? (
-            <p className="error">
-              Please enter your name
-            </p>
+    <Container
+      fixed
+      component="main"
+      sx={{
+        backgroundImage: `url(${background})`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        width: "100vw",
+        height: "100vh",
+      }}
+    >
+      <Container component="main" maxWidth="xs">
+        <Paper
+          elevation={3}
+          style={{
+            padding: 16,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h5">Sign Up</Typography>
+          {Object.keys(errors).length === 0 && submitting ? (
+            <span className="success">Successfully submitted ✓</span>
           ) : null}
-          <TextField
-            placeholder='Email'
-            type="email"
-            variant="outlined"
-            margin="normal"
-            fullWidth       
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-           {errors.email ? (
-            <p className="error">Email should be at least 15 characters long</p>
-          ) : null}
-
-          <TextField
-            placeholder='Password'
-            type="password"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          {errors.password ? (
-            <p className="error">
-              Password should be at least 5 characters long
-            </p>
-          ) : null}
-          <TextField
-            placeholder='Address'
-            type="text"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-          />
-          {errors.address ? (
-            <p className="error">
-              Please enter your address
-            </p>
-          ) : null}
-
-          <TextField
-            placeholder='Phone Number'
-            type="number"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-            {errors.phone ? (
-            <p className="error">
-              phone number should be at least 11 digits long
-            </p>
-          ) : null}
-
-          <Button sx={{ marginTop: 2, borderRadius: 3 }} color="warning">
-            <NavLink to="/login">Already have an account? Login</NavLink>
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="warning"
-            style={{ marginTop: 16 }}
-            onClick={handleSubmit}
+          <form
+            onSubmit={handleSubmit}
+            style={{ width: "100%", marginTop: 16 }}
           >
-            Submit
-          </Button>
-        </form>
-      </Paper>
+            <TextField
+              placeholder="Username"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              value={formData.username}
+              name="username"
+              onChange={handleChange}
+            />
+            {errors.username ? (
+              <p className="error">Please enter your name</p>
+            ) : null}
+            <TextField
+              placeholder="Email"
+              type="email"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            {errors.email ? (
+              <p className="error">
+                Email should be at least 15 characters long
+              </p>
+            ) : null}
+
+            <TextField
+              placeholder="Password"
+              type="password"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            {errors.password ? (
+              <p className="error">
+                Password should be at least 5 characters long
+              </p>
+            ) : null}
+            <TextField
+              placeholder="Address"
+              type="text"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+            />
+            {errors.address ? (
+              <p className="error">Please enter your address</p>
+            ) : null}
+
+            <TextField
+              placeholder="Phone Number"
+              type="number"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+            {errors.phone ? (
+              <p className="error">
+                phone number should be at least 11 digits long
+              </p>
+            ) : null}
+
+            <Button sx={{ marginTop: 2, borderRadius: 3 }} color="warning">
+              <NavLink to="/login">Already have an account? Login</NavLink>
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="warning"
+              style={{ marginTop: 16 }}
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          </form>
+        </Paper>
+      </Container>
     </Container>
   );
 };

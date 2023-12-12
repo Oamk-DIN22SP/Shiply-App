@@ -41,7 +41,7 @@
     cursor: pointer;  
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1500px) {
   .notification {
     width: 100%; /* Take up the full width on smaller screens */
   }
@@ -109,4 +109,16 @@ h5.set_heading {
   background-color: #F2FDE8;
   margin: 5px;
   border: 1px solid #E5E5E5;
+}
+.Login-component {
+    /* The image used */
+    background-image: url(./images2/consumer-app-login-bg.png);
+
+    /* Full height */
+    height: 100%; 
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }

@@ -36,10 +36,11 @@ const DetailParcel = ({parcelID}) => {
 
   // Render the appropriate component based on the parcel status
   switch (parcelDetails.status) {
+    case "reserved":
+      // Check if the parcel is sent and the receiver email matches the user's email
+      return <DetailParcelSent parcelDetails={parcelDetails} />;
     case "sent":
       // Check if the parcel is sent and the receiver email matches the user's email
-        return <DetailParcelSent parcelDetails={parcelDetails} />;
-      // If the receiver email does not match, fall through to the next case
       return <DetailParcelSent parcelDetails={parcelDetails} />;
     case "picked":
       return <DetailParcelPicked parcelDetails={parcelDetails} />;

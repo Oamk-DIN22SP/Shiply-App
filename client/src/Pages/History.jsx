@@ -7,58 +7,56 @@ import MenuItem from "@mui/material/MenuItem";
 import message from "../Images/msg1.png";
 import { auth, authenticateUser } from "../config/firebase.config";
 import axios from "axios";
-import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Container } from "@mui/material";
+import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Box, Container, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import DetailParcel from "../Components/DetailParcel";
 
 export default function History() {
   const [sentParcels, setSentParcels] = useState([]);
   const [receivedParcels, setReceivedParcels] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("all"); // Default to show all parcels
-    const [selectedParcel, setSelectedParcel] = useState({});
+    const [selectedParcel, setSelectedParcel] = useState(null);
   const [user] = useAuthState(auth);
 
   const handleListItemClick = (parcel) => {
     setSelectedParcel(parcel);
+    console.log(selectedParcel)
   };
   // Ensure the user is authenticated before making the request
   authenticateUser();
+  // Error handling
+   
   useEffect(() => {
-    const fetchUserParcels = async () => {
+     console.log(selectedParcel);
+   const fetchUserParcels = async () => {
       try {
         const sentParcelsResponse = await fetch(
           `${BACKEND_HOSTNAME}/api/parcels/sender/getSentParcels/${user?.uid}`
         );
-        const data = await sentParcelsResponse.json();
+        const sentParcelsData = await sentParcelsResponse.json();
 
         if (sentParcelsResponse.ok) {
-          // If the response status is okay, proceed with your logic
-          console.log("History- sent parcels:", data);
-          setSentParcels(data);
+          setSentParcels(sentParcelsData);
         } else {
-          // If there's an error in the response, handle it
-          console.error("Error from server:", data);
+          console.log("Error fetching sent parcels.");
         }
-        // Second API request to get received parcels
-
+ setSelectedParcel(null); 
         // Fetch parcels from the backend API
         const apiUrl = `${BACKEND_HOSTNAME}/api/parcels/receiver/getParcels`;
-        // Create a request payload with the expected structure
         const requestBody = {
           receiverEmailAddress: user?.email,
         };
 
         const res = await axios.post(apiUrl, requestBody);
-        console.log(res);
-        if (res) {
-          // If the response status is okay, proceed with your logic
-          console.log("History- received parcels:", data);
+        if (res && res.status === 200) {
+          console.log("History- received parcels:", res.data);
           setReceivedParcels(res.data);
         } else {
-          // If there's an error in the response, handle it
-          console.error("Error from server:", data);
+          console.log("Error fetching received parcels.");
         }
       } catch (error) {
-        throw new Error("History function collapsed", error);
+        console.error("Error in fetchUserParcels:", error);
+        // handleSnackbarOpen("An error occurred while processing your request.");
       }
     };
 
@@ -92,21 +90,29 @@ export default function History() {
   };
 
   return (
-    <Container style={{ display: "flex" }}>
-      <Box sx={{ marginLeft: { xs: 0, sm: 30 } }}>
-    <div className="notification">
-      <p
-        className="heading"
-        style={{
-          border: "1px solid #FFFAF6",
-          padding: "10px",
-          backgroundColor: "#FFFAF6",
-          borderRadius: "10px 10px 0 0 ",
-        }}
+    <div>
+      <Grid
+        container
+        className="home_page"
+        xs={6}
+        xl={8}
+        sx={{ marginLeft: { xs: 0, sm: 45 } }}
       >
-        History
-      </p>
-      <Grid style={{ backgroundColor: "#FFFAF6", height: "70vh" }}>
+        <Typography
+          variant="h5"
+          className="heading"
+          style={{
+            border: "1px solid #FFFAF6",
+            padding: "10px",
+            backgroundColor: "#FFFAF6",
+            borderRadius: "10px 10px 0 0",
+            textAlign: "center",
+            width: "95%",
+          }}
+        >
+          History
+        </Typography>
+
         <Select
           style={{ marginTop: 15, width: "95%", marginLeft: "1em" }}
           value={selectedFilter}
@@ -115,43 +121,49 @@ export default function History() {
           <MenuItem value="all">All Parcels</MenuItem>
           <MenuItem value="sendFirst">Sent parcels</MenuItem>
           <MenuItem value="receiveFirst">Incoming parcels</MenuItem>
-         
         </Select>
-
-        {filterParcels().length > 0 ? (
-          <List>
-            {filterParcels().map((parcel) => (
-              <ListItem
-                key={parcel.parcelID}
-                className="list-item"
-                component={Link}
-                to={`/receiver/parcel/${parcel.parcelID}`}
-                onClick={() => handleListItemClick(parcel)}
-              >
-              
-                <ListItemAvatar>
-                  <Avatar src={message}></Avatar>
-                </ListItemAvatar>
-                {parcel.receiverEmailAddress !== user?.email && (
-                  <ListItemText>
-                    Your parcel to {parcel.receiverEmailAddress}{" "}
-                  </ListItemText>
-                )}
-               {parcel.receiverEmailAddress === user?.email && (
-                  <ListItemText>
-                    Parcel from {parcel.senderEmailAddress}{" "}
-                  </ListItemText>
-                )} 
-              </ListItem>
-            ))}
-          </List>
-        ) : (
-          <p>No parcels available.</p>
-        )}
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            {filterParcels().length > 0 ? (
+              <List>
+                {filterParcels().map((parcel) => (
+                  <ListItem
+                    key={parcel.parcelID}
+                    className="list-item"
+                    onClick={() => handleListItemClick(parcel)}
+                  >
+                    <ListItemAvatar>
+                      <Avatar src={message}></Avatar>
+                    </ListItemAvatar>
+                    {parcel.receiverEmailAddress !== user?.email && (
+                      <ListItemText>
+                        Your parcel to {parcel.receiverEmailAddress}{" "}
+                      </ListItemText>
+                    )}
+                    {parcel.receiverEmailAddress === user?.email && (
+                      <ListItemText>
+                        Parcel from {parcel.senderEmailAddress}{" "}
+                      </ListItemText>
+                    )}
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <p>You don't currently have any selected parcel details.</p>
+            )}
+          </Grid>
+          {/* Right Column - DetailParcel */}
+          <Grid item xs={6}>
+            <div>
+              {selectedParcel ? (
+                <DetailParcel parcelID={selectedParcel.parcelID} />
+              ) : (
+                <p>You don't currently have any selected parcel details.</p>
+              )}
+            </div>
+          </Grid>
+        </Grid>
       </Grid>
     </div>
-    
-    </Box>
-    </Container>
   );
 }

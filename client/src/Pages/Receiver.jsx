@@ -54,8 +54,6 @@ export default function Receiver() {
 
   return (
     <div>
-     
-
       <Grid
         container
         className="home_page"
@@ -63,19 +61,39 @@ export default function Receiver() {
         xl={8}
         sx={{ marginLeft: { xs: 0, sm: 45 } }}
       >
-        <Grid item xs={6}>
-          <Notification onNotificationItemClick={handleNotificationItemClick} />
-        </Grid>
+        <Typography
+          variant="h5"
+          className="heading"
+          style={{
+            border: "1px solid #FFFAF6",
+            padding: "10px",
+            backgroundColor: "#FFFAF6",
+            borderRadius: "10px 10px 0 0",
+            textAlign: "center",
+            width: "95%",
+          }}
+        >
+          Incoming parcels
+        </Typography>
+        <Grid container spacing={2} sx={{ marginTop: { xs: 0, sm: 2 } }}>
+          <Grid item xs={6}>
+            <Notification
+              onNotificationItemClick={handleNotificationItemClick}
+            />
+          </Grid>
 
-        <Grid item xs={6}>
-          <Typography variant="h5">Click on any parcel to see more info.</Typography>
-          <div>
-            {selectedParcel ? (
-              <DetailParcel parcelID={selectedParcel.parcelID} />
-            ) : (
-              <p>You don't currently have any selected parcel details.</p>
-            )}
-          </div>
+          <Grid item xs={6}>
+            <Typography variant="h5">
+              Click on any parcel to see more info.
+            </Typography>
+            <div>
+              {selectedParcel ? (
+                <DetailParcel parcelID={selectedParcel.parcelID} />
+              ) : (
+                <p>You don't currently have any selected parcel details.</p>
+              )}
+            </div>
+          </Grid>
         </Grid>
       </Grid>
     </div>

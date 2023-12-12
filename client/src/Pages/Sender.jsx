@@ -473,8 +473,14 @@ const submithandleClick = async () => {
   };
 
   return (
-    <Container style={{ display: "flex" }}>
-      <Box sx={{ marginLeft: { xs: 0, sm: 30 } }}>
+  <div>
+     <Grid
+        container
+        className="home_page"
+        xs={6}
+        xl={8}
+        sx={{ marginLeft: { xs: 0, sm: 45 } }}
+      >
         <div>
           <p
             className="heading"
@@ -484,6 +490,7 @@ const submithandleClick = async () => {
               backgroundColor: "#FFFAF6",
               borderRadius: "10px 10px 0 0",
               textAlign: "center",
+              width: "95%",
             }}
           >
             Send parcels
@@ -527,7 +534,7 @@ const submithandleClick = async () => {
             </div>
           </Grid>
         </div>
-      </Box>
-    </Container>
+      </Grid>
+    </div>
   );
 }

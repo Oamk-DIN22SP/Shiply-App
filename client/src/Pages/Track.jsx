@@ -70,9 +70,15 @@ export default function Track() {
   );
 
   return (
-    <Container style={{ display: "flex" }}>
-      {/* Left Grid */}
-      <Box sx={{ marginLeft: { xs: 0, sm: 30 } }}>
+    <div>
+      <Grid
+        container
+        className="home_page"
+        xs={6}
+        xl={8}
+        sx={{ marginLeft: { xs: 0, sm: 45 } }}
+        spacing={3}
+      >
         <Typography
           variant="h5"
           className="heading"
@@ -82,13 +88,14 @@ export default function Track() {
             backgroundColor: "#FFFAF6",
             borderRadius: "10px 10px 0 0",
             textAlign: "center",
+            width: "95%",
           }}
         >
-          Track
+          Track parcel
         </Typography>
 
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} xl={8}>
+        <Grid container spacing={1}>
+          <Grid item xs={6} >
             <h5 className="send_parcel">Track Your Delivery!</h5>
             <p className="track_content">
               Your 8 digit delivery number is enough to know the status
@@ -101,7 +108,7 @@ export default function Track() {
                 placeholder="Delivery Number"
                 value={trackingNumber}
                 onChange={handleTrackingNumberChange}
-                style={{ width: "100%" }}
+                style={{ width: "60%" }}
               />
             </div>
             <div
@@ -122,14 +129,14 @@ export default function Track() {
             </div>
           </Grid>
 
-          <Grid item xs={12} sm={6} xl={8}>
+          <Grid item xs={6}>
             <div>
               {/* Display parcel data */}
               {parcelData && <div>{displayParcelDetails(parcelData)}</div>}
             </div>
           </Grid>
         </Grid>
-      </Box>
-    </Container>
+      </Grid>
+    </div>
   );
 }
