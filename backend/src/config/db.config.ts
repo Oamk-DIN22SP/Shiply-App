@@ -5,7 +5,7 @@ import mysql, { Pool, PoolConnection } from 'mysql2/promise';
   const pool: Pool = mysql.createPool({
  connectionLimit: 10,
       host: process.env.HOST,
-      user: 'admin',
+      user: process.env.USER,
       password: process.env.PASSWORD,
       database: process.env.DB
   });
