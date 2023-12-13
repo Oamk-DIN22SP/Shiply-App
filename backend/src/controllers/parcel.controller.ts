@@ -7,7 +7,6 @@ import { generateNumericString } from '../robot';
 // ResultSetHeader is used for For multiples INSERT, UPDATE, DELETE, TRUNCATE, etc. when using multipleStatements as true
 
 // Generate tracking number and pin code
-const trackingNumber = generateNumericString(8);
 const pinCode = generateNumericString(4);
 
 class ParcelController {
@@ -121,14 +120,13 @@ class ParcelController {
     // Endpoint to send parcel (create a new parcel from sender account) 
     async createNewParcel(req: Request, res: Response) {
         try {
-
             const {
                 senderName,
                 senderEmailAddress,
                 senderAddress,
                 senderPhoneNumber,
                 senderID,
-
+                senderDropOffPoint,
 
                 receiverName,
                 receiverEmailAddress,
@@ -140,47 +138,41 @@ class ParcelController {
                 packageHeight,
                 packageMass,
 
-                // new features for lockers
-                receiverLocationId, // is empty
-                senderLocationId, // ID of a parcel locker location
-                senderDropOffLocation, // Address of  a parcel locker location from table "locations"
-                lockerID, // to be assigned when user chooses sending parcel locker location
+                senderLocationId,
+                lockerID,
                 lockerNumber
             } = req.body;
 
 
+            // 4 digits random number add to tracking number
+            const trackingNumber = "STN" + generateNumericString(12);
 
+            console.log("trackingNumber", trackingNumber);
 
             try {
                 // Insert parcel data into the database
                 const [result]: [ResultSetHeader[], FieldPacket[]] = await (await db).query(
-                    'INSERT INTO Parcels (trackingNumber, pinCode, status, senderName, senderEmailAddress, senderAddress, senderPhoneNumber, senderID, senderDropOffPoint, receiverName, receiverEmailAddress, receiverAddress, receiverPhoneNumber, packageWidth, packageHeight, packageMass , receiverLocationId, senderLocationId, lockerID, lockerNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)',
+                    'INSERT INTO Parcels (trackingNumber, pinCode, status, senderName, senderEmailAddress, senderAddress, senderPhoneNumber, senderID, receiverName, receiverEmailAddress,receiverAddress,receiverPhoneNumber,packageWidth,packageHeight,packageMass,senderLocationId,lockerID,lockerNumber, senderDropOffPoint) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?)',
                     [
                         trackingNumber,
                         pinCode,
-                        'reserved', // locker has been reserved, but sender hasnt yet sent the parcel
-
+                        'reserved',
                         senderName,
                         senderEmailAddress,
                         senderAddress,
                         senderPhoneNumber,
-                        senderID, // Use the extracted sender ID here
-                        senderDropOffLocation,
-
+                        senderID,
                         receiverName,
                         receiverEmailAddress,
                         receiverAddress,
                         receiverPhoneNumber,
-
                         packageWidth,
                         packageHeight,
                         packageMass,
-
-                        // new features for lockers
-                        receiverLocationId,
                         senderLocationId,
                         lockerID,
-                        lockerNumber
+                        lockerNumber,
+                        senderDropOffPoint
                     ]
                 );
                 // Get the last inserted parcel ID
@@ -198,9 +190,19 @@ class ParcelController {
                         [parcelId, pinCode, trackingNumber, lockerID]
                     );
 
+                const notificationTxt = 'New parcel is ready for you to drop off at '+ senderDropOffPoint + 'and locker' + lockerNumber;
+                // create notification
+                console.log(notificationTxt);
+                await (await db).query(
+                    'INSERT INTO notification (title, status, `read`, parcel_id, time, receiver, sender) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                    [notificationTxt, 'reserved', 0, parcelId, Date.now(), receiverEmailAddress, senderEmailAddress]
+                );
+
+
+
 
                 if (result) {
-                    res.json({ success: true, trackingNumber, pinCode, status: "reserved", receiverName, receiverEmailAddress, senderDropOffLocation, senderLocationId, lockerNumber, lockerID });
+                    res.json({ success: true, parcelId });
                 } else {
                     console.error();
                     res.status(500).json({ error: 'Failed to create the parcel' });

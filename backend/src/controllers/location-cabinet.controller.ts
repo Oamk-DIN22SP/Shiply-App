@@ -89,7 +89,7 @@ class LocationCabinetController {
 
       await (await db).query('UPDATE cabinets SET status = "reserved" WHERE id = ?', [cabinet_id]);
 
-      res.status(200).json({ message: 'Cabinet reserved successfully', location_id, cabinet_id, cabinet_number });
+      res.status(200).json({ message: 'Cabinet reserved successfully', location_id, cabinet_id, cabinet_number, success: true });
     } catch (err) {
       console.error('Error reserving random empty cabinet:', err);
       res.status(500).json({ error: 'Internal server error' });
@@ -137,6 +137,23 @@ class LocationCabinetController {
       // Update package status to 'sent' and set receiver location ID
       await (await db).query('UPDATE Parcels SET status = "sent", receiverLocationId = ?, pinCode = ?  WHERE parcelID = ?', [tempReceiverLocationId, newCode, parcel_id]);
 
+      const [parcelResult] = await (await db).query(
+        'SELECT senderEmailAddress,receiverEmailAddress   FROM Parcels WHERE parcelID = ?',
+        [parcel_id]
+      );
+
+      if (!Array.isArray(parcelResult) || parcelResult.length === 0) {
+        return res.status(404).json({ error: 'No matching cabinet found for the provided details' });
+      }
+
+      const { receiverEmailAddress, senderEmailAddress } = parcelResult[0] as { receiverEmailAddress: string, senderEmailAddress: string };
+
+      const notificationTxt = 'Your parcel has been dropped off at location ' + locationId + ' in cabinet ' + cabinet_number + '. It will be delivered to location ' + tempReceiverLocationId + ' soon.';
+      // create notification 
+      await (await db).query(
+        'INSERT INTO notification (title, status, `read`, parcel_id, time, receiver, sender) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [notificationTxt, 'sent', 0, parcel_id, Date.now(), receiverEmailAddress, senderEmailAddress]
+      );
 
       res.status(200).json({ message: 'Drop-off verified successfully', cabinet_id, cabinet_number, parcel_id });
 
@@ -175,6 +192,24 @@ class LocationCabinetController {
       // Update package status to received
       await (await db).query('UPDATE Parcels SET status = "received" WHERE parcelID = ?', [parcel_id]);
 
+      const [parcelResult] = await (await db).query(
+        'SELECT senderEmailAddress,receiverEmailAddress   FROM Parcels WHERE parcelID = ?',
+        [parcel_id]
+      );
+
+      if (!Array.isArray(parcelResult) || parcelResult.length === 0) {
+        return res.status(404).json({ error: 'No matching cabinet found for the provided details' });
+      }
+
+      const { receiverEmailAddress, senderEmailAddress } = parcelResult[0] as { receiverEmailAddress: string, senderEmailAddress: string };
+
+      const notificationTxt = 'Your parcel has been picked up from location ' + locationId + ' in cabinet ' + cabinet_number + ' by the receiver.';
+
+      // create notification 
+      await (await db).query(
+        'INSERT INTO notification (title, status, `read`, parcel_id, time, receiver, sender) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [notificationTxt, 'sent', 0, parcel_id, Date.now(), receiverEmailAddress, senderEmailAddress]
+      );
 
       res.status(200).json({ message: 'Pick up verified successfully', cabinet_id, cabinet_number, parcel_id });
 

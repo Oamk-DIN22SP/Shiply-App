@@ -28,7 +28,7 @@ class DriverController {
       
       // select traking number by parcel_id
       const [parcelResult] = await (await db).query(
-        'SELECT trackingNumber AS tracking_number FROM Parcels WHERE parcelID = ?',
+        'SELECT trackingNumber AS tracking_number, senderEmailAddress,receiverEmailAddress   FROM Parcels WHERE parcelID = ?',
         [parcel_id]
       );
 
@@ -36,7 +36,7 @@ class DriverController {
         return res.status(404).json({ error : 'No matching cabinet found for the provided details' });
       }
 
-      const { tracking_number } = parcelResult[0] as { tracking_number: number };
+      const { tracking_number,receiverEmailAddress, senderEmailAddress } = parcelResult[0] as { tracking_number: number, receiverEmailAddress: string, senderEmailAddress: string };
       
       // select cabinet number by cabinet_id
       const [cabinetResult] = await (await db).query(
@@ -61,6 +61,13 @@ class DriverController {
       if ((res2[0] as ResultSetHeader).affectedRows === 0) {
         return res.status(404).json({ error: 'No matching cabinet found for the provided details' });
       }
+
+      const notificationTxt = `Parcel #${tracking_number} has been delivered to cabinet ${cabinet_number} at location ${location_id}`;
+      // create notification 
+      await (await db).query(
+        'INSERT INTO notification (title, status, `read`, parcel_id, time, sender, receiver) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [notificationTxt, 'delivered', 0, parcel_id, Date.now(), senderEmailAddress, receiverEmailAddress]
+      );
       
       res.status(200).json({ message: 'Parcel successfully dropped off', parcel_id, cabinet_number, tracking_number, newCode});
     } catch (err) {
@@ -97,6 +104,25 @@ class DriverController {
       if ((result2[0] as ResultSetHeader).affectedRows === 0) {
         return res.status(404).json({ error: 'No matching parcel found for the provided details' });
       }
+
+      const [parcelResult] = await (await db).query(
+        'SELECT trackingNumber, senderEmailAddress,receiverEmailAddress, senderDropOffPoint   FROM Parcels WHERE parcelID = ?',
+        [parcel_id]
+      );
+
+      if (!Array.isArray(parcelResult) || parcelResult.length === 0) {
+        return res.status(404).json({ error : 'No matching cabinet found for the provided details' });
+      }
+
+      const { receiverEmailAddress, senderEmailAddress, trackingNumber, senderDropOffPoint } = parcelResult[0] as { trackingNumber: number, receiverEmailAddress: string, senderEmailAddress: string, senderDropOffPoint: string };
+
+      const notificationTxt = `Parcel #${trackingNumber} has been picked up from ${senderDropOffPoint}`;
+
+      // create notification 
+      await (await db).query(
+        'INSERT INTO notification (title, status, `read`, parcel_id, time, sender, receiver) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [notificationTxt, 'delivered', 0, parcel_id, Date.now(), senderEmailAddress, receiverEmailAddress]
+      );
 
       res.status(200).json({ message: 'Parcel successfully picked up', parcel_id});
 
