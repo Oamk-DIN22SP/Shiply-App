@@ -41,6 +41,23 @@ class ParcelController {
             res.status(500).json({ error: 'Internal server error' });
         }
     }
+    
+    async getAllParcelByEmail(req: Request, res: Response) {
+        try {
+            const email = req.body.email;
+            const [rows] = await (await db).query('SELECT * FROM Parcels WHERE receiverEmailAddress = ? OR senderEmailAddress = ? ORDER BY parcelID DESC', [email, email]);
+
+            if (rows) {
+                res.json(rows);
+            } else {
+                console.error();
+                res.status(500).json({ error: 'No parcels' });
+            }
+        } catch (err) {
+            console.error('Error fetching parcels:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
     // retrieve parcel by receiver id (main page, my parcels)
     async getParcelByReceiverEmail(req: Request, res: Response) {
         try {

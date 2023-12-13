@@ -13,7 +13,7 @@ class NotificationController {
 
       // select all locations where sender or receiver email matches
       const [rows] = await (await db).query(
-        'SELECT * FROM notification WHERE sender = ? OR receiver = ?',
+        'SELECT * FROM notification WHERE sender = ? OR receiver = ? ORDER BY id DESC',
         [userEmail, userEmail]
       );
 
